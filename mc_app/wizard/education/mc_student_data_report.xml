@@ -1,0 +1,112 @@
+<odoo>
+    <data>
+        <record id="student_data_wizard_form_view" model="ir.ui.view">
+            <field name="name">student.data.wizard.form</field>
+            <field name="model">student.data.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Student Data Report" >
+                    <group>
+                        <field name="report_view" required="1"/>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" can_create="false" can_write="false" />
+                        <field name="title" />
+                    </group>
+                    <group>
+                        <group>
+                            <field name="display_name" required="1"/>
+                        </group>
+                        <group>
+                            <field name="student_status" widget="checkbox" required="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="grade_id" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="student_id" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="first_name" />
+                            <field name="code" />
+                            <field name="entrance_year" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="city" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="bus_city_id" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="founder_son" string="Founder Son" />
+                            <field name="student_first_school" string="Student First School" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}" />
+                            <field name="old_entrance_year" string="Old entrance year" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}" />
+                            <field name="nationality" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}" can_create="false" can_write="false" />
+                            <field name="year_next_oct" />
+                            <field name="school_transferred_to"  invisible= "archived != True"/>
+                            <field name="left_date_to"  invisible= "archived != True"/>
+                            <field name="ministry_exmpt" />
+                            <field name="order_by" />
+                        </group>
+                        <group>
+                            <field name="class_division_id" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="full_name" />
+                            <field name="surname" />
+                            <field name="birth_date" />
+                            <field name="enrollment_date" />
+                            <field name="join_bus" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="gender" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="worker_son" string="Worker Son" />
+                            <field name="prev_school_type" string="Previous School Type" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}" />
+                            <field name="founder_son_level" string="Founder Son Level" invisible= "founder_son != True"/>
+                            <field name="worker_son_level" string="Worker Son Level"  invisible= "worker_son != True"/>
+                            <field name="prev_school" string="Previous School" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}" />
+                            <field name="first_school" string="Financial First School" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}" />
+                            <field name="parent_status" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="religion" options="{'no_quick_create': True, 'no_create_edit' : True,'no_open':True}" />
+                            <field name="is_sibling" />
+                            <field name="archived" />
+                            <field name="left_date_from"  invisible= "archived != True"/>
+                            <field name="age_details" />
+                            <field name="per_page" />
+                        </group>
+                    </group>
+
+                    <group string="Results Displayed Fields">
+                        <group>
+                            <field name="first_field" />
+                            <field name="third_field" />
+                            <field name="fifth_field" />
+                            <field name="seven_field" />
+                            <field name="ninth_field" />
+                        </group>
+                        <group>
+                            <field name="second_field" />
+                            <field name="fourth_field" />
+                            <field name="sixth_field" />
+                            <field name="eighth_field" />
+                            <field name="tenth_field" />
+                        </group>
+                    </group>
+                    <footer >
+                        <button name="generate_student_report" type="object"   
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+                                
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
+        
+        <record id="action_student_data_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Student Data Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">student.data.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="student_data_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+            <!-- Student Date  menu -->
+        <menuitem   id="student_data_report_menu" name="Student Date"
+                    parent="mc_app.ministry_reports_menu"
+                    action="action_student_data_wizard"
+                    sequence = "1"/>
+
+
+    </data>
+</odoo>

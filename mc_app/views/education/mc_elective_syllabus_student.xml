@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record id="mc_elective_syllabus_student_list_view" model="ir.ui.view">
+            <field name="name">mc_elective_syllabus_student_list_view</field>
+            <field name="model">mc.elective.syllabus.students</field>
+            <field name="arch" type="xml">
+            <list editable="bottom" >
+                <field name="syllabus_id" can_create="true" can_write="true" domain="[('elective', '=',True)]"/>
+                <field name="student_id" on_change="1" can_create="true" can_write="true" />
+                <field name="year_id" can_create="true" can_write="true" />
+                <field name="class_id" readonly="1" can_create="true" can_write="true" />
+                <field name="grade_id" readonly="1" can_create="true" can_write="true" />
+                <field name="company_id" readonly="1" can_create="false" can_write="false" />
+            </list>
+            </field>
+        </record>
+
+        
+        <record id="action_mc_elective_syllabus_student" model="ir.actions.act_window">
+            <field name="name">Elective Syllabus</field>
+            <field name="res_model">mc.elective.syllabus.students</field>
+          <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+            <field name="view_mode">list</field>
+        </record>
+
+
+        <menuitem   id="menu_mc_elective_syllabus_student"
+                    name="Elective Syllabus Student" 
+                    parent="education_core.menu_education_class_conf"
+                    action="action_mc_elective_syllabus_student"
+                    sequence = "20"
+                    />
+
+        <!-- From timetable -->
+        <menuitem
+            id="menu_mc_elective_syllabus_student_from_timtable"
+            name="Elective Syllabus Student" 
+            parent="menu_curriculum_from_timtable"
+            action="action_mc_elective_syllabus_student"
+        />
+
+    </data>
+</odoo>

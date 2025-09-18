@@ -1,0 +1,59 @@
+<odoo>
+    <template id="submission_done_template" name="Student Form">
+        <t>
+            <link rel="icon" href="mc_app/static/description/mccion.png" type="image/x-icon"/>
+            <title>Mansoura College Student Application Form - تم ارسال طلب التحاق طالب</title>
+            <script type="text/javascript" src="/mc_app/static/src/js/mc_form_validation.js"></script>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link t-att-href="'https://fonts.googleapis.com/css2?family=Oswald&amp;display=swap'" rel="stylesheet"/>
+            <link t-att-href="'https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&amp;family=Oswald&amp;display=swap'" rel="stylesheet"/>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+                <div class="form-body">
+                    <div class="container">
+                    <link rel="stylesheet" type="text/css" href="mc_app/static/mc_admission_application_form.css" />
+                        <div class="form-container">
+                            <div class="form-header">
+                                <img src="mc_app/static/description/mclogo.png" class="logo" alt=""
+                                    style="width: auto;  display: block;margin: 0 auto;"/>
+                                <div class="row"
+                                style="     padding: 8px 16px;
+                                            border-radius: 24px;
+                                            background:rgb(235, 237, 255);
+                                            border: 1px solid #2C3691;
+                                            gap: 16px;
+                                            width: 100%;
+                                            justify-content: center;
+                                            margin:16px 0;
+                                            align-items: center !important;
+                                        }">
+                                    <i style="color:#2C3691 !important;" class="fa fa-check-circle-o fa-lg" aria-hidden="true"></i>
+
+                                <h1 style="color:#2C3691;">Form submitted successfully! - <span class="arabic_span">تم التسجيل</span></h1>
+                                </div>    
+                                <p style="font-size: 18px; color: #2C3691; text-align:center;">
+                                    Your Application No: <strong><t t-esc="application_id"/></strong>
+                                </p>
+
+                                <p style="font-size: 16px; text-align: center; margin-top: 16px;">Please check your email for admission details. <br/>
+                                If you have any queries, please feel free to contact the school administration.</p>
+                            </div>
+
+                            <p style="font-size: 14px; text-align: center; margin-top: 8px; color: #444;">
+                                    <span class="arabic_span">يرجى الاحتفاظ برقم الطلب لمتابعة القبول، وسيتم إرسال التفاصيل إلى بريدكم الإلكتروني.</span>
+                                </p>
+
+
+                            <div class="l-col-12">
+                                <div class="form-group align-center" style="margin-top: 1.5rem;">
+                                <a t-att-href="'/apply/' + str(company_id)"
+                                    style="text-decoration:none"
+                                class="btn btn-success btn-flat btn-form ">Back to apply page - الرجوع لصفحة التقديم </a>
+                                   
+                                </div>
+                            </div>
+                        </div>    
+                    </div> 
+                </div> 
+        </t>
+    </template>
+</odoo>

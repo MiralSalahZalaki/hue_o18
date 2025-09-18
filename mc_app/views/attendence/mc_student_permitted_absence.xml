@@ -1,0 +1,60 @@
+<odoo>
+    <record id="mc_student_permitted_absence_list_view" model="ir.ui.view">
+        <field name="name">mc.student.permitted.absence.list</field>
+        <field name="model">mc.student.permitted.absence</field>
+        <field name="arch" type="xml">
+            <list string="Permitted Absence">
+                <field name="student_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="reason_id"/>
+            </list>
+        </field>
+    </record>
+
+
+
+    <record id="mc_student_permitted_absence_form_view" model="ir.ui.view">
+        <field name="name">mc.student.permitted.absence.form</field>
+        <field name="model">mc.student.permitted.absence</field>
+        <field name="arch" type="xml">
+            <form string="Permitted Absence">
+                <sheet>
+                    <group>
+                        <field name="student_id"/>
+                        <field name="grade_id"/>
+                        <field name="class_division_id"/>
+                        <field name="start_date" widget="date"/>
+                        <field name="end_date" widget="date"/>
+                        <field name="days_count"/>
+                        <field name="reason_id"/>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+            
+    <record id="action_mc_student_permitted_absence" model="ir.actions.act_window">
+        <field name="name">Permitted Absence</field>
+        <field name="res_model">mc.student.permitted.absence</field>
+        <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+
+    <menuitem id="education_attendances.education_attendance_report_menu"
+              parent="education_attendances.education_attendance_main_menu"
+              name="Reports" sequence="13"/>
+
+    <menuitem id="menu_mc_student_permitted_absence"
+            name="Permitted Absence" 
+            parent="education_attendances.education_attendance_main_menu"
+            action="action_mc_student_permitted_absence"
+            sequence="12"
+            />
+
+
+</odoo>

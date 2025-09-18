@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="system_settings_management.SystemListRenderer"
+       t-inherit="web.ListRenderer"
+       t-inherit-mode="primary">
+        
+        <!-- Replace the default ActionHelper -->
+        <xpath expr="//t[@t-call='web.ActionHelper']" position="replace">
+            <SystemActionHelper
+                list="props.list"
+                noContentHelp="''"/>
+        </xpath>
+        
+        <!-- Hide the table when no content by adding condition -->
+        <xpath expr="//table" position="attributes">
+            <attribute name="t-if">!shouldHideTable</attribute>
+        </xpath>
+        
+        <!-- Also hide the header when no content -->
+        <xpath expr="//thead" position="attributes">
+            <attribute name="t-if">!shouldHideTable</attribute>
+        </xpath>
+    </t>
+</templates>

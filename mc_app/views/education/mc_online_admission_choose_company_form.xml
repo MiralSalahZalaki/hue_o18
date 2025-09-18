@@ -1,0 +1,145 @@
+<odoo>
+    <template id="select_company_form_template" name="Student Form">
+        <t>
+            <link rel="icon" href="/mc_app/static/description/mccion.png" type="image/x-icon"/>
+            <title>Mansoura College Student Application Form - طلب التحاق طالب</title>
+            <script type="text/javascript" src="/mc_app/static/src/js/mc_form_validation.js"></script>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link t-att-href="'https://fonts.googleapis.com/css2?family=Oswald&amp;display=swap'" rel="stylesheet"/>
+            <link t-att-href="'https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&amp;family=Oswald&amp;display=swap'" rel="stylesheet"/>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+        </t>
+
+        <div class="form-body">
+            <div class="container">
+                <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_admission_application_form.css" />
+                <div class="form-container">
+                    <div class="form-header">
+                        <img src="/mc_app/static/description/mclogo.png" class="logo" alt="Mansoura College Logo"
+                             style="width: auto; display: block; margin: 0 auto;"/>
+                    </div>
+
+                    <t t-if="existing_application">
+                            <div style="background-color: #bf172814; border: 1px solid #BF1728; border-radius: 24px; padding: 8px 16px; color: #BF1728; text-align: center; margin: 24px auto;">
+                              <span>
+                               You have already applied, you can edit your submission 
+                               <span class="arabic_span">-لقد قمت بالتقديم سابقاً. يمكنك تعديل بياناتك</span>
+                              </span>
+
+                            </div>
+                    </t> 
+
+                    <fieldset>
+                        <legend>Choose the school you want to join 
+                            <span class="arabic_span">- اختر المدرسة التي ترغب الالتحاق بها</span>
+                        </legend>
+                        <div class="row">
+                            <div class="l-col-12">
+                                <div class="form-group">
+                                    <label for="company_id">Company
+                                        <span class="arabic_span" style="float:right;">المدرسة</span>
+                                    </label>
+                                    <div class="l-pos-r">
+                                        <select id="company_id" class="form-element-icon"
+                                                name="company_id"
+                                                required="true"
+                                                onchange="updateApplyLink()">
+                                            <option value="" selected="selected" disabled="disabled">Select Company</option>
+                                            <t t-foreach="company_ids" t-as="company">
+                                                <option t-att-value="company.id">
+                                                    <t t-esc="company.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                        <i class="fa fa-building fa-absolute fa-background"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                            <div class="row">
+                                <div class="l-col-12 arabic_span" style="color:#BF1728;"> يرجى الالتزام بالتقديم بالمدرسة التي يوجد بها شقيق المتقدم</div>
+                            </div>
+                        </fieldset>
+
+                    <div class="l-col-12">
+                        <div class="form-group align-center">
+                            <t t-if="existing_application">
+                                    <input type="hidden" name="application_id" id="application_id" t-att-value="existing_application and existing_application.id or ''"/>
+                                    <input type="hidden" name="student_national_id"  id="student_national_id" t-att-value="existing_application and existing_application.student_national_id or ''"/>
+                                    
+                                    <a id="edit_application_link" href="/" 
+                                    class="btn-form px-2"
+                                    style="text-decoration: none; background-color: #2C3691; color: white; padding: 12px 24px; border-radius: 32px; display: inline-block;"
+                                    onmouseover="this.style.backgroundColor='#12195a'" 
+                                    onmouseout="this.style.backgroundColor='#2C3691'"
+                                    onclick="return updateEditLink()">
+                                        Edit application - تعديل الابلكيشن
+                                    </a>
+                            </t>
+
+                            <t t-else="">
+                                <a id="apply_link" href="#" class="disabled" 
+                                style="text-decoration: none; background-color: #2C3691; color: white; padding: 12px 24px; border-radius: 32px; display: inline-block;"
+                                onmouseover="this.style.backgroundColor='#12195a'" 
+                                onmouseout="this.style.backgroundColor='#2C3691'"
+                                onclick="return validateSelection()">
+                                    Apply now - <span class='arabic_span'>قدم الان</span>
+                                </a>  
+                            </t>
+                        </div>
+                    </div>
+                </div>    
+            </div> 
+        </div> 
+
+        <script>
+
+            function updateEditLink() {
+                var companySelect = document.getElementById("company_id");
+                var application_id = document.getElementById("application_id");
+                var student_national_id = document.getElementById("student_national_id");
+                
+                var editLink = document.getElementById("edit_application_link");
+
+                if (companySelect.value)  {
+                    var url = "/update/" + companySelect.value + 
+                            "?student_national_id=" + student_national_id.value + 
+                            "&amp;application_id=" + application_id.value;
+
+                    editLink.href = url;
+                    return true;
+                } else {
+                    alert("Please select a company before editing.");
+                    return false;
+                }
+            }
+
+            function updateApplyLink() {
+                var companySelect = document.getElementById("company_id");
+                var applyLink = document.getElementById("apply_link");
+
+                if (companySelect.value) {
+                    applyLink.href = "/apply/" + companySelect.value;
+                    applyLink.classList.remove("disabled");
+                } else {
+                    applyLink.href = "#";
+                    applyLink.classList.add("disabled");
+                }
+            }
+
+
+
+            function validateSelection() {
+                var companySelect = document.getElementById("company_id");
+                if (!companySelect.value) {
+                    alert("Please select a company before applying.");
+                    return false;
+                }
+                return true;
+            }
+        </script>
+    </template>
+</odoo>

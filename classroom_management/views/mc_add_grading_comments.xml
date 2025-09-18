@@ -1,0 +1,85 @@
+<odoo>
+    <data>
+        <record id="mc_add_grading_comments_tree_view" model="ir.ui.view">
+            <field name="name">mc_add_grading_comments_tree_view</field>
+            <field name="model">mc.add.grading.comments</field>
+            <field name="arch" type="xml">
+            <list string="Add Grading Comments" >
+                <field name="year"/> 
+                <field name="term_id"/> 
+                <field name="company_id"/> 
+                <field name="grade_id"/> 
+            </list>
+            </field>
+        </record>
+
+
+         <record id="mc_add_grading_comments_form_view" model="ir.ui.view">
+            <field name="name">mc_add_grading_comments_form_view</field>
+            <field name="model">mc.add.grading.comments</field>
+            <field name="arch" type="xml">
+            <form>
+                 <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" required="1"/>
+                        <button name="set_done" type="object" class="btn btn-primary" string="Set to Done" invisible="state == 'done' or check_student == False"/>
+                        <button name="set_draft" type="object" class="btn btn-primary" string="Set to Draft" invisible="state == 'draft' or check_student == False"/>
+                        <button name="get_students_list" type="object"  string="Get Students"  invisible="state == 'done' or check_student == True"/>
+                </header>
+                <sheet string="Add Grading Comments">
+                    <group>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                        <field name="year" readonly="state == 'done'"/> 
+                        <field name="term_id" readonly="state == 'done'"/> 
+                        <field name="grade_id" readonly="state == 'done'"/> 
+                        <field name="syllabus_id" readonly="state == 'done'"/> 
+                        <field name="grading_type" readonly="state == 'done'"/> 
+                        <field name="grading_comment" readonly="state == 'done'"/> 
+
+                        <button name="fill_score"
+                                    string="Fill Situation"
+                                    class="oe_highlight"
+                                    type="object"
+                                    invisible="state == 'done'"
+                                    readonly="state == 'done'"/>
+                    </group>    
+                    <notebook>
+                        <page string="Students List">
+                             <field name="student_list"  widget="one2many" mode="list,form">
+                                    <list string="Student List" create="false">
+                                        <field name="check"/>
+                                        <field name="seat_number"/>
+                                        <field name="student_id"/>
+                                        <field name="class_id"/>
+                                        <field name="grading_comment"/>
+                                    </list>
+                                </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+            </field>
+        </record>
+
+
+
+        
+        <record id="action_mc_add_grading_comments" model="ir.actions.act_window">
+            <field name="name">Add Grading Comments</field>
+            <field name="res_model">mc.add.grading.comments</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+
+
+        </record>
+
+
+
+        <menuitem id="menu_mc_add_grading_comments"
+                name="Add Grading Comments" 
+                parent="menu_student_grading"
+                action="action_mc_add_grading_comments"
+                sequence="6"
+                />
+
+    </data>
+</odoo>

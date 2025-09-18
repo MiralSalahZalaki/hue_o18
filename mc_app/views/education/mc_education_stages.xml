@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+        <record id="mc_education_stages_tree_view" model="ir.ui.view">
+            <field name="name">mc_education_stages_tree_view</field>
+            <field name="model">mc.education.stages</field>
+             <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                    <field name="company_id"  />
+                    <field name="grades" widget="many2many_tags" />
+                    <field name="vice_headmasters" widget="many2many_list"  />
+                    <field name="vice_headmasters2" widget="many2many_list" />
+                    <field name="credit" />
+                </list>
+            </field>
+        </record>
+
+
+            <record id="mc_education_stages_form_view" model="ir.ui.view">
+            <field name="name">mc_education_stages_form_view</field>
+            <field name="model">mc.education.stages</field>
+             <field name="arch" type="xml">
+                <form string="Educational Stages" >
+                    <sheet >
+                        <group >
+                            <field name="name" />
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"  />
+                            <field name="grades" widget="many2many_tags" domain="[('school','=',company_id)]" />
+                            <field name="vice_headmasters" widget="many2many_list"  />
+                            <field name="vice_headmasters2" widget="many2many_list" />
+                            <field name="credit" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_mc_education_stages" model="ir.actions.act_window">
+            <field name="name">Education Stages</field>
+            <field name="res_model">mc.education.stages</field>
+            <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+            <field name="view_mode">list,form</field>
+
+        </record>
+
+
+
+        <menuitem id="menu_mc_education_stages"
+                name="Education Stages" 
+                parent="menu_application_class_setup"
+                action="action_mc_education_stages"/>
+
+    </data>
+</odoo>

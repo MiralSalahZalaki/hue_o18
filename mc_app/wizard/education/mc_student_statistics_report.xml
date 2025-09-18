@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+        <record id="student_statistics_wizard_form_view" model="ir.ui.view">
+            <field name="name">student.statistics.wizard.form</field>
+            <field name="model">student.statistics.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Student Statistics Report" >
+                    <group>
+                            <field name="report_view" required="1"/>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" can_create="false" can_write="false" />
+                            <field name="academic_year_id"/>
+                    </group>
+
+                    <footer >
+                        <button name="action_generate_statistics_report" type="object"   
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_student_statistics_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Student Statistics Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">student.statistics.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="student_statistics_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+            <!-- Student Date  menu -->
+        <menuitem   id="student_statistics_report_menu" 
+                    name="Student Statistics"
+                    parent="mc_app.ministry_reports_menu"
+                    action="action_student_statistics_wizard"
+                    sequence = "3"/>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,48 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="mc_assessments_category_types_tree_view" model="ir.ui.view">
+        <field name="name">mc.assessments.category.types.tree</field>
+        <field name="model">mc.assessments.category.types</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mc_assessments_category_types_form_view" model="ir.ui.view">
+        <field name="name">mc.assessments.category.types.form</field>
+        <field name="model">mc.assessments.category.types</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Assessments Category Types">
+                    <group>
+                        <field name="name"/>
+                        <field name="hidden_student_report"/>                     
+                    </group>    
+             
+                    <group>
+                        <field name="attendance_assessment"/>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                    </group>
+                        
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_mc_assessments_category_types" model="ir.actions.act_window">
+        <field name="name">Assessments Category Types</field>
+        <field name="res_model">mc.assessments.category.types</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_mc_assessments_category_types"
+              name="Assessments Category Types" 
+              parent="menu_grading_config"
+              sequence = "2"
+              action="action_mc_assessments_category_types"/>
+</odoo>

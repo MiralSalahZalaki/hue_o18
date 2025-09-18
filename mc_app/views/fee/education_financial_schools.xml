@@ -1,0 +1,30 @@
+<odoo>
+    <record id="education_financial_schools_list_view" model="ir.ui.view">
+        <field name="name">education.financial.schools.list</field>
+        <field name="model">education.financial.schools</field>
+        <field name="arch" type="xml">
+            <list string="Financial School">
+                <field name="school_id"/>
+                <field name="school_fees"/>
+                <button type="object" class="btn p-2 btn-primary oe_highlight" string="Generate School Invoices" 
+                help="Generate School Invoices" name="generate_school_invoices"/>
+                <field name="student_id" />
+            </list>
+        </field>
+    </record>
+
+    <record id="education_financial_schools_form_view" model="ir.ui.view">
+        <field name="name">education.financial.schools.form</field>
+        <field name="model">education.financial.schools</field>
+        <field name="arch" type="xml">
+            <form string="Financial School">
+                <group>
+                    <field name="school_id"/>
+                    <field name="school_fees"/>
+                    <field name="student_id" domain="[('company_id','=',school_id)]"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

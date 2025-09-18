@@ -1,0 +1,60 @@
+<odoo>
+    <!-- Tree View -->
+    <!-- <record id="mc_generate_student_result_tree_view" model="ir.ui.view">
+        <field name="name">mc.generate.student.result.tree</field>
+        <field name="model">mc.generate.student.result</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="term_id"/>
+                <field name="grade_ids"/>
+                <field name="class_division_ids"/>
+            </list>
+        </field>
+    </record> -->
+
+    <!-- Form View -->
+    <record id="mc_generate_student_result_form_view" model="ir.ui.view">
+        <field name="name">mc.generate.student.result.form</field>
+        <field name="model">mc.generate.student.result</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Generate Result" name="button_generate" type="object" class="btn btn-primary"/>
+                    <button string="Generate Monthly Result" name="button_generate_monthly" type="object" class="btn btn-primary"
+                            invisible="is_british_system"/>                </header>
+                <sheet string="Generate Student Result">
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                        <field name="term_id"/>
+                        <field name="grade_ids" widget="many2many_tags"/>
+
+                        <field name="class_division_ids" widget="many2many_tags"/>
+                        <field name="assesment_time_ids" invisible="1" />
+                        <field name="assesment_time" domain="assesment_time_ids"/>
+                        <field name="student_ids_domain" invisible="1" />
+                        <field name="student_ids" domain="student_ids_domain"/>
+                        <field name="is_british_system" invisible="1"/>
+                    </group>    
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_mc_generate_student_result" model="ir.actions.act_window">
+        <field name="name">Generate Student Result</field>
+        <field name="res_model">mc.generate.student.result</field>
+        <field name="view_mode">form</field>
+
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_mc_generate_student_result"
+              name="Generate Student Result" 
+              parent="menu_grading_config"
+              sequence = "5"
+              action="action_mc_generate_student_result"/>
+</odoo>

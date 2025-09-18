@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main menus of Ministry Reports -->
+    <menuitem id="ministry_reports_menu" name="Minstry Reports"
+              parent="education_core.education_application_menu_report"
+            groups="education_core.group_education_hod,education_core.group_education_faculty,education_core.group_education_principal,mc_app.mc_service_manager,mc_app.mc_education_pr"
+
+              />
+
+
+
+</odoo>

@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+        <record id="behavior_class_wizard_form_view" model="ir.ui.view">
+            <field name="name">class.missing.attendence.wizard.form</field>
+            <field name="model">class.missing.attendence.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Behavior Class" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" can_create="false" can_write="false" />
+                            <field name="grade_id"/>
+                            <field name="class_division_id"/>
+                    </group>
+
+                    <footer >
+                        <button name="generate_behavior_class_report" type="object"   
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_behavior_class_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Behavior Class</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">class.missing.attendence.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="behavior_class_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="class_missing_attendence_menu" 
+                    name="Class Missing Attendence"
+                    parent="education_attendances.education_attendance_report_menu"
+                    action="action_behavior_class_wizard"
+                    sequence = "2"/>
+
+
+    </data>
+</odoo>

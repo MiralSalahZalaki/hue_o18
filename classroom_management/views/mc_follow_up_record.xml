@@ -1,0 +1,81 @@
+<odoo>
+    <data>
+        <record id="mc_follow_up_record_tree_view" model="ir.ui.view">
+            <field name="name">mc_follow_up_record_tree_view</field>
+            <field name="model">mc.follow.up.record</field>
+            <field name="arch" type="xml">
+            <list string="Follow-Up Record">
+                <field name="syllabus_id"/>
+                <field name="grade_id"/>
+                <field name="class_id"/>
+                <field name="date"/>
+                <field name="state"/>
+            </list>
+            </field>
+        </record>
+
+        <record id="mc_follow_up_record_form_view" model="ir.ui.view">
+            <field name="name">mc_follow_up_record_form_view</field>
+            <field name="model">mc.follow.up.record</field>
+            <field name="arch" type="xml">
+            <form>
+                <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" required="1"/>
+                        <button name="set_done" type="object" class="btn btn-primary" string="Set to Done" invisible="state == 'done' or check_student == False"/>
+                        <button name="set_draft" type="object" class="btn btn-primary" string="Set to Draft" invisible="state == 'draft' or check_student == False"/>
+                        <button name="get_students_list" type="object"  string="Get Students"/>
+                </header>
+                <sheet string="Follow-Up Record">
+                   <group>
+                        <group>
+                            <field name="syllabus_id" required="1"/>
+                            <field name="class_id" required="1"/>
+                            <field name="follow_up_time"/>
+                        </group>
+                        <group>
+                                <field name="grade_id"/>
+                                <field name="date" required="1"/>
+                        </group>
+                   </group>
+
+                   <notebook>
+                            <page string="Student List">
+                                <field name="student_list" widget="one2many" mode="list,form">
+                                    <list string="Student List" create="false">
+                                        <field name="student_id"/>
+                                        <field name="attendence"/>
+                                        <field name="tools" readonly="attendence == 'abs'"/>
+                                        <field name="hw" readonly="attendence == 'abs'"/>
+                                        <field name="quiz" readonly="attendence == 'abs'"/>
+                                        <field name="progress" reafonly = "1"/>
+                                        <field name="notes" readonly="attendence == 'abs'"/>
+                                    </list>
+                                </field>
+                            </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+            </field>
+        </record>
+
+
+
+        
+        <record id="action_mc_follow_up_record" model="ir.actions.act_window">
+            <field name="name">Follow-Up Record</field>
+            <field name="res_model">mc.follow.up.record</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_mc_follow_up_record"
+                name="Follow-Up Record" 
+                parent="menu_follow_up_sheet"
+                action="action_mc_follow_up_record"
+                sequence="1"
+                />
+
+    </data>
+</odoo>

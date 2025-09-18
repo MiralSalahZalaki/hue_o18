@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="ig_total_term_template">
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+                <style>
+                        table.customTable {
+                            width: 100%;
+                            background-color: #FFFFFF;
+                            border-collapse: collapse;
+                            border-width: 2px;
+                            border-color: #7EA8F8;
+                            border-style: solid;
+                            color: #000000;
+                            }
+
+                        table.customTable td, table.customTable th {
+                            border-width: 2px;
+                            border-color: #7EA8F8;
+                            border-style: solid;
+                            padding: 5px;
+                            }
+
+                        table.customTable thead {
+                            background-color: #7EA8F8;
+                        }
+                        .style1{
+                            background-color: rgba(0, 0, 0, 0.2) !important ;
+                        }
+                        .style2{
+                            background-color: blue;
+                        }
+
+                        .student-header h1 {
+                        text-align: center;
+                        margin: 0;
+                        font-size: 22px;
+                        text-shadow: 1px 1px 2px #cdcdcd;
+                        }
+                        .student-header h3 {
+                            text-align: center;
+                            margin-bottom: 25px;
+                            font-size: 16px;
+                            font-weight: 700;
+                        }
+                        .row-info {
+                            font-size: 13px;
+                            margin-bottom: 10px;
+                        }
+                        .o_report_layout_boxed table thead tr th {
+                            border-bottom: 3px solid #555555 !important;
+                            text-transform: uppercase;
+                        }
+                        .o_report_layout_boxed table tbody tr td:last-child {
+                            background-color: #ffffff ;
+                        }
+                        table {
+                                border: 1px solid;
+                        }
+                        table th , td{
+                            padding: 5px 5px;
+                            font-size: 12px !important;
+                            font-weight: 700;
+                            text-transform: uppercase;
+                            border: 1px solid #000 !important;
+                        }
+
+                        th,tr td:first-child{
+                            vertical-align: middle !important;
+                            text-align: center !important;
+                        }
+
+                        td{
+                            vertical-align: middle !important;
+                            text-align: center !important;
+                            border-top: 1px solid #000 !important;
+                        }
+                        .kt-portlet.kt-portlet--solid-warning {
+                            background: #dee0e8 !important;
+                        } 
+                        
+                        .kt-portlet.kt-portlet--skin-solid .kt-portlet__body {
+                            color: #3a3a3ade;
+                        }
+                        @media only screen and (max-width: 768px) {
+                        /* For mobile phones: */
+                        [class*="col-"] {
+                            width: 100%;
+                        }}
+                        
+                        .container {
+                            width: 100% !important;
+                        }
+                        table.table-bordered {
+                            color: #000000 !important;
+                        }
+                        td {
+                            font-weight: bold !important;
+                        }
+                        .print {
+                            display:none
+                        } 
+                    
+                        hr {
+                            padding: 4px 0;
+                            margin-top: 20px;
+                            margin-bottom: 20px;
+                            border: 0;
+                            border-top: 1px solid #eeeeee;
+                        }
+
+ /* لضمان وجود Scroll */
+                    .table-container {
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                        margin-top: 10px;
+                    }
+                    .table-container table {
+                        min-width: 1000px; 
+                        white-space: nowrap;
+                    }
+                      
+                        @media print {
+                              .student-page {
+                            page-break-after: always !important;
+                        }
+                            .btn-print {display:none!important;}
+                        
+    .btn-print {
+        display: none !important;
+    }
+    .table-container {
+        overflow: visible !important;
+        -webkit-overflow-scrolling: auto !important;
+    }
+    .table-container table {
+        min-width: auto !important;
+        white-space: normal !important;
+    }
+    table {
+        page-break-inside: auto;
+        font-size: 10px !important;
+    }
+    .page {
+        page-break-before: always;
+    }
+    .page:first-child {
+        page-break-before: avoid;
+    }
+    .page-break {
+        display: none;
+    }
+}
+            </style>
+            </head>
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            <div class="page">
+                <!--  Report Header -->
+                <t t-foreach="students_data" t-as="std">
+                    <div class="student-page">
+                        <t t-if="grading_method_type == 'numeric'">
+                            <!-- Header -->
+                            <div class="student-header">
+                                <h1>Grade Transcript</h1>
+                                <h3>
+                                    <span t-esc="term_name"/> -
+                                    <span t-esc="academic_year"/>
+                                </h3>
+                            </div>
+                            <!-- Student Info -->
+                            <div class="row justify-content-between" style="font-size:0.75rem">
+                                <div class="col-6">
+                                    <strong> Student Name :
+                                        <span t-esc="std.get('name','')"/>
+                                    </strong>
+                                </div>
+                                <div class="col-3">
+                                    <strong> Grade :
+                                        <span t-esc="std.get('grade','')"/>
+                                    </strong>
+                                </div>
+                                <div class="col-3 text-end">
+                                    <strong> Seating Number :
+                                        <span t-esc="std.get('seat_number','')"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="table-container">
+                                <!-- Numeric -->
+                                <table class="table blueTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 75px;" rowspan="2">Subject</th>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == false ">
+                                                    <th colspan="3" >
+                                                        <t t-esc="syllabus_info.get('name','')"/>
+                                                    </th>
+                                                </t>
+                                            </t>
+                                            <th   style="background: #9e9e9e45;" rowspan="3">Total</th>
+                                            <t t-if="syllabus_info.get('syllabuses_no_add_total') == true ">
+                                                <th colspan="1" >
+                                                    <t t-esc="syllabus_info.get('name','')"/>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <tr>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == false ">
+                                                    <th class="total-header">Weekly</th>
+                                                    <th class="total-header">Monthly</th>
+                                                    <th class="total-header">Exam</th>
+                                                </t>
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == true ">
+                                                    <th class="total-header">Exam</th>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Total Mark Row -->
+                                        <tr>
+                                            <td>Total Mark</td>
+                                            <t t-set="max_od_syllabuses_add_total" t-value="0"/>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total', false) == false">
+                                                    <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                                    <t t-set="subject_result" t-value="std.get('subjects_results', {}).get(subject_id, {})"/>
+                                                    <td>
+                                                        <t t-esc="subject_result.get('british_weekly_max', 0)"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="subject_result.get('british_monthly_max', 0)"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="subject_result.get('british_exam_max', 0)"/>
+                                                    </td>
+                                                    <t t-set="max_od_syllabuses_add_total" t-value="max_od_syllabuses_add_total + subject_result.get('british_weekly_max', 0) + subject_result.get('british_monthly_max', 0) + subject_result.get('british_exam_max', 0)"/>
+                                                    </t>
+                                            </t>
+                                            <td rowspan="2" style="background: #9e9e9e45;">
+                                                <t t-esc="max_od_syllabuses_add_total"/>
+                                            </td>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == true">
+                                                    <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                                    <t t-set="subject_result" t-value="std.get('subjects_results', {}).get(subject_id, {})"/>
+                                                    <td rowspan="2">
+                                                        <t t-esc="subject_result.get('max_score', 0)"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                        <!-- Subject Total Row -->
+                                        <tr>
+                                            <td>Subject Total</td>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                                <t t-set="subject_result" t-value="std.get('subjects_results', {}).get(subject_id, {})"/>
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == false">
+                                                    <td colspan="3">
+                                                        <t t-esc="subject_result.get('british_total_max', 0)"/>
+                                                    </td>
+                                                </t>
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == true">
+                                                    <!-- Empty cell since it's already shown in Total Mark row -->
+                                                </t>
+                                            </t>
+                                        </tr>
+                                        <!-- Given Mark Row -->
+                                        <tr>
+                                            <td>Given Mark</td>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                                <t t-set="subject_result" t-value="std.get('subjects_results', {}).get(subject_id, {})"/>
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == false">
+                                                    <td>
+                                                        <t t-esc="subject_result.get('british_weekly', 0)"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="subject_result.get('british_monthly', 0)"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="subject_result.get('british_exam', 0)"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                            <td rowspan="2" style="background: #9e9e9e45;">
+                                                <t t-esc="std.get('total_score', 0)"/>
+                                            </td>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                                <t t-set="subject_result" t-value="std.get('subjects_results', {}).get(subject_id, {})"/>
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == true">
+                                                    <td rowspan="2">
+                                                        <t t-esc="subject_result.get('total', 0)"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                        <!-- Final Mark Row -->
+                                        <tr>
+                                            <td>Final Mark</td>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                                <t t-set="subject_result" t-value="std.get('subjects_results', {}).get(subject_id, {})"/>
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == false">
+                                                    <td colspan="3">
+                                                        <t t-esc="subject_result.get('british_total', 0)"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                        <!-- Final Mark From 6 Row -->
+                                        <tr>
+                                            <td>Final Mark From 6</td>
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                                <t t-set="subject_result" t-value="std.get('subjects_results', {}).get(subject_id, {})"/>
+                                                <t t-if="syllabus_info.get('syllabuses_no_add_total') == false">
+                                                    <td colspan="3">
+                                                        <t t-esc="round(subject_result.get('final_mark_from_6', 0), 2)"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                        <t t-elif="grading_method_type == 'q_colors'">
+                            <!-- Header -->
+                            <div class="student-header">
+                                <h1>Grade Transcript</h1>
+                                <h3>
+                                    <span t-esc="term_name"/> -
+                                    <span t-esc="academic_year"/>
+                                </h3>
+                            </div>
+                            <!-- Student Info -->
+                            <div class="row justify-content-between" style="font-size:0.75rem">
+                                <div class="col-6">
+                                    <strong> Student Name :
+                                        <span t-esc="std.get('name','')"/>
+                                    </strong>
+                                </div>
+                                <div class="col-3">
+                                    <strong> Grade :
+                                        <span t-esc="std.get('grade','')"/>
+                                    </strong>
+                                </div>
+                                <div class="col-3 text-end">
+                                    <strong> Seating Number :
+                                        <span t-esc="std.get('seat_number','')"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="table-container">
+                                <!-- Numeric -->
+                                <table class="customTable">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <span>Subject</span>
+                                            </th>
+                                            <th>
+                                                <span>Assessment</span>
+                                            </th>
+                                            <th>
+                                                <span>Evaluation</span>
+                                            </th>
+                                            <th>
+                                                <span>Comment</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="syllabus_data" t-as="syllabus">
+                                            <!-- تصحيح: استخدام 'id' بدلاً من 'syllabus_id' -->
+                                            <t t-set="syllabus_id" t-value="str(syllabus.get('id'))"/>
+                                            <t t-set="student_subject_data" t-value="std.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                            <!-- Skip elective subjects if student is not registered -->
+                                            <t t-if="not syllabus.get('elective') or syllabus_id in std.get('registered_subjects', [])">
+                                                <t t-set="assessments" t-value="syllabus.get('assessments', [])"/>
+                                                <t t-set="distributions" t-value="syllabus.get('distributions', [])"/>
+                                                <t t-set="all_items" t-value="assessments + distributions"/>
+                                                <!-- Filter out hidden assessments -->
+                                                <t t-set="visible_items" t-value="[item for item in all_items if not (item in assessments and item.get('hidden_student_report', False))]"/>
+                                                <!-- If subject has visible items, display them -->
+                                                <t t-if="visible_items">
+                                                    <t t-foreach="visible_items" t-as="item">
+                                                        <tr>
+                                                            <!-- Subject column - only show in first row -->
+                                                            <t t-if="item_index == 0">
+                                                                <td t-att-rowspan="len(visible_items)" class="subject-col">
+                                                                    <span t-esc="syllabus.get('name', '')"/>
+                                                                </td>
+                                                            </t>
+                                                            <!-- Assessment/Distribution name -->
+                                                            <td>
+                                                                <span t-esc="item.get('name', '')"/>
+                                                            </td>
+                                                            <!-- Evaluation -->
+                                                            <td>
+                                                                <t t-set="item_id" t-value="str(item.get('id'))"/>
+                                                                <t t-if="item in assessments">
+                                                                    <span t-esc="student_subject_data.get('assessments', {}).get(item_id, {}).get('score', '')"/>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <span t-esc="student_subject_data.get('distributions', {}).get(item_id, {}).get('score', '')"/>
+                                                                </t>
+                                                            </td>
+                                                            <!-- Comment -->
+                                                            <td>
+                                                                <t t-if="item in assessments">
+                                                                    <t t-set="description" t-value="student_subject_data.get('assessments', {}).get(item_id, {}).get('description', '')"/>
+                                                                    </t>
+                                                                <t t-else="">
+                                                                    <t t-set="description" t-value="student_subject_data.get('distributions', {}).get(item_id, {}).get('description', '')"/>
+                                                                    </t>
+                                                                <span t-esc="description if description else 'Well - Above expectations'"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <!-- If subject has NO items, still display the subject with empty row -->
+                                                <t t-else="">
+                                                    <tr>
+                                                        <td class="subject-col">
+                                                            <span t-esc="syllabus.get('name', '')"/>
+                                                        </td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+            <div style="page-break-after: always;"/>
+        </t>
+    </template>
+</odoo>

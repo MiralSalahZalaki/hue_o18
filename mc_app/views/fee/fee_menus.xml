@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="education_fee.education_fee_menu_root"
+        name="Fee"
+        sequence="11"
+        web_icon="education_fee,static/description/icon.png"
+        groups="base.group_system"/>
+
+    <menuitem id="discount_config_menu" name="Discount Configuration"
+              parent="education_fee.education_fee_menu_root" sequence="3"/>
+
+    <menuitem id="fee_reports_menu" name="Fee Reports"
+              parent="education_fee.education_fee_menu_root" sequence="4"/>
+
+    
+
+
+</odoo>

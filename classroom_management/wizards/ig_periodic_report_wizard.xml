@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        <record id="ig_periodic_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">ig.periodic.report.wizard.form</field>
+            <field name="model">ig.periodic.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Periodic Assessment Report Wizard" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"   required="1"/>
+                            <field name="term_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="grade_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="class_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field  name="assessments_times"
+                                    widget="many2many_tags"  
+                                    domain="assessment_times_domain"  
+                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />         
+                            <field name="student_ids"  domain="student_ids_domain"  options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />         
+                            <field name="show_attendance" />
+                            <field name="top_rank" />
+                    </group>
+
+                    <footer >
+                        <button name="generate_ig_periodic_report_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_ig_periodic_report_wizard" model="ir.actions.act_window">
+            <field name="name">Periodic Assessment Report Wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ig.periodic.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="ig_periodic_report_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="ig_periodic_report_wizard_report_menu" 
+                    name="Periodic Assessment Report"
+                    parent="menu_ig_reports"
+                    action="action_ig_periodic_report_wizard"
+                    sequence = "1"/>
+
+
+    </data>
+</odoo>

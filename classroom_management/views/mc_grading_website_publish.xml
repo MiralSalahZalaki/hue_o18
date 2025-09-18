@@ -1,0 +1,55 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="mc_grading_website_publish_tree_view" model="ir.ui.view">
+        <field name="name">mc.grading.website.publish.tree</field>
+        <field name="model">mc.grading.website.publish</field>
+        <field name="arch" type="xml">
+            <list create="false">
+                <field name="menu_name"/>
+                <field name="grade_ids"/>
+                <field name="publish"/>
+                <field name="inv_block"/>
+                <field name="portal_link"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mc_grading_website_publish_form_view" model="ir.ui.view">
+        <field name="name">mc.grading.website.publish.form</field>
+        <field name="model">mc.grading.website.publish</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <sheet string="Grading Website Publish">
+                    <group>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                        <field name="menu_icon"/>
+                        <field name="menu_name"/>
+                        <field name="menu_link"/>
+                        <field name="portal_link"/>        
+                        <field name="portal_link2"/>        
+                        <field name="grade_ids"/>
+                        <field name="publish"/>
+                        <field name="inv_block"/>
+                    </group>    
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_mc_grading_website_publish" model="ir.actions.act_window">
+        <field name="name">Grading Website Publish</field>
+        <field name="res_model">mc.grading.website.publish</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'create': False}</field>
+
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_mc_grading_website_publish"
+              name="Grading Website Publish" 
+              parent="menu_grading_config"
+              sequence = "5"
+              action="action_mc_grading_website_publish"/>
+</odoo>

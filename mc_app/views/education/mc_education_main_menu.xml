@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main menus of Education -->
+    <menuitem id="education_core.menu_education_root" name="Education"
+              web_icon="education_core,static/description/icon.png"
+              groups="education_core.group_education_hod,education_core.group_education_faculty,education_core.group_education_principal,mc_app.mc_service_manager,mc_app.mc_education_pr,mc_app.employee_group"
+              sequence="2"/>
+
+    <!-- Grade Configuration menu -->
+    <menuitem id="education_core.menu_education_main_menu" name="Grade Configuration"
+              parent="education_core.menu_education_root" sequence="10"/>
+
+    <!-- Application Setup menu -->
+    <menuitem id="menu_education_setup_menu" name="Application Setup"
+              parent="education_core.menu_education_root" sequence="20"/>
+
+    <!-- Admission Setup submenu -->
+    <menuitem id="menu_application_admission_setup" name="Admission Setup"
+              parent="menu_education_setup_menu" sequence="5"/>
+    
+    <menuitem id="education_core.education_document_menu" action="education_core.education_document_action"
+              parent="menu_application_admission_setup" sequence="10"
+              groups="base.group_no_one"/>
+    
+    <menuitem id="education_core.document_document_menu" name="Document Type"
+              parent="menu_application_admission_setup" action="education_core.document_document_action"
+              sequence="15"/>
+
+    <menuitem id="education_core.education_medium_menu" action="education_core.education_medium_action"
+              parent="menu_application_admission_setup" sequence="20"/>
+
+    <menuitem id="education_core.education_academic_year_menu"
+              action="education_core.education_academic_year_action"
+              parent="menu_application_admission_setup" sequence="2"/>
+    
+    <!-- Class Setup menu -->
+    <menuitem id="menu_application_class_setup" name="Class Setup"
+              parent="education_core.menu_education_main_menu" sequence="30"/>
+
+    <menuitem id="education_core.education_division_menu" action="education_core.education_division_action"
+              parent="menu_application_class_setup" sequence="1"/>
+    
+    <menuitem id="education_core.education_amenities_menu" action="education_core.education_amenities_action"
+              parent="menu_application_class_setup" sequence="5"/>
+
+    <!-- Reject Reason menu -->
+    <menuitem id="education_core.application_reject_reason_menu" name="Reject Reason"
+              parent="menu_application_admission_setup"
+              action="education_core.application_reject_reason_action" sequence="25"/>
+
+    
+    
+    
+    
+    <!-- Test Students  -->
+
+    <menuitem
+        id="education_promotion.education_year_ending_menu" name="Year Ending"
+        groups="education_core.group_education_hod,education_core.group_education_faculty,education_core.group_education_principal,mc_app.mc_service_manager,mc_app.mc_education_pr"
+        parent="education_core.menu_education_root" sequence="5"/>
+
+    <menuitem id="education_core.menu_education_admission" name="Admission"
+            groups="education_core.group_education_hod,education_core.group_education_faculty,education_core.group_education_principal,mc_app.mc_service_manager,mc_app.mc_education_pr,mc_app.employee_group"
+            parent="education_core.menu_education_root" sequence="5"/>
+
+    <menuitem id="education_core.education_student_menu" name="Student" sequence="10"
+            parent="education_core.menu_education_admission"
+            groups="education_core.group_education_hod,education_core.group_education_faculty,education_core.group_education_principal,mc_app.mc_service_manager,mc_app.mc_education_pr,mc_app.employee_group"
+            action="education_core.education_student_action"/>
+
+
+
+    
+</odoo>

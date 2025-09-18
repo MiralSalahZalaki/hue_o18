@@ -1,0 +1,119 @@
+<odoo>
+    <data>
+        <record id="mc_timetable_form_inherit" model="ir.ui.view">
+            <field name="name">education.timetable.from.inherit</field>
+            <field name="model">education.timetable</field>
+            <field name="inherit_id" ref="education_time_table.education_time_table_view_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='class_division_id']" position="before">
+                    <field name="grade_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='class_division_id']" position="after">
+                    <field name="published" string="Published"/>
+                </xpath>
+
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="domain">[('id', 'in', allowed_company_ids)]</attribute>
+                </xpath>
+
+                
+                <!-- Adjust Notebook Monday to be like 11 -->
+                <xpath expr="//notebook/page/field[@name='timetable_mon_ids']/list" position="inside">
+                    <field name="syllabus" options="{'no_create': True}" widget="selection"/>
+                    <field name="syllabus_special" string="Special"/>
+                </xpath>
+
+                <xpath expr="//notebook/page/field[@name='timetable_mon_ids']/list/field[@name='subject_id']" position="replace"/>
+                <xpath expr="//notebook/page/field[@name='timetable_mon_ids']/list/field[@name='faculty_id']" position="replace"/>
+            
+                <!-- Adjust Notebook Tuesday to be like 11 -->
+                <xpath expr="//notebook/page/field[@name='timetable_tue_ids']/list" position="inside">
+                    <field name="syllabus" options="{'no_create': True}" widget="selection"/>
+                    <field name="syllabus_special" string="Special"/>
+                </xpath>
+
+                <xpath expr="//notebook/page/field[@name='timetable_tue_ids']/list/field[@name='subject_id']" position="replace"/>
+                <xpath expr="//notebook/page/field[@name='timetable_tue_ids']/list/field[@name='faculty_id']" position="replace"/>
+            
+                <!-- Adjust Notebook Wed to be like 11 -->
+                <xpath expr="//notebook/page/field[@name='timetable_wed_ids']/list" position="inside">
+                    <field name="syllabus" options="{'no_create': True}" widget="selection"/>
+                    <field name="syllabus_special" string="Special"/>
+                </xpath>
+
+                <xpath expr="//notebook/page/field[@name='timetable_wed_ids']/list/field[@name='subject_id']" position="replace"/>
+                <xpath expr="//notebook/page/field[@name='timetable_wed_ids']/list/field[@name='faculty_id']" position="replace"/>
+            
+                <!-- Adjust Notebook thur to be like 11 -->
+                <xpath expr="//notebook/page/field[@name='timetable_thur_ids']/list" position="inside">
+                    <field name="syllabus" options="{'no_create': True}" widget="selection"/>
+                    <field name="syllabus_special" string="Special"/>
+                </xpath>
+
+                <xpath expr="//notebook/page/field[@name='timetable_thur_ids']/list/field[@name='subject_id']" position="replace"/>
+                <xpath expr="//notebook/page/field[@name='timetable_thur_ids']/list/field[@name='faculty_id']" position="replace"/>
+            
+                <!-- Adjust Notebook fri to be like 11 -->
+                <xpath expr="//notebook/page/field[@name='timetable_fri_ids']/list" position="inside">
+                    <field name="syllabus" options="{'no_create': True}" widget="selection"/>
+                    <field name="syllabus_special" string="Special"/>
+                </xpath>
+
+                <xpath expr="//notebook/page/field[@name='timetable_fri_ids']/list/field[@name='subject_id']" position="replace"/>
+                <xpath expr="//notebook/page/field[@name='timetable_fri_ids']/list/field[@name='faculty_id']" position="replace"/>
+            
+                <!-- Adjust Notebook sat to be like 11 -->
+                <xpath expr="//notebook/page/field[@name='timetable_sat_ids']/list" position="inside">
+                    <field name="syllabus" options="{'no_create': True}" widget="selection"/>
+                    <field name="syllabus_special" string="Special"/>
+                </xpath>
+
+                <xpath expr="//notebook/page/field[@name='timetable_sat_ids']/list/field[@name='subject_id']" position="replace"/>
+                <xpath expr="//notebook/page/field[@name='timetable_sat_ids']/list/field[@name='faculty_id']" position="replace"/>
+            
+                <!-- Adjust Notebook sun to be like 11 -->
+                <xpath expr="//notebook/page/field[@name='timetable_sun_ids']/list" position="inside">
+                    <field name="syllabus" options="{'no_create': True}" widget="selection"/>
+                    <field name="syllabus_special" string="Special"/>
+                </xpath>
+
+                <xpath expr="//notebook/page/field[@name='timetable_sun_ids']/list/field[@name='subject_id']" position="replace"/>
+                <xpath expr="//notebook/page/field[@name='timetable_sun_ids']/list/field[@name='faculty_id']" position="replace"/>
+            
+
+            </field>
+        </record>
+
+
+         <record id="mc_timetable_list_inherit" model="ir.ui.view">
+            <field name="name">education.timetable.list.inherit</field>
+            <field name="model">education.timetable</field>
+            <field name="inherit_id" ref="education_time_table.education_time_table_view_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="published"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Edit Action domain -->
+          <record id="education_time_table.education_time_table_action" model="ir.actions.act_window">
+               <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        </record>
+
+        <menuitem id="education_time_table.education_time_table_main_menu"
+        name="Timetable"
+        web_icon="education_time_table,static/description/icon.png"
+        groups="base.group_system"/>
+
+
+
+    </data>
+</odoo>
+
+
+

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="educational_student_grades_template">
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+                <style>
+            body {
+                font-size:12px !important;
+            }
+          .container {
+              max-width: 100% !important;
+              width: 100% !important;
+          }
+          table {
+            border: 1px solid #000 !important;
+            background-color: #f9f9f9 !important;
+            width: 100% !important;
+            text-align: center !important;
+            border-collapse: collapse !important;
+          }
+          td {
+              white-space: nowrap !important;
+          }
+          td, th {
+            border: 1px solid #000 !important;
+            text-transform: capitalize !important
+          }
+          table tr:nth-child(even) {
+            background: #D0E4F5 !important;
+          }
+          table thead {
+              border-bottom: 2px solid #000 !important;
+          }
+          table thead th {
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: #3B4345 !important;
+            text-align: center !important;
+            vertical-align: inherit !important;
+          }
+          table tfoot td {
+            font-size: 14px !important;
+          }
+          table tfoot .links {
+            text-align: right !important;
+          }
+          table tfoot .links a {
+            display: inline-block !important;
+            background: #1C6EA4 !important;
+            color: #FFFFFF !important;
+            padding: 2px 8px !important;
+            border-radius: 5px !important;
+          }
+          .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+                padding: 0px  !important;
+                line-height: 1.42857143 !important;
+                vertical-align: middle  !important;
+                border-top: 1px solid #dddddd !important;
+            }
+             /* لضمان وجود Scroll */
+                    .table-container {
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                        margin-top: 10px;
+                    }
+                    .table-container table {
+                        min-width: 1000px; 
+                        white-space: nowrap;
+                    }
+
+                    @media print {
+    .btn-print {
+        display: none !important;
+    }
+    .table-container {
+        overflow: visible !important;
+        -webkit-overflow-scrolling: auto !important;
+    }
+    .table-container table {
+        min-width: auto !important;
+        white-space: normal !important;
+    }
+    table {
+        page-break-inside: auto;
+        font-size: 10px !important;
+    }
+    .page {
+        page-break-before: always;
+    }
+    .page:first-child {
+        page-break-before: avoid;
+    }
+    .page-break {
+        display: none;
+    }
+}
+        </style>
+            </head>
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            <!-- Debug info (remove in production) -->
+            <t t-if="not classes">
+                <h3>No records found in evaluations for the classes</h3>
+            </t>
+            <t t-foreach="classes" t-as="curr_class">
+                <!-- التحقق من وجود الطلاب للفصل الحالي -->
+                <t t-set="class_students" t-value="students_data.get(curr_class.get('id'), [])"/>
+                <div t-if="class_students" t-attf-style="page-break-after: always; padding-top: 32px; direction: #{'rtl' if arabic_report else 'ltr'};">
+                    <h4 t-if="arabic_report" style="text-align:center;direction: rtl;">
+                           درجات التلاميذ  للعام الدراسي
+                        <span t-esc="year"/>
+                           طبقا للقرار الوزاري (
+                        <span t-esc="ministerial_number"/>
+                           )
+                                (
+                        <span t-esc="term_ar"/>
+                           )
+                                للمادة
+                        <span t-esc="syllabus_ar"/>
+                           للصف
+                        <span t-esc="garde_ar"/>
+                           فصل
+                        <t t-esc="curr_class.get('name', '')"/>
+                    </h4>
+                    <h4 t-if="not arabic_report" style="text-align:center; direction: ltr;">
+                    Students Grades for year
+                        <span t-esc="year"/>
+                    according to ministry  (
+                        <span t-esc="ministerial_number"/>
+                    )
+                        (
+                        <span t-esc="term_en"/>
+                    )
+                        for subject
+                        <span t-esc="syllabus_en"/>
+                    for grade
+                        <span t-esc="garde_en"/>
+                    class
+                        <t t-esc="curr_class.get('name', '')"/>
+                    </h4>
+                    <div class="table-container">
+                        <table class="table blueTable" border="1" style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                            <thead>
+                                <tr style="background-color: #f0f0f0;">
+                                    <th rowspan="3" class="name-col">
+                                        <span t-if="not arabic_report">Serial no</span>
+                                        <span t-if="arabic_report">م</span>
+                                    </th>
+                                    <th rowspan="3">
+                                        <span t-if="not arabic_report">Student</span>
+                                        <span t-if="arabic_report">الاسم</span>
+                                    </th>
+                                    <t t-foreach="assessment_times" t-as="time">
+                                        <!-- استخدم الطالب الأول من الفصل الحالي لإنشاء الـ header -->
+                                        <t t-set="sample_student" t-value="class_students[0] if class_students else None"/>
+                                        <t t-set="time_assessments" 
+                                            t-value="sample_student.get('grades_by_time', {}).get(time.get('id'), {}).get('assessments', []) if sample_student else []"/>
+                                        <t t-set="assessments_count" t-value="len(time_assessments)"/>
+                                        <t t-set="total_colspan" t-value="assessments_count + 1 if not show_avg else assessments_count + 2 if grading_method != 'q_colors' else assessments_count"/>
+                                        <th t-att-colspan="total_colspan" style="text-align: center; padding: 8px; background-color: #e0e0e0;">
+                                            <strong>
+                                                <t t-esc="time.get('name', '')"/>
+                                            </strong>
+                                        </th>
+                                    </t>
+                                    <th rowspan="2" t-if="grading_method != 'q_colors'" style="text-align: center; vertical-align: middle; padding: 8px; background-color: #d0d0d0;">
+                                        <span t-if="not arabic_report">Total Assessments</span>
+                                        <span t-if="arabic_report">المجموع</span>
+                                    </th>
+                                    <th rowspan="2" t-if="grading_method != 'q_colors' and show_avg" style="text-align: center; vertical-align: middle; padding: 8px; background-color: #d0d0d0;">
+                                        <span t-if="not arabic_report">Average</span>
+                                        <span t-if="arabic_report">المتوسط</span>
+                                    </th>
+                                    <t t-if="grading_method != 'q_colors'" t-foreach="distributions" t-as="distribution">
+                                        <th rowspan="2" style="text-align: center; vertical-align: middle; padding: 8px; background-color: #d0d0d0;">
+                                            <span t-esc="distribution.get('item', {}).get('name', '')"/>
+                                        </th>
+                                    </t>
+                                    <th rowspan="2" t-if="grading_method != 'q_colors'" style="text-align: center; vertical-align: middle; padding: 8px; background-color: #d0d0d0;">
+                                        <span t-if="not arabic_report">Total</span>
+                                        <span t-if="arabic_report">اجمالي</span>
+                                    </th>
+                                </tr>
+                                <tr style="background-color: #f8f8f8;">
+                                    <t t-foreach="assessment_times" t-as="time">
+                                        <t t-set="sample_student" t-value="class_students[0] if class_students else None"/>
+                                        <t t-set="time_assessments" 
+                                            t-value="sample_student.get('grades_by_time', {}).get(time.get('id'), {}).get('assessments', []) if sample_student else []"/>
+                                        <t t-foreach="time_assessments" t-as="assessment">
+                                            <th style="text-align: center; padding: 5px; font-size: 10px; max-width: 80px; word-wrap: break-word;">
+                                                <span t-esc="assessment.get('name', '')"/>
+                                            </th>
+                                        </t>
+                                        <th t-if="grading_method != 'q_colors' and show_avg" style="text-align: center; padding: 5px; background-color: #e8e8e8; font-weight: bold;">
+                                            <span t-if="not arabic_report">Average</span>
+                                            <span t-if="arabic_report">المتوسط</span>
+                                        </th>
+                                        <th t-if="grading_method != 'q_colors'" style="text-align: center; padding: 5px; background-color: #e8e8e8; font-weight: bold;">
+                                            <span t-if="not arabic_report">Total</span>
+                                            <span t-if="arabic_report">اجمالي</span>
+                                        </th>
+                                    </t>
+                                </tr>
+                                <tr t-if="grading_method != 'q_colors'">
+                                    <t t-set="total_max_score" t-value="0"/>
+                                    <t t-foreach="assessment_times" t-as="time">
+                                        <t t-set="max_score" t-value="0"/>
+                                        <t t-set="sample_student" t-value="class_students[0] if class_students else None"/>
+                                        <t t-set="time_assessments" 
+   t-value="sample_student.get('grades_by_time', {}).get(time.get('id'), {}).get('assessments', []) if sample_student else []"/>
+                                        <t t-foreach="time_assessments" t-as="assessment">
+                                            <t t-set="max_score" t-value="max_score + assessment.get('max_score', 0)"/>
+                                            <th style="text-align: center; padding: 5px;">
+                                                <span t-esc="assessment.get('max_score', 0)"/>
+                                            </th>
+                                        </t>
+                                        <th t-if="show_avg" style="text-align: center; padding: 5px;">
+                                            <span t-esc="max_score / len(time_assessments) if time_assessments else 0"/>
+                                        </th>
+                                        <th style="text-align: center; padding: 5px;">
+                                            <span t-esc="max_score"/>
+                                        </th>
+                                        <t t-set="total_max_score" t-value="total_max_score + max_score"/>
+                                        </t>
+                                    <th style="text-align: center; padding: 5px;">
+                                        <span t-esc="total_max_score"/>
+                                    </th>
+                                    <th t-if="show_avg" style="text-align: center; padding: 5px;">
+                                        <span t-esc="total_max_score / len(assessment_times) if assessment_times else 0"/>
+                                    </th>
+                                    <t t-set="distribution_maximum" t-value="0"/>
+                                    <t t-foreach="distributions" t-as="distribution">
+                                        <th style="text-align: center; padding: 5px;">
+                                            <span t-esc="distribution.get('maximum', 0)"/>
+                                        </th>
+                                        <t t-set="distribution_maximum" t-value="distribution_maximum + distribution.get('maximum', 0)"/>
+                                        </t>
+                                    <th style="text-align: center; padding: 5px;">
+                                        <span t-esc="total_max_score + distribution_maximum if total_max_score and distribution_maximum else total_max_score"/>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="serial_no" t-value="1"/>
+                                <t t-foreach="class_students" t-as="student">
+                                    <tr t-att-style="'background-color: %s;' % ('#f9f9f9' if serial_no % 2 == 0 else 'white')">
+                                        <td style="text-align: center; padding: 8px; font-weight: bold;">
+                                            <t t-esc="serial_no"/>
+                                        </td>
+                                        <td style="padding: 8px; font-weight: bold;">
+                                            <span t-if="not arabic_report">
+                                                <t t-esc="student.get('en_name', '')"/>
+                                            </span>
+                                            <span t-if="arabic_report">
+                                                <t t-esc="student.get('ar_name', '')"/>
+                                            </span>
+                                        </td>
+                                        <t t-set="total_assessments" t-value="0"/>
+                                        <t t-foreach="assessment_times" t-as="time">
+                                            <t t-set="time_data" t-value="student.get('grades_by_time', {}).get(time.get('id'), {})"/>
+                                            <t t-set="time_assessments" t-value="time_data.get('assessments', [])"/>
+                                            <t t-foreach="time_assessments" t-as="assessment">
+                                                <td style="text-align: center; padding: 5px;" t-att-style="'background-color: %s !important' % assessment.get('score_selection', {}).get('symbol', '') if grading_method == 'q_colors' else ''">
+                                                    <t t-if="grading_method == 'q_colors'">
+                                                        <span t-esc="assessment.get('score_selection', {}).get('symbol', '')"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <t t-set="score" t-value="assessment.get('score', 0)"/>
+                                                        <t t-set="max_score" t-value="assessment.get('max_score', 0)"/>
+                                                        <span t-att-style="'width: 100% !important; display: inline-block;' + ('background-color: #ffd7d7; color: red;' if score == 0 or score == 'abs' else '')">
+                                                            <t t-esc="'{0:g}'.format(float('{0:.2f}'.format(score))) if isinstance(score, (int, float)) and score >= 0 else 'abs'"/>
+                                                        </span>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <td t-if="grading_method != 'q_colors' and show_avg" style="text-align: center; padding: 5px; background-color: #f0f0f0; font-weight: bold;">
+                                                <t t-esc="'{0:g}'.format(float('{0:.2f}'.format(time_data.get('average', 0)))) if time_data.get('average', 0) >= 0 else 'abs'"/>
+                                            </td>
+                                            <td t-if="grading_method != 'q_colors'" style="text-align: center; padding: 5px; background-color: #f0f0f0; font-weight: bold;">
+                                                <t t-esc="'{0:g}'.format(float('{0:.2f}'.format(time_data.get('total', 0)))) if time_data.get('total', 0) >= 0 else 'abs'"/>
+                                            </td>
+                                            <t t-set="total_assessments" t-value="total_assessments + time_data.get('total', 0)"/>
+                                            </t>
+                                        <td t-if="grading_method != 'q_colors'" style="text-align: center; padding: 8px; background-color: #e0e0e0; font-weight: bold; font-size: 14px;">
+                                            <t t-esc="'{0:g}'.format(float('{0:.2f}'.format(student.get('total_assessments', 0)))) if student.get('total_assessments', 0) >= 0 else 'abs'"/>
+                                        </td>
+                                        <td t-if="grading_method != 'q_colors' and show_avg" style="text-align: center; padding: 8px; background-color: #e0e0e0; font-weight: bold; font-size: 14px;">
+                                            <t t-esc="'{0:g}'.format(float('{0:.2f}'.format(student.get('average', 0)))) if student.get('average', 0) >= 0 else 'abs'"/>
+                                        </td>
+                                        <t t-if="grading_method != 'q_colors'" t-foreach="distributions" t-as="distribution">
+                                            <td style="text-align: center; padding: 8px; background-color: #e0e0e0; font-weight: bold; font-size: 14px;">
+                                                <t t-set="dist_score" t-value="student.get('distributions', {}).get(str(distribution.get('id', '')), 0)"/>
+                                                <t t-if="dist_score == 'abs'">
+                                                    <span style="background-color: #ffd7d7; color: red; width: 100%; display: inline-block;">abs</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="'{0:g}'.format(float('{0:.2f}'.format(dist_score))) if isinstance(dist_score, (int, float)) and dist_score >= 0 else 'abs'"/>
+                                                    </t>
+                                            </td>
+                                        </t>
+                                        <td t-if="grading_method != 'q_colors'" style="text-align: center; padding: 8px; background-color: #e0e0e0; font-weight: bold; font-size: 14px;">
+                                            <t t-esc="'{0:g}'.format(float('{0:.2f}'.format(student.get('total_assessments', 0) + sum([student.get('distributions', {}).get(str(d.get('id', '')), 0) for d in distributions]))))"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set="serial_no" t-value="serial_no + 1"/>
+                                    </t>
+                            </tbody>
+                        </table>
+                        <table t-if="arabic_report">
+                            <tr>
+                                <td style="text-align:center; width:33%;" class="table">مدرس المادة</td>
+                                <td style="text-align:center; width:33%;" class="table">رئيس القسم</td>
+                                <td style="text-align:center; width:33%;" class="table">مدير المدرسة</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- رسالة في حالة عدم وجود طلاب للفصل -->
+                <div t-if="not class_students">
+                    <h4>No students found for class:
+                        <t t-esc="curr_class.get('name', '')"/>
+                    </h4>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,99 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="mc_custom_template_tree_view" model="ir.ui.view">
+        <field name="name">mc.custom.template.tree</field>
+        <field name="model">mc.custom.template</field>
+        <field name="arch" type="xml">
+            <list default_group_by = 'grade_id'>
+                <field name="name"/>
+                <field name="syllabus_id"/>
+                <field name="grade_id"/>
+                <field name="grading_method"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mc_custom_template_form_view" model="ir.ui.view">
+        <field name="name">mc.custom.template.form</field>
+        <field name="model">mc.custom.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Custom Template">
+                    <group>
+                        <field name="name"/>
+                        <field name="syllabus_id"/>
+                        <field name="grading_method"/>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                        <field name="school_year_id"/>
+                        <field name="grade_id"/>
+                        <field name="academic_report_grade_max" invisible="grading_method != 'numeric'"/>
+                        <field name="academic_report_grade_min" invisible="grading_method != 'numeric'"/>
+                    </group>  
+
+
+                    <notebook invisible="not grading_method">
+                        <page string="Grade Distribution Template">
+
+                            <field name="custom_grade_distribution_template"  invisible="not grading_method" widget="one2many" mode="list,form">
+                                <list editable="bottom" string="Grade Distribution Template">
+                                    <field name="item"/>
+                                    <field name="maximum" column_invisible= "parent.grading_method != 'numeric'"/>
+                                    <field name="minimum" column_invisible= "parent.grading_method != 'numeric'"/>
+                                    <field name="weight"/>
+                                    <field name="control"/>
+                                    <field name="report_mark"/>
+                                    <field name="best_of"/>
+                                </list>
+                            </field>
+                            <span class="o_form_label">Total Grades</span>
+                            <div>
+                                <label for="maximum" class="mx-2" invisible="grading_method != 'numeric'">Maximum</label>
+                                <field name="maximum" class="oe_inline" invisible="grading_method != 'numeric'"/>
+
+                                <label for="minimum" class="mx-2" invisible="grading_method != 'numeric'">Minimum</label>
+                                <field name="minimum" class="oe_inline" invisible="grading_method != 'numeric'"/>
+
+                                <label for="weight" class="mx-2">Weight</label>
+                                <field name="weight" class="oe_inline"/>
+                            </div>
+
+                        </page> 
+                    </notebook>  
+
+                    <notebook>
+                        <page string="Assessments Category">
+                            <div>
+                                <label for="total_assessments_score" >Total Assessments Score </label>
+                                <field name="total_assessments_score" style="margin-right:10px;" class="oe_inline"/>
+                            </div>
+                            <field name="assessments_category_id"   widget="one2many" mode="list,form">
+                                <list editable="bottom" string="Assessments Category">
+                                    <field name="item"/>
+                                    <field name="max_score" />
+                                    <field name="weight" readonly="1"/>
+                                    <field name="best_of"/>
+                                    <field name="control"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_mc_custom_template" model="ir.actions.act_window">
+        <field name="name">Custom Template</field>
+        <field name="res_model">mc.custom.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_mc_custom_template"
+              name="Custom Template" 
+              parent="menu_grading_setup"
+              sequence = "8"
+              action="action_mc_custom_template"/>
+</odoo>

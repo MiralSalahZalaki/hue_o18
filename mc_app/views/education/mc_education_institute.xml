@@ -1,0 +1,58 @@
+<odoo>
+    <record id="mc_education_institute_list_view" model="ir.ui.view">
+        <field name="name">mc_education_institute_list</field>
+        <field name="model">mc.education.institute</field>
+        <field name="arch" type="xml">
+            <list string="Education Institute">
+                <field name="name"/>
+                <field name="affiliation"/>
+                <field name="register_number"/>
+                <field name="higher_class"/>
+                <field name="lower_class"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="mc_education_institute_form_view" model="ir.ui.view">
+        <field name="name">mc_education_institute_form</field>
+        <field name="model">mc.education.institute</field>
+        <field name="arch" type="xml">
+            <form string="Education Institute">
+                <sheet>
+                   <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="affiliation"/>
+                            <field name="register_number"/>
+                        </group>
+                        <group>
+                            <field name="higher_class"/>
+                            <field name="lower_class"/>
+                        </group>
+                   </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+            
+    <record id="action_education_institute" model="ir.actions.act_window">
+        <field name="name">Education Institute</field>
+        <field name="res_model">mc.education.institute</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+
+    <menuitem id="menu_education_institute"
+            name="Education Institute" 
+            parent="menu_application_admission_setup"
+            action="action_education_institute"/>
+
+
+</odoo>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_report_timetable_by_class">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>            
+       <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_reports_style.css" />
+        </head>
+
+                <div class="page">
+                <div class="my-3">
+                    <button class="print-button" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+                        <i class="fa fa-print"/> Print
+                    </button>
+                </div>
+                    <div class="container mt-5" >
+                        <!-- Report Header -->
+                        <div class="row mb-4">
+                            <div class="d-flex align-items-center align-items-sm-start border-bottom border-2 border-dark">
+                            <div class="col-6 text-start">
+                                <h2>Timetable by class</h2>
+                                <h5><t t-esc="company_name"/> </h5>
+                            </div>
+                            <div class="col-6" style="display: flex; justify-content: end;">
+                                <img src="/mc_app/static/description/mclogo.png" class="d-none d-lg-block" alt=""
+                                style="width: 250px;"/>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- ALWAYS show Class Timetable first -->
+                        <div class="header" style="text-align: center; margin-bottom: 20px;">
+                            <h3>Class Timetable - 
+                                <span>Class: </span>
+                                <span t-esc="class_division"/>                            
+                            </h3>
+                        </div>
+
+                        <div class="timetable-container">
+                            <t t-set="all_periods" t-value="[]"/>
+                            
+                            <!-- Collect all periods from the data -->
+                            <t t-foreach="class_timetable.values()" t-as="day_periods">
+                                <t t-foreach="day_periods" t-as="period_data">
+                                    <t t-if="period_data['period'] not in all_periods">
+                                        <t t-set="all_periods" t-value="all_periods + [period_data['period']]"/>
+                                    </t>
+                                </t>
+                            </t>
+                            
+                            <!-- Sort periods -->
+                            <t t-set="all_periods" t-value="sorted(all_periods)"/>
+                            
+                            <!-- Get all days from the data dynamically -->
+                            <t t-set="days_in_data" t-value="list(class_timetable.keys())"/>
+                            
+                            <!-- Define standard day order -->
+                            <t t-set="day_order" t-value="{'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6}"/>
+                            
+                            <!-- Sort days according to standard order -->
+                            <t t-set="ordered_days" t-value="sorted(days_in_data, key=lambda d: day_order.get(d, 7))"/>
+                            
+                            <table class="table table-bordered table-sm" style="width: 100%; border: 1px solid #cccccc; text-align: center;">
+                            
+                                <thead>
+                                    <tr>
+                                        <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff; width:16px" >Day</th>
+                                        <th t-foreach="all_periods" t-as="period" class="text-center font-weight-bold" style="background: #2c3691; color: #fff; width:50px">
+                                            <span t-esc="period"/>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="ordered_days" t-as="day">
+                                        <tr>
+                                            <td style="font-weight: bold; text-align: center; background-color: rgb(44 54 145 / 10%);" t-esc="day"/>
+                                            
+                                            <!-- Display each period in its appropriate day -->
+                                            <t t-foreach="all_periods" t-as="period">
+                                                <td>
+                                                    <t t-set="found" t-value="False"/>
+                                                    <t t-foreach="class_timetable[day]" t-as="period_data">
+                                                        <t t-if="period_data['period'] == period">
+                                                            <div style="font-weight: bold;" t-esc="period_data['subject']"/>
+                                                            <div t-esc="period_data['teacher']"/>
+                                                            <div>
+                                                                <!-- Format time -->
+                                                                <t t-if="'time_from' in period_data and 'time_till' in period_data">
+                                                                    <t t-esc="period_data['time_from']"/> - 
+                                                                    <t t-esc="period_data['time_till']"/>
+                                                                </t>
+                                                            </div>
+                                                            <t t-set="found" t-value="True"/>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="not found">-</t>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- THEN display student-specific timetables (if any) -->
+                        <t t-if="is_student_specific">
+                            <!-- Add page break between class timetable and student timetables -->
+                            <div style="page-break-after: always;"></div>
+                            
+                            <!-- Student Specific Timetables -->
+                            <t t-foreach="student_timetables" t-as="student_name">
+                                <div class="header" style="text-align: center; margin-bottom: 20px; page-break-before: auto;">
+                                    <h3>Student Timetable - 
+                                        <span>Class: </span>
+                                        <span t-esc="class_division"/>
+                                        <span> - Student: </span>
+                                        <span t-esc="student_name"/>                          
+                                    </h3>
+                                </div>
+
+                                <div class="timetable-container">
+                                    <t t-set="student_timetable" t-value="student_timetables[student_name]"/>
+                                    <t t-set="all_periods" t-value="[]"/>
+                                    
+                                    <!-- Collect all periods from the data -->
+                                    <t t-foreach="student_timetable.values()" t-as="day_periods">
+                                        <t t-foreach="day_periods" t-as="period_data">
+                                            <t t-if="period_data['period'] not in all_periods">
+                                                <t t-set="all_periods" t-value="all_periods + [period_data['period']]"/>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    
+                                    <!-- Sort periods -->
+                                    <t t-set="all_periods" t-value="sorted(all_periods)"/>
+                                    
+                                    <!-- Get all days from the data dynamically -->
+                                    <t t-set="days_in_data" t-value="list(student_timetable.keys())"/>
+                                    
+                                    <!-- Define standard day order -->
+                                    <t t-set="day_order" t-value="{'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6}"/>
+                                    
+                                    <!-- Sort days according to standard order -->
+                                    <t t-set="ordered_days" t-value="sorted(days_in_data, key=lambda d: day_order.get(d, 7))"/>
+                                    
+                                    <table class="table table-bordered table-sm" style="width: 100%; border: 1px solid #cccccc; text-align: center;">
+                                    
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff; width:16px" >Day</th>
+                                                <th t-foreach="all_periods" t-as="period" class="text-center font-weight-bold" style="background: #2c3691; color: #fff; width:50px">
+                                                    <span t-esc="period"/>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="ordered_days" t-as="day">
+                                                <tr>
+                                                    <td style="font-weight: bold; text-align: center; background-color: rgb(44 54 145 / 10%);" t-esc="day"/>
+                                                    
+                                                    <!-- Display each period in its appropriate day -->
+                                                    <t t-foreach="all_periods" t-as="period">
+                                                        <td>
+                                                            <t t-set="found" t-value="False"/>
+                                                            <t t-foreach="student_timetable[day]" t-as="period_data">
+                                                                <t t-if="period_data['period'] == period">
+                                                                    <div style="font-weight: bold;" t-esc="period_data['subject']"/>
+                                                                    <div t-esc="period_data['teacher']"/>
+                                                                    <div>
+                                                                        <!-- Format time -->
+                                                                        <t t-if="'time_from' in period_data and 'time_till' in period_data">
+                                                                            <t t-esc="period_data['time_from']"/> - 
+                                                                            <t t-esc="period_data['time_till']"/>
+                                                                        </t>
+                                                                    </div>
+                                                                    <t t-set="found" t-value="True"/>
+                                                                </t>
+                                                            </t>
+                                                            <t t-if="not found">-</t>
+                                                        </td>
+                                                    </t>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Add page break between student timetables if not the last student -->
+                                <t t-if="not student_name_index == len(student_timetables) - 1">
+                                    <div style="page-break-after: always;"></div>
+                                </t>
+                            </t>
+                        </t>
+
+                        <!-- Report Footer -->
+                        <div class="row mt-4 footer">
+                            <div class="col-12">
+                                <div class="text-center text-muted generated-date">
+                                    <small>Generated on: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+        </t>
+    </template>
+</odoo>

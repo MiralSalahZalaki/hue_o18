@@ -1,0 +1,44 @@
+<odoo>
+    <data>
+        <record id="mc_education_class_form_inherit" model="ir.ui.view">
+            <field name="name">education.class.form.inherit</field>
+            <field name="model">education.class</field>
+            <field name="inherit_id" ref="education_core.view_education_class_view_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="arabic_name"/>
+                    <field name="other_name"/>
+                    <field name="educational_stages"/>
+                    <field name="sequence"/>
+                    <field name="school" domain="[('id', 'in', allowed_company_ids)]" />
+                    <field name="accepted_age_year"/>
+                    <field name="accepted_age_month"/>
+                    <field name="accepted_age_day"/>
+                    <field name="separated_days"/>
+                    <field name="attendance_responsible"/>
+                    <field name="connected_days"/>
+                    <field name="general_microsoft_teams"/>
+                    <field name="ministerial_number"/>
+                    <field name="signature"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mc_education_class_tree_inherit" model="ir.ui.view">
+            <field name="name">education.class.tree.inherit</field>
+            <field name="model">education.class</field>
+            <field name="inherit_id" ref="education_core.education_class_view_tree"/>
+             <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <field name="educational_stages"/>
+                    <field name="sequence"/>
+                    <field name="school" />
+                    <field name="accepted_age_year"/>
+                    <field name="accepted_age_month"/>
+                    <field name="accepted_age_day"/>
+                    <field name="separated_days"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

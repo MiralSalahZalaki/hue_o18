@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="ministry_fee_report_template">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>            
+        <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_reports_style.css" />
+        </head>
+
+                <div class="page">
+                    <div class="my-3">
+                        <button class="print-button" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+                            <i class="fa fa-print"/> Print
+                        </button>
+                    </div>
+                    <div class="container mt-5" >
+                        <!-- Report Header -->
+                        <div class="row mb-4">
+                            <div class="d-flex justify-content-between align-items-center align-items-sm-start border-bottom border-2 border-dark">
+                            <h4 class="mb-0">Ministry Fee Account Report</h4>
+                            <div class="col-6" style="display: flex; justify-content: end;">
+                                <img src="/mc_app/static/description/mclogo.png" class="d-none d-lg-block" alt=""
+                                style="width: 150px;"/>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- Student Information Table -->
+                        <div class="row">
+                            <div class="col-12">
+                            <table style="border: 1px solid #ccc;" class="table table-striped table-bordered">
+                                <tbody>
+                                    <tr >
+                                    <td class="text-left">
+                                        <strong>Accountant:</strong>
+                                        <span><t t-esc="employee_name"/></span>
+                                    </td>
+                                    <td class="text-left">
+                                        <strong>Company:</strong>
+                                        <span><t t-esc="company_name"/></span>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                    <td class="text-left">
+                                        <strong>Date from:</strong>
+                                        <span><t t-esc="date_from"/></span>
+                                    </td>
+                                    <td class="text-left">
+                                        <strong>Date to:</strong>
+                                        <span><t t-esc="date_to"/></span>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                    <td class="text-left">
+                                        <strong>Account:</strong>
+                                        <span><t t-esc="account_id"/></span>
+                                    </td>
+                                    <td class="text-left">
+                                        <strong>Term:</strong>
+                                        <span><t t-esc="term_id"/></span>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                    <td class="text-left" colspan="2">
+                                        <strong>Financial Year:</strong>
+                                        <span><t t-esc="financial_years"/></span>
+                                    </td>
+                                    
+                                    </tr>
+                                </tbody>
+                                </table>
+
+
+                                <table class="table table-sm table-bordered table-striped table-responsive table-condensed">
+                                    <thead style="background: #2c3691; ">
+                                        <tr>
+                                        <th style="color: #fff; width:25px">#</th>
+                                        <th style="color: #fff;" class="text-left">Name</th>
+                                        <th style="color: #fff;  width: 200px; text-align: center;" class="text-left">Grade</th>
+                                        <th style="color: #fff; width: 200px; text-align: center;"  class="text-left">Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <t t-foreach="ministry_data" t-as="record">
+                                            <tr>
+                                                <td><t t-esc="record_index + 1"/></td>
+                                                <td class="text-left"><t t-esc="record['student_name']"/></td>
+                                                <td class="text-left"><t t-esc="record['grade']"/></td>
+                                                <td class="text-center"><t t-esc="record['total']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr style="background: #2c36911a;">
+                                            <td colspan="3"><strong>Total</strong></td>
+                                            <td class="text-center" style="font-weight:bold">
+                                                <span style="font-weight: bolder;" 
+                                                t-esc="sum(record['total'] for record in ministry_data)" />
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Report Footer -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="text-center text-muted">
+                                    <small>Generated on: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               
+                </div>
+            
+        </t>
+    </template>
+</odoo>

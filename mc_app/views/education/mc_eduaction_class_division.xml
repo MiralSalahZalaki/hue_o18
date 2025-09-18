@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+        <record id="mc_education_class_division_form_inherit" model="ir.ui.view">
+            <field name="name">education.class.division.form.inherit</field>
+            <field name="model">education.class.division</field>
+            <field name="inherit_id" ref="education_core.education_class_division_view_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='actual_strength']" position="after">
+                    <field name="school_id"/>
+                    <field name="room_id"/>
+                    <field name="ldap_ou"/>
+                    <field name="ms_channel"/>
+                    <field name="sds_level"/>
+                </xpath>
+
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="mc_education_class_division_list_view_inherit" model="ir.ui.view">
+            <field name="name">education.class.division.list.inherit</field>
+            <field name="model">education.class.division</field>
+            <field name="inherit_id" ref="education_core.education_class_division_view_tree"/>
+             <field name="arch" type="xml">
+                 <xpath expr="//list" position="attributes">
+                    <attribute name="default_group_by">class_id</attribute>
+                </xpath>
+            </field>
+        </record>
+
+          <!--Menu action of Education Class Division-->
+        <record id="education_core.education_class_division_action" model="ir.actions.act_window">
+            <field name="name">Class Division</field>
+            <field name="res_model">education.class.division</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[('school_id', 'in', allowed_company_ids)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create your first class division here.
+                </p>
+            </field>
+        </record>
+
+
+        
+        <menuitem id="education_core.education_class_division_menu"
+                action="education_core.education_class_division_action"
+                parent="education_core.menu_education_class_conf"
+                sequence="0"/>
+    </data>
+</odoo>

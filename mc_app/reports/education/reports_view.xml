@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="action_report_student_data_template" model="ir.actions.report">
+            <field name="name">Student Date Report</field>
+            <field name="model">student.data.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_report_student_data</field>
+        </record>
+
+
+        <!-- History Report -->
+        <record id="action_report_student_history_template" model="ir.actions.report">
+            <field name="name">Student History Report</field>
+            <field name="model">student.history.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_report_student_history</field>
+        </record>
+
+        <!-- Statistics Report -->
+        <record id="action_report_statistics_template" model="ir.actions.report">
+            <field name="name">Student Statistics Report</field>
+            <field name="model">student.statistics.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_report_student_statistics</field>
+        </record>
+
+        <!-- 12d Report -->
+        <record id="action_report_12d_template" model="ir.actions.report">
+            <field name="name">12D Report</field>
+            <field name="model">student.12d.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_report_student_12d</field>
+        </record>
+
+        
+
+
+    </data>
+</odoo>    

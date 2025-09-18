@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <record id="subject_department_tree_view" model="ir.ui.view">
+            <field name="name">subject_department_tree_view</field>
+            <field name="model">mc.subject.department</field>
+             <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                    <field name="company_id" />
+                    <field name="department" />
+                    <field name="respon" />
+                </list>
+            </field>
+        </record>
+
+
+        <record id="subject_department_form_view" model="ir.ui.view">
+            <field name="name">subject_department_form_view</field>
+            <field name="model">mc.subject.department</field>
+             <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name" />
+                        <field name="company_id" />
+                        <field name="department" />
+                        <field name="department_manager" />
+                        <field name="other_department" widget="many2many_tags"/>
+                        <field name="respon" />
+                        <field name="general_microsoft_teams" placeholder="Type General Microsoft Teams"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        
+        <record id="action_subject_department" model="ir.actions.act_window">
+            <field name="name">Subjects Departments</field>
+            <field name="res_model">mc.subject.department</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_subject_department"
+                name="Subjects Departments" 
+                parent="menu_application_class_setup"
+                action="action_subject_department"/>
+
+
+       <!--  from Timetable -->
+        <menuitem
+            id="menu_subject_department_from_timtable"
+            name="Subjects Departments"
+            parent="menu_curriculum_from_timtable"
+            action="action_subject_department"
+            sequence = "3"
+            />
+
+    </data>
+</odoo>

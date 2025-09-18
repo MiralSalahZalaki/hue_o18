@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+        <record id="behavior_report_no5_wizard_form_view" model="ir.ui.view">
+            <field name="name">behavior.report.no5.wizard.form</field>
+            <field name="model">behavior.report.no5.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Behavior Report No. 5 wizard" >
+                    <group>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" can_create="false" can_write="false" />
+                        <field name="grade_id"/>
+                        <field name="class_division_id"/>
+                    </group>
+                    <field name="student_id"/>
+                    <footer >
+                        <button name="generate_behavior_report_no5" type="object"   
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_behavior_report_no5_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Behavior Report No. 5 wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">behavior.report.no5.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="behavior_report_no5_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem   id="behavior_report_no5_menu" 
+                    name="Behavior Report No. 5"
+                    parent="education_attendances.education_attendance_report_menu"
+                    action="action_behavior_report_no5_wizard"
+                    sequence = "1"/>
+    </data>
+</odoo>

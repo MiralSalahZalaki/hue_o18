@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+        <record id="mc_enrollment_per_class_list_view" model="ir.ui.view">
+            <field name="name">mc_enrollment_per_class_list_view</field>
+            <field name="model">mc.enrollment.per.class</field>
+             <field name="arch" type="xml">
+                <list>
+                  <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+
+            <record id="mc_enrollment_per_class_form_view" model="ir.ui.view">
+            <field name="name">mc_enrollment_per_class_form_view</field>
+            <field name="model">mc.enrollment.per.class</field>
+             <field name="arch" type="xml">
+                <form string="Enrollment Per Calss" >
+                    <sheet >
+                        <group>
+                            <group >
+                                <field name="name"/>
+                                <field name="school_id" readonly="1"/>
+                                <field name="teacher_id"/>
+                                <field name="primary"/>
+                                <field name="end_date"/>
+                            </group>
+                            <group >
+                                <field name="active"/>
+                                <field name="student_id"/>
+                                <field name="role" readonly="1"/>
+                                <field name="begin_date"/>
+                                <field name="user_class"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        
+        <record id="action_mc_enrollment_per_class" model="ir.actions.act_window">
+            <field name="name">Enrollment Per Calss</field>
+            <field name="res_model">mc.enrollment.per.class</field>
+            <!-- <field name="domain">[('school_id', 'in', allowed_company_ids)]</field> -->
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+       <!--  <menuitem id="menu_mc_enrollment_per_class"
+                name="Enrollment Per Calss" 
+                parent="education_core.menu_education_class_conf"
+                action="action_mc_enrollment_per_class"/> -->
+
+    </data>
+</odoo>

@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <record id="educational_student_grades_wizard_form_view" model="ir.ui.view">
+            <field name="name">educational.student.grades.wizard.form</field>
+            <field name="model">educational.student.grades.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Educational Student Grades" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="term_id"/>
+                            <field name="grade_id"/>
+                            <field name="syllabus_id"/>
+                            <field name="class_division_id"/>
+                            <field name="arabic_report"/>
+                            <field name="show_avg"/>
+                    </group>
+
+                    <footer >
+                        <button name="generate_educational_student_grades_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_educational_student_grades_wizard" model="ir.actions.act_window">
+            <field name="name">Educational Student Grades</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">educational.student.grades.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="educational_student_grades_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="educational_student_grades_wizard_report_menu" 
+                    name="Follow Up Sheet"
+                    parent="menu_grading_reports"
+                    action="action_educational_student_grades_wizard"
+                    sequence = "1"/>
+
+
+    </data>
+</odoo>

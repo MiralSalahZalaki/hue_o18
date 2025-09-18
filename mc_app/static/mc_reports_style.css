@@ -1,0 +1,72 @@
+ /* Global Styles */
+ body {
+      font-family: "Lato", sans-serif !important;
+     margin: 0;
+     padding: 0;
+ }
+
+ /* تنسيقات الطباعة */
+ @media print {
+     body {
+      font-family: "Lato", sans-serif !important;
+         font-size: 12pt;
+     }
+
+     @page {
+         margin: 0.2cm;
+     }
+
+     .print-button {
+         display: none !important;
+     }
+
+     h2 {
+         font-size: 18pt;
+         margin-bottom: 8px;
+         color: #333;
+     }
+
+     /* تنسيق الجدول */
+     table {
+         width: 100%;
+         border-collapse: collapse;
+         margin-top: 20px;
+         border-color: #ccc !important;
+     }
+
+     th {
+         background-color: #cccccc !important;
+         color: black !important;
+         padding: 8px;
+         border: 1px solid #000;
+         -webkit-print-color-adjust: exact;
+         print-color-adjust: exact;
+     }
+
+     td {
+         padding: 8px;
+         border: 1px solid #000;
+     }
+
+
+     .text-center {
+         text-align: center;
+     }
+
+     .footer {
+         position: fixed;
+         bottom: 0;
+         width: 100%;
+         text-align: center;
+         font-size: 10pt;
+         padding: 10px 0;
+         border-top: 1px solid #ccc;
+     }
+
+     /* تنسيق تاريخ الإنشاء */
+     .generated-date {
+         margin-top: 20px;
+         font-size: 10pt;
+         color: #666;
+     }
+ }

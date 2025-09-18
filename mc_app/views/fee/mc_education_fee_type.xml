@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        <record id="mc_education_fee_type_form_inherit" model="ir.ui.view">
+            <field name="name">education.fee.type.form.inherit</field>
+            <field name="model">education.fee.type</field>
+            <field name="inherit_id" ref="education_fee.education_fee_type_view_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="categ_id"/>
+                    <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                    <field name="property_account_income_id" domian="[('deprecated','=',false)]" required="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="bank_account_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='list_price']" position="attributes">
+                    <attribute name="required">0</attribute>
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+                <xpath expr="//field[@name='description_sale']" position="replace">
+                    <group>
+                        <field name="description_sale" placeholder="Details about the fee" string="Description"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mc_education_fee_type_view_tree_inherit" model="ir.ui.view">
+            <field name="name">education.fee.type.list.inherit</field>
+            <field name="model">education.fee.type</field>
+            <field name="inherit_id" ref="education_fee.education_fee_type_view_tree"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="categ_id"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_type']" position="after">
+                    <field name="category_id"/>
+                </xpath>
+                <xpath expr="//field[@name='lst_price']" position="attributes">
+                    <attribute name="nolabel">1</attribute>
+                    <attribute name="invisible">1</attribute>
+
+                </xpath>
+
+            </field>
+        </record>
+
+        
+    </data>
+</odoo>

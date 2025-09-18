@@ -1,0 +1,168 @@
+<t t-name="system_settings_management.SystemActionHelper">
+    <t t-set="btnPrimary" t-value="'btn btn-primary btn-sm fw-semibold rounded-pill px-3 py-2'"/>
+    <t t-set="btnOutlineSecondary" t-value="'btn btn-outline-secondary btn-sm'"/>
+    <t t-set="cardStep" t-value="'card h-100 border-primary border-opacity-25 step-card'"/>
+    <t t-set="imgIcon" t-value="'img-fluid mb-3 mx-auto step-icon'"/>
+    <t t-set="btnSuccessTag" t-value="'btn btn-sm text-success px-3 py-1 step-tag'"/>
+    <t t-set="dropdownButton" t-value="'btn btn-outline-secondary btn-sm dropdown-toggle rounded-pill px-3 py-2'"/>
+    <t t-set="stepActionGroup" t-value="'d-flex align-items-center gap-2 flex-wrap justify-content-center'"/>
+
+    <style>
+        .step-card { max-width: 320px; border: none; background: none; }
+        .step-icon { width: 50px; height: 50px; }
+        .step-tag { max-width: fit-content; align-self: center; }
+        .onboarding-card { border: none; border-bottom: 1px solid #ddd; background: linear-gradient(180deg, #F7F9FA 0%, #E9EBEF 100%); }
+        .company-name {
+            white-space: nowrap;        /* النص في سطر واحد */
+            overflow: hidden;           /* إخفاء أي جزء زائد */
+            text-overflow: ellipsis;    /* إظهار "..." في النهاية */
+            max-width: 200px;           /* عرض أقصى للعنصر */
+            display: inline-block;      /* أو block حسب السياق */
+            vertical-align: middle;     /* لو بجانب أيقونة */
+        }
+    
+    </style>
+
+    <div>
+        <div t-if="state.showOnboarding" class="mb-4">
+            <div class="card onboarding-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-end gap-2 align-items-center">
+                        <button type="button" t-on-click="hideOnboardingSteps" t-att-class="btnOutlineSecondary">
+                            <i class="fa fa-chevron-up me-1"></i>Hide
+                        </button>
+                        <button type="button" t-on-click="resetForNewConfiguration" class="btn px-3 btn-sm btn-secondary">
+                            <i class="fa fa-plus me-1"></i>Add new configuration
+                        </button>
+                    </div>
+
+                    <div class="row justify-content-center g-3">
+                        <t t-foreach="getCurrentStepGroup()" t-as="step" t-key="step.id">
+                            <div class="col-sm-4 col-md-6 col-lg-4" style="justify-items:center">
+                                <div t-att-class="cardStep">
+                                    <div class="card-body text-center d-flex flex-column">
+                                        <img t-att-src="step.icon" t-att-class="imgIcon" t-att-alt="step.title"/>
+                                        <h6 t-out="step.title" class="card-title fw-bold mb-2"/>
+                                        <p t-if="step.id != 1 and state.currentCompanyName"
+                                            t-out="step.description"
+                                            class="card-text text-muted small mb-3 flex-grow-1"/>
+
+                                        <!-- للخطوة الأولى: عرض dropdown الشركات دائماً -->
+                                        <t t-if="step.id === 1">
+                                            <t t-if="step.complete_state and state.currentCompanyName">
+                                                <span t-att-class="btnSuccessTag + ' mb-2' + ' company-name'" >
+                                                    <t t-out="state.currentCompanyName"/> added!
+                                                </span>
+                                            </t>
+                                            
+                                            <div t-att-class="stepActionGroup" style="align-self: center;">
+                                                <span class="text-muted small fw-medium">or</span>
+                                                <div class="dropdown">
+                                                    <button t-att-class="dropdownButton" type="button" data-bs-toggle="dropdown">
+                                                        <i class="fa fa-building me-1"></i>
+                                                        <!-- <t t-if="state.currentCompanyName" t-esc="state.currentCompanyName"/> -->
+                                                        <span>Choose Company</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu shadow-sm border-0" style="min-width: 180px;">
+                                                        <t t-foreach="state.allCompanies" t-as="companyId" t-key="companyId">
+                                                            <li>
+                                                                <a class="dropdown-item py-2"
+                                                                href="#"
+                                                                t-on-click.prevent="() => this.UserSelectCompany(companyId)"
+                                                                t-att-class="{'active': companyId === state.currentCompanyId}">
+                                                                    <span t-esc="state.companyNames[companyId] || 'Loading...'"/>
+                                                                </a>
+                                                            </li>
+                                                        </t>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </t>
+
+                                        <!-- للخطوات الأخرى: المنطق العادي -->
+                                        <t t-else="">
+                                            <t t-if="step.complete_state">
+                                                <span t-att-class="btnSuccessTag">
+                                                    <t t-out="step.complete_msg"/>
+                                                </span>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-if="step.hasImport and !isStepDisabled(step.id)">
+                                                    <div t-att-class="stepActionGroup" style="align-self: center;">
+                                                        <button type="button"
+                                                                t-on-click="() => this.executeStepAction(step)"
+                                                                t-att-class="btnPrimary">
+                                                            <i class="fa fa-plus me-1"></i>
+                                                            <t t-out="step.button"/>
+                                                        </button>
+                                                        <span class="text-muted small fw-medium">or</span>
+                                                        <div class="dropdown">
+                                                            <button t-att-class="dropdownButton" type="button" data-bs-toggle="dropdown">
+                                                                <i class="fa fa-file-csv me-1"></i>CSV Import
+                                                            </button>
+                                                            <ul class="dropdown-menu shadow-sm border-0" style="min-width: 180px;">
+                                                                <li>
+                                                                    <a class="dropdown-item py-2"
+                                                                       href="#"
+                                                                       t-on-click.prevent="() => this.downloadTemplateForStep(step.id)">
+                                                                        <i class="fa fa-download me-2 text-success"></i>
+                                                                        Download Template
+                                                                    </a>
+                                                                </li>
+                                                                <li><hr class="dropdown-divider m-0"/></li>
+                                                                <li>
+                                                                    <a class="dropdown-item py-2"
+                                                                       href="#"
+                                                                       t-on-click.prevent="() => this.importCSVForStep(step.id)">
+                                                                        <i class="fa fa-upload me-2 text-info"></i>
+                                                                        Import from CSV
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <button type="button"
+                                                            t-att-disabled="isStepDisabled(step.id)"
+                                                            t-on-click="() => this.executeStepAction(step)"
+                                                            t-att-class="btnPrimary">
+                                                        <i class="fa fa-plus me-1"></i>
+                                                        <t t-out="step.button"/>
+                                                    </button>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center mb-3" style="justify-self: center;">
+                        <button type="button" t-on-click="previousTab" t-att-class="btnOutlineSecondary" t-att-disabled="state.currentTab === 1">
+                            <i class="fa fa-chevron-left me-1"></i>
+                        </button>
+                        <span class="fw-bold" t-out=" state.currentTab"/><span t-out="' of ' + state.totalTabs"/>
+                        <button type="button" t-on-click="nextTab" t-att-class="btnOutlineSecondary" t-att-disabled="state.currentTab === state.totalTabs">
+                            <i class="fa fa-chevron-right me-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div t-if="!state.showOnboarding" class="mb-3">
+            <div class="d-flex justify-content-center gap-4 align-items-center p-3 bg-light rounded" style="border-bottom:1px solid #ddd;">
+                <div class="d-flex gap-2">
+                    <button type="button" t-on-click="showOnboardingSteps" class="btn btn-outline-info">
+                        <i class="fa fa-eye me-1"></i>Show Setup
+                    </button>
+                    <button type="button" t-on-click="resetForNewConfiguration" class="btn px-3 py-1 btn-primary">
+                        <i class="fa fa-plus me-1"></i>Add new configuration
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>

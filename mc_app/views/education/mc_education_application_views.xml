@@ -1,0 +1,303 @@
+<odoo>
+    <data>
+        <record id="mc_education_application_form_inherit" model="ir.ui.view">
+            <field name="name">education.application.form.inherit</field>
+            <field name="model">education.application</field>
+            <field name="inherit_id" ref="education_core.education_application_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/*[1]" position="before">
+                    <widget name="web_ribbon" title="Done" bg_color="text-bg-success" invisible="state != 'done'"/>
+                </xpath>
+                <xpath expr="//header" position="replace">
+                    <header>
+                        <button name="action_send_to_verify_online" type="object"
+                        class="oe_highlight"
+                        string="Verify Online"
+                        help="Click to send the application for online done purpose"
+                        invisible="state != 'online-draft'" groups="mc_app.mc_education_pr,mc_app.mc_service_manager"/>
+                        <button name="action_send_to_verify" type="object"
+                            class="oe_highlight"
+                            string="Send for Verification"
+                            help="Click to send the application for verification purpose"
+                           invisible="state != 'online-done' and state != 'draft'"
+                            groups="education_core.group_education_faculty,education_core.group_education_hod,mc_app.mc_service_manager"/>
+                        <button name="action_application_verify" type="object"
+                            class="oe_highlight"
+                            string="Verify Done"
+                            groups="education_core.group_education_faculty,education_core.group_education_hod,mc_app.mc_service_manager"
+                            help="Click to verify the application and documents"
+                            invisible="state != 'verification'"/>
+                        <button name="action_create_student"
+                            string="Create Student"
+                            type="object" class="oe_highlight"
+                            help="Click to create Student"
+                            invisible="state != 'approve'"
+                            groups="education_core.group_education_faculty,education_core.group_education_hod,mc_app.mc_service_manager"/>
+                        <button name="%(education_core.application_reject_action)d"
+                            string="Reject"
+                            type="action"
+                            invisible="state != 'approve'"
+                            groups="education_core.group_education_faculty,education_core.group_education_hod,mc_app.mc_service_manager"/>
+                        <button name="action_re_request" string="Re Request"
+                            type="object"
+                            invisible="state != 'reject'"
+                            class="btn-secondary"
+                            help="Apply for admission again"
+                            groups="education_core.group_education_faculty,education_core.group_education_hod,mc_app.mc_service_manager"/>
+                        <field name="state" widget="statusbar"
+                            statusbar_visible="online-draft,online-done,draft,verification,approve,done"/>
+                    </header>
+                </xpath>
+                <xpath expr="//h1" position="inside">
+                    <div>
+                        <label for="full_english_name" >English Full Name:</label>
+                        <field name="full_english_name" placeholder="Enter full English name" 
+                               required="state not in ['draft','online-done','online-draft']"/>
+                    </div>
+                    <div>
+                        <label for="full_arabic_name">Arabic Full Name:</label>
+                        <field name="full_arabic_name" placeholder="Enter full Arabic name" required="1"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='date_of_birth']" position="before">
+                    <field name="student_national_id" required="1" readonly="state == 'done'"/>
+                    <field name="place_of_birth" readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='gender']" position="before">
+                    <field name="age_next_oct"/>
+                    <field name="religion_id"/>
+                    <field name="birth_certificate_number" invisible="state in ['online-done', 'online-draft']"/>
+                    <field name="internal_student"  invisible="state in ['online-done', 'online-draft']"/>
+                </xpath>
+                <xpath expr="//field[@name='prev_school_id']" position="before">
+                    <field name="prev_school" placeholder="Type Previous School"/>
+                </xpath>
+                <xpath expr="//field[@name='prev_school_id']" position="after">
+                    <field name="need_transportation_facility" 
+                            invisible = "state in ['online-done', 'online-draft']"
+                            placeholder="Select Previous School"/>
+                </xpath>
+                <xpath expr="//field[@name='prev_school_id']" position="after">
+                    <field name="join_bus"  invisible = "state not in ['online-done', 'online-draft']"/>
+                    <field name="bus_city"  invisible= "join_bus == False"  string="Bus City"/>
+                </xpath>
+                <xpath expr="//sheet//group[3]" position="before">
+                    <group name='father_info' string="Father's Personal Details">
+                        <group>
+                            <field name='father_name' placeholder='Type father name' required="state not in ['draft', 'online-draft']"/>
+                            <field name='father_national_id' placeholder='Type father national ID' required="state not in ['draft', 'online-draft']" readonly="state == 'done'"/>
+                            <field name='father_birthdate'/>
+                            <field name='father_governorate'/>
+                            <field name='father_educational_qualifications' placeholder='Type Qualifications'/>
+                        </group>
+                        <group>
+                            <field name='father_profession' placeholder='Type father profession'/>
+                            <field name='father_mobile' placeholder='Type phone number' widget='phone' required="state not in ['draft', 'online-draft']"/>
+                            <field name='father_email' placholder='example@domain.com' widget='email'/>
+                            <field name='father_english_level' placeholder="Select English level"/>
+                            <field name='father_status'/>
+                        </group>
+                    </group>
+                    <group name='mother_info' string="Mother's Personal Details">
+                        <group>
+                            <field name='mother_name' placeholder='Type mother name' required="state not in ['draft', 'online-draft']"/>
+                            <field name='mother_national_id' placeholder='Type mother national ID' required="state not in ['draft', 'online-draft']"  readonly="state == 'done'"/>
+                            <field name='mother_birthdate'/>
+                            <field name='mother_governorate'/>
+                            <field name='mother_profession' placeholder='Type mother profession'/>
+                        </group>
+                        <group>
+                            <field name='mother_educational_qualifications' placeholder='Type Qualifications'/>
+                            <field name='mother_mobile'  placeholder='Type phone number' widget='phone' required="state not in ['draft', 'online-draft']"/>
+                            <field name='mother_email' placholder='example@domain.com' widget='email'/>
+                            <field name='mother_english_level' placeholder="Select English level"/>
+                            <field name='mother_status'/>
+                        </group>
+                    </group>
+                    <group name='guardian' string="Guardian Details" invisible="state in ['online-done', 'online-draft']">
+                        <group>
+                            <field name='parent_status' placeholder='Select Parent Status'/>
+                            <field name="relation_to_student" placeholder="Relation To Student" />
+                            <field name="guardian_national_id" 
+                                      placeholder='Type Guardian National ID' 
+                                      />
+                            <field name='guardian' placeholder='Type Guardian Name' 
+                                       
+                                       required="state not in ['draft','online-done','online-draft']"/>
+                            <field name='reason_of_guardian' placeholder='Reason Of Guardian'/>
+                        </group>
+                        <group>
+                            <field name='emergency_mobile'  placeholder='Type phone number' widget='phone'/>
+                            <field name='detailed_address' placholder='Detailed Address' />
+                            <field name='guardian_note' placeholder="Note"/>
+                        </group>
+                    </group>
+                    <group string="Siblings Info">
+                        <field name="siblings_ids"  placeholder="Add Siblings"/>
+                    </group>
+                </xpath>
+                <xpath expr="//form/sheet" position="inside">
+                    <group string="School Application Info" invisible="state in ['online-done', 'online-draft']">
+                        <field name="enrollment_date" required="state not in ['draft', 'online-done', 'online-draft']"/>
+                        <field name="entrance_year" required="state not in ['draft', 'online-done','online-draft']"/>
+                        <field name="founder_son"/>
+                        <field name="founder_son_level" invisible="founder_son == False"/>
+                        <field name="worker_son"/>
+                        <field name="worker_son_level" invisible="worker_son == False"/>
+                        <field name="join_bus"/>
+                        <field name="bus_city"  invisible= "join_bus == False"  string="Bus City"/>
+                    </group>
+                </xpath>
+                <!-- Chanage Fields Names - Attributes -->
+                <xpath expr="//field[@name='email']" position="attributes">
+                    <attribute name="required">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='first_name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='middle_name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='last_name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="domain">[('id', 'in', allowed_company_ids)]</attribute>
+                </xpath>
+                <xpath expr="//field[@name='street']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_of_birth']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='gender']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/separator[2]" position="attributes">
+                    <attribute name="string">Student Details</attribute>
+                </xpath>
+                <xpath expr="//field[@name='prev_school_id']" position="attributes">
+                    <attribute name="string">Prev School</attribute>
+                    <attribute name="invisible">state in ['online-done', 'online-draft']</attribute>
+                </xpath>
+                <!--Change String of "Class" to be admission grade-->
+                <xpath expr="//field[@name='admission_class_id']" position="attributes">
+                    <attribute name="string">Admission Grade</attribute>
+                    <attribute name="placeholder">Select Company First</attribute>
+                </xpath>
+                <!-- Hide Fields on online state  -->
+                <xpath expr="//field[@name='sec_lang_id']" position="attributes">
+                    <attribute name="invisible">state in ['online-done', 'online-draft']</attribute>
+                </xpath>
+                <xpath expr="//field[@name='medium_id']" position="attributes">
+                    <attribute name="invisible">state in ['online-done', 'online-draft']</attribute>
+                </xpath>
+                <!-- Remove Fields  -->
+                <xpath expr="//field[@name='father_name']" position="replace"/>
+                <xpath expr="//field[@name='mother_name']" position="replace"/>
+                <xpath expr="//field[@name='caste']" position="replace"/>
+                <xpath expr="//field[@name='guardian_id']" position="replace"/>
+                <xpath expr="//field[@name='religion']" position="replace"/>
+                <!-- NO QUICK OPEN Fields  -->
+                <xpath expr="//field[@name='academic_year_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    <attribute name="widget">selection</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    <attribute name="widget">selection</attribute>
+                </xpath>
+                <xpath expr="//field[@name='prev_school_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    <attribute name="widget">selection</attribute>
+                </xpath>
+                <xpath expr="//field[@name='religion_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    <attribute name="widget">selection</attribute>
+                </xpath>
+                <xpath expr="//field[@name='relation_to_student']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    <attribute name="widget">selection</attribute>
+                </xpath>
+                <xpath expr="//field[@name='entrance_year']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    <attribute name="widget">selection</attribute>
+                </xpath>
+                <xpath expr="//field[@name='admission_class_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    <attribute name="widget">selection</attribute>
+                </xpath>
+                <xpath expr="//field[@name='sec_lang_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    <attribute name="widget">selection</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="mc_education_application_list_inherit" model="ir.ui.view">
+            <field name="name">education.application.list.inherit</field>
+            <field name="model">education.application</field>
+            <field name="inherit_id" ref="education_core.education_application_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list/field[@name='name']" position="after">
+                    <field name = 'full_arabic_name'/>
+                    <field name = 'father_mobile'/>
+                    <field name = 'father_profession'/>
+                    <field name = 'mother_mobile'/>
+                    <field name = 'mother_profession'/>
+                    <field name = 'age_next_oct'/>
+                    <field name = 'company_id' />
+                </xpath>
+                <xpath expr="//list/field[@name='first_name']" position="replace"/>
+                <xpath expr="//list/field[@name='last_name']" position="replace"/>
+                <xpath expr="//list/field[@name='phone']" position="replace"/>
+                <xpath expr="//list/field[@name='blood_group']" position="replace"/>
+            </field>
+        </record>
+        <record id="mc_education_application_search_inherit" model="ir.ui.view">
+            <field name="name">education.application.search.inherit</field>
+            <field name="model">education.application</field>
+            <field name="inherit_id" ref="education_core.education_application_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search//filter[@name='new_application']" position="before">
+                    <filter name="online-draft" string="Online Draft" domain="[('state', '=', 'online-draft')]"/>
+                </xpath>
+                <xpath expr="//search//filter[@name='religion']" position="replace">
+                    <filter string="Religion" name="religion" domain="[]" context="{'group_by': 'religion_id'}"/>
+                </xpath>
+            </field>
+        </record>
+        <!-- Edite menu and actions-->
+        <menuitem id="education_core.menu_education_admission" name="Admission"
+            groups="education_core.group_education_hod,education_core.group_education_faculty,education_core.group_education_principal,mc_app.mc_service_manager,mc_app.mc_education_pr"
+            parent="education_core.menu_education_root" sequence="5"/>
+        <record id="education_core.education_application_action" model="ir.actions.act_window">
+            <field name="domain">[('state', '!=','online-draft'),('company_id', 'in', allowed_company_ids)]</field>
+        </record>
+        <menuitem id="education_core.education_application_menu" name="Application"
+            parent="education_core.menu_education_admission"
+            sequence = "9"
+            groups="education_core.group_education_hod,education_core.group_education_faculty,education_core.group_education_principal,mc_app.mc_service_manager"
+            action="education_core.education_application_action"/>
+        <record id="education_online_application_action" model="ir.actions.act_window">
+            <field name="name">Online Application</field>
+            <field name="res_model">education.application</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">list,form,graph,pivot</field>
+            <field name="search_view_id" ref="education_core.education_application_view_search"/>
+            <field name="context">{'create': False, 'search_default_online-draft': 1}</field>
+            <field name="domain">[('state', 'in', ['online-draft','online-done']), ('company_id', 'in', allowed_company_ids)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create your first student application here.
+                </p>
+            </field>
+        </record>
+        <menuitem 
+                id="mc_education_online_application_menu" 
+                name="Online Application"
+                parent="education_core.menu_education_admission"
+                action="education_online_application_action"
+                groups="mc_app.mc_education_pr,mc_app.mc_service_manager"
+                />
+    </data>
+</odoo>

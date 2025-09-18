@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+        <record id="mc_res_users_form_inherit" model="ir.ui.view">
+            <field name="name">mc.res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+<!-- 
+                <xpath expr="//field[@name='login']" position="after">
+                    <field name="student_id" />    
+                    <field name="stu_parent" />    
+                    <field name="father_user" />    
+                    <field name="mother_user" />    
+                    <field name="guardian_user" />    
+                </xpath>
+                
+ -->
+                <xpath expr="//field[@name='login']" position="after">
+                    <field name="faculty_id" />    
+                </xpath>
+                
+                
+                <!-- <xpath expr="//field[@name='groups_id']" position="attributes">
+                    <attribute name="widget">many2many_checkboxes</attribute>
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath> -->
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

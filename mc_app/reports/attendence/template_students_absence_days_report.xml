@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_students_absence_days_report">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>            
+        <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_reports_style.css" />
+        </head>
+
+        <div class="page">
+            <div class="my-3">
+                    <button class="print-button" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+                        <i class="fa fa-print"/> Print
+                    </button>
+            </div>
+
+             <div class="container mt-5">
+                <div class="row mb-4">
+                    <div class="d-flex align-items-center align-items-sm-start border-bottom border-1 border-dark mb-3">
+                        <div class="col-6 text-start">
+                            <h2>Students Absence Listing</h2>
+                            <h6><t t-esc="company_name"/> </h6>
+                        </div>
+                        <div class="col-6" style="display: flex; justify-content: end;">
+                            <img src="/mc_app/static/description/mclogo.png" class="d-none d-lg-block" alt="" style="width: 175px;"/>
+                        </div>
+                    </div>
+                    
+
+                    <div class="row">
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Grade :</strong>
+                                <span><t t-esc="grade"/></span>
+                            </div>
+                            
+                            <t t-if="class">
+                                <div class="col-xs-6" style="width:50% !important">
+                                    <strong>Class : </strong>
+                                    <span><t t-esc="class"/></span>
+                                </div>
+                            </t>
+                          
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Date from: </strong>
+                                <span><t t-esc="date_from"/></span>
+                            </div>
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Date to: </strong>
+                                <span><t t-esc="date_to"/></span>
+                            </div>
+                            
+                        </div>
+
+                       <table class="table table-bordered table-sm mt-4" style="'border: 1px solid #cccccc !important;">
+                            <thead>
+                                <tr>
+
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff; width:40px">#</th>
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">Name</th>
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff; width:120px">Grade</th>
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;width:120px">Class</th>
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;width:120px">Absence Days Count</th>
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">Absence Date</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-set="index" t-value="0"/>  <!-- تعيين فهرس قبل الحلقة -->
+                                    <t t-foreach="result" t-as="student">
+                                        <tr>
+                                            <td class="text-center"><t t-esc="index + 1"/></td> <!-- استخدام الفهرس -->
+                                            <td class="text-center"><t t-esc="student['name']"/></td>
+                                            <td class="text-center"><t t-esc="student['grade']"/></td>
+                                            <td class="text-center"><t t-esc="student['class']"/></td>
+                                            <td class="text-center"><t t-esc="student['absence_days_count']"/></td>
+                                            <td class="text-center"><t t-esc="student['absence_days']"/></td>
+                                        </tr>
+                                        <t t-set="index" t-value="index + 1"/> <!-- تحديث الفهرس -->
+                                    </t>
+                                    <tbody>
+                                        <tr>
+                                            <td  class="text-center" colspan="5">Total</td>
+                                            <td class="text-center" style="background-color: #ccd1ff42;"><t t-esc="total"/></td>
+                                            
+                                        </tr>
+                                    </tbody>
+
+                            </tbody>
+
+                        </table>
+                </div>
+
+            </div>
+          
+
+        </div>
+        </t>
+    </template>
+</odoo>

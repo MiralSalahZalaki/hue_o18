@@ -1,0 +1,46 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="mc_custom_assessments_category_tree_view" model="ir.ui.view">
+        <field name="name">mc.custom.assessments.category.tree</field>
+        <field name="model">mc.custom.assessments.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="item"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mc_custom_assessments_category_form_view" model="ir.ui.view">
+        <field name="name">mc.custom.assessments.category.form</field>
+        <field name="model">mc.custom.assessments.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Assessments Custom Category">   
+                    <group>
+                        <field name="item"/>
+                        <field name="max_score"/>
+                        <field name="weight"/>
+                        <field name="best_of"/>
+                        <field name="control"/>
+                        <field name="assessments_custom_category_id"/>
+                    </group>
+                        
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <!-- <record id="action_mc_custom_assessments_category" model="ir.actions.act_window">
+        <field name="name">Assessments Custom Category</field>
+        <field name="res_model">mc.custom.assessments.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_mc_custom_assessments_category"
+              name="Custom Assessments Category" 
+              parent="menu_grading_config"
+              sequence = "8"
+              action="action_mc_custom_assessments_category"/> -->
+</odoo>

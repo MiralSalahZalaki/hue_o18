@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_behavior_report_no5" model="ir.actions.report">
+            <field name="name">Behavior Report No.5</field>
+            <field name="model">behavior.report.no5.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_behavior_report_no5</field>
+        </record>
+        <record id="action_absence_days_report" model="ir.actions.report">
+            <field name="name">Absence Days</field>
+            <field name="model">absence.days.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_absence_days_report</field>
+        </record>
+        <record id="action_students_absence_days_report" model="ir.actions.report">
+            <field name="name">Student Absence Days</field>
+            <field name="model">students.absence.days.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_students_absence_days_report</field>
+        </record>
+        <record id="action_class_missing_attendance_report" model="ir.actions.report">
+            <field name="name">Class Missing Attendance</field>
+            <field name="model">class.missing.attendence.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_class_missing_attendance_report</field>
+        </record>
+    </data>
+</odoo>

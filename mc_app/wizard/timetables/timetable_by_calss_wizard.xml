@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+        <record id="timetable_by_calss_wizard_form_view" model="ir.ui.view">
+            <field name="name">timetable.by.calss.wizard.form</field>
+            <field name="model">timetable.by.calss.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Report by class" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" can_create="false" can_write="false" />
+                            <field name="grade_id"/>
+                    </group>
+                    <group>
+                            <field name="class_division_id"/>
+                    </group>
+                    <field name="student_id"/>
+
+                    <footer >
+                        <button name="generate_timetable_class_report" type="object"   
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_timetable_by_calss_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Timetable By Class</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">timetable.by.calss.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="timetable_by_calss_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+            <!-- Student Date  menu -->
+        <menuitem
+            id="main_menu_timtable_reports"
+            name="Timetable Reports"
+            parent="education_time_table.education_time_table_main_menu"
+            sequence="3"
+            />
+
+        <menuitem   id="timetable_by_calss_report_menu" 
+                    name="By Class"
+                    parent="main_menu_timtable_reports"
+                    action="action_timetable_by_calss_wizard"
+                    sequence = "3"/>
+
+
+    </data>
+</odoo>

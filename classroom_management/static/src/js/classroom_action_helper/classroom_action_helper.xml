@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="classroom_management.ClassroomActionHelper">
+        <!-- Show onboarding only if showOnboarding is true -->
+        <t t-if="state.showOnboarding">
+            <div class="o_view_nocontent flex-wrap pt-5">
+                <div class="container">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold">Get Started 🎯</h2>
+                        <p class="fs-5 text-muted">Complete the steps below to finish setup</p>
+                    </div>
+                    <div class="o_nocontent_help">
+                        <!-- Steps as Cards -->
+                        <div class="d-flex justify-content-center flex-wrap gap-4">
+                            <t t-foreach="state.steps" t-as="step" t-key="step.id">
+                                 <div style="flex: 1 1 220px; max-width: 100%;">
+
+
+                                    <div class="card shadow-sm border-0 ">
+                                         <div class="card-body text-center d-flex flex-column align-items-center p-4 rounded-lg">
+                                            <!-- Step Icon -->
+                                            <img t-att-src="step.icon"
+                                                 class="img mb-3"
+                                                 style="width: 60px;"
+                                                 t-att-alt="step.title"/>
+
+                                            <!-- Step Title -->
+                                            <h5 t-out="step.title" class="card-title mb-2 fw-bold"/>
+
+                                            <!-- Step Description -->
+                                            <p t-out="step.description" class="card-text text-muted mb-4 fs-6"/>
+
+                                            <!-- Action Button -->
+                                            <button type="button"
+                                                    t-on-click="() => this.executeStepAction(step)"
+                                                    t-att-class="'btn btn-link btn-sm px-3 py-1 btn-outline-primary' + (isStepCompleted(step.id) ? 'btn-success' : '')">
+                                                <t t-if="isStepCompleted(step.id)">
+                                                    <i class="fa fa-check me-2"></i>
+                                                    Completed - Review
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-out="step.button"/>
+                                                </t>
+                                            </button>
+
+                                            <!-- Skip Step Button -->
+
+                                        </div>
+                                        <!-- Completion Indicator -->
+
+                                    </div>
+                                      <div t-if="isStepCompleted(step.id)"
+                                             class="card-footer bg-transparent border-top-0 text-success fw-bold mt-4">
+                                            <i class="fa fa-check-circle me-1"></i> Done
+                                        </div>
+                                      <!--<t t-if="!isStepCompleted(step.id)">
+                                                <button type="button"
+                                                        t-on-click="() => this.skipStep(step.id)"
+                                                        class="btn btn-link btn-sm text-muted mt-2">
+                                                    Skip for now
+                                                </button>
+                                        </t>-->
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

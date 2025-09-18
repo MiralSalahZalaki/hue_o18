@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="control_report_template">
+    <t t-set="data_report_landscape" t-value="True"/>
+    <t t-set="full_width" t-value="True"/>
+    <t t-call="web.html_container">
+      <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+        <style>
+          
+          .container {
+              max-width: 100% !important;
+              width: 100% !important;
+          }
+          table {
+            border: 1px solid #000 !important;
+            background-color: #f9f9f9 !important;
+            width: 100% !important;
+            text-align: center !important;
+            border-collapse: collapse !important;
+          }
+          td {
+              white-space: nowrap !important;
+          }
+          td, th {
+            border: 1px solid #000 !important;
+            text-transform: capitalize !important
+          }
+          table tr:nth-child(even) {
+            background: #D0E4F5 !important;
+          }
+          table thead {
+              border-bottom: 2px solid #000 !important;
+          }
+          table thead th {
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: #3B4345 !important;
+            text-align: center !important;
+            vertical-align: inherit !important;
+          }
+          table tfoot td {
+            font-size: 14px !important;
+          }
+          table tfoot .links {
+            text-align: right !important;
+          }
+          table tfoot .links a {
+            display: inline-block !important;
+            background: #1C6EA4 !important;
+            color: #FFFFFF !important;
+            padding: 2px 8px !important;
+            border-radius: 5px !important;
+          }
+          .table &gt; thead &gt; tr &gt; th, .table &gt; tbody &gt; tr &gt; th, .table &gt; tfoot &gt; tr &gt; th, .table &gt; thead &gt; tr &gt; td, .table &gt; tbody &gt; tr &gt; td, .table &gt; tfoot &gt; tr &gt; td {
+                padding: 0px  !important;
+                line-height: 1.42857143 !important;
+                vertical-align: middle  !important;
+                border-top: 1px solid #dddddd !important;
+            }
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin-top: 10px;
+            }
+            .table-container table {
+                min-width: 1000px; 
+                white-space: nowrap;
+            }
+
+            /* تحسين قواعد الطباعة لمنع الصفحات الفارغة */
+            @media print {
+                * {
+                    box-sizing: border-box !important;
+                }
+                
+                html, body {
+                    height: auto !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    overflow: visible !important;
+                }
+                
+                .btn-print {
+                    display: none !important;
+                }
+                
+                .table-container {
+                    overflow: visible !important;
+                    -webkit-overflow-scrolling: auto !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                
+                .table-container table {
+                    min-width: auto !important;
+                    white-space: normal !important;
+                    width: 100% !important;
+                }
+                
+                table {
+                    page-break-inside: auto !important;
+                    font-size: 10px !important;
+                    margin: 0 !important;
+                }
+                
+                .page {
+                    page-break-before: avoid !important;
+                    page-break-after: avoid !important;
+                    page-break-inside: avoid !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    min-height: auto !important;
+                    height: auto !important;
+                }
+
+                .page:first-child {
+                    page-break-before: avoid !important;
+                }
+                
+                .page:last-child {
+                    page-break-after: avoid !important;
+                }
+
+                .page-break {
+                    display: none !important;
+                }
+                
+                /* منع المساحات الفارغة الإضافية */
+                .my-3, .mb-3, .d-flex {
+                    margin: 5px 0 !important;
+                }
+                
+                h2 {
+                    margin: 10px 0 !important;
+                    page-break-after: avoid !important;
+                }
+                
+                /* تأكد من عدم وجود مساحات فارغة */
+                div:empty {
+                    display: none !important;
+                }
+            }
+        </style>
+      </head>
+      <t t-set="student_index" t-value="0"/>
+      <div class="page">
+        <div class="my-3">
+          <button class="btn-print" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+            <i class="fa fa-print"/> Print
+          </button>
+        </div>
+        <h2>Control Grades Report</h2>
+        <div class="d-flex justify-content-between mb-3 ">
+          <span class="w-100 border-end border-secondary me-4 fw-bold">Grade:
+            <span class="fw-normal" t-esc="grade_name"/></span>
+          <span class="w-100 border-end border-secondary me-4 fw-bold">Term:
+            <span  class="fw-normal" t-esc="term_name"/></span>
+          <span class="w-100 border-end border-secondary me-4 fw-bold">Distribution:
+            <span  class="fw-normal" t-esc="distribution"/></span>
+          <span class="w-100 border-end border-secondary me-4 fw-bold">Assessment Time:
+            <span  class="fw-normal" t-esc="assessments_times"/></span>
+        </div>
+        <div class="table-container">
+          <table class="table table-condensed">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width: 60px !important; ">Serial No</th>
+                <th rowspan="2">Seat Number</th>
+                <th rowspan="2">Student</th>
+                <t t-foreach="subjects" t-as="subject">
+                  <th t-att-colspan="subject.get('dists_count', 1)">
+                    <span t-esc="subject.get('name', 'Unknown')"/>
+                  </th>
+                </t>
+              </tr>
+              <tr>
+                <t t-foreach="subjects" t-as="subject">
+                  <t t-foreach="subject.get('dists', [])" t-as="distribution">
+                    <th>
+                      <span t-esc="distribution.get('name', 'Unknown')"/>
+                    </th>
+                  </t>
+                </t>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="students" t-as="student">
+                <tr>
+                  <td>
+                    <t t-esc="student_index + 1"/>
+                  </td>
+                  <td>
+                    <t t-esc="student.get('seat_number', '') or 'N/A'"/>
+                  </td>
+                  <td>
+                    <t t-esc="student.get('student_name', '')"/>
+                  </td>
+                  <t t-foreach="subjects" t-as="subject">
+                    <t t-set="subject_grades" t-value="student.get('grades', {}).get(subject.get('id'),{})"/>
+                    <t t-foreach="subject.get('dists', [])" t-as="distribution">
+                      <td>
+                        <t t-if="subject_grades">
+                          <t t-set="grade_entry" t-value="subject_grades.get(distribution.get('id'), {})"/>
+                          <t t-if="grade_entry and grade_entry.get('check', False)">
+                            <t t-esc="grade_entry.get('score', '0')"/>
+                          </t>
+                          <t t-else="">
+                            <p style="color: red;background: bisque;width: 100% !important;max-height: 100%;margin: 0;padding: 0;">Abs</p>
+                          </t>
+                        </t>
+                        <t t-else="">
+                      </t>
+                      </td>
+                    </t>
+                  </t>
+                </tr>
+                <t t-set="student_index" t-value="student_index + 1"/>
+              </t>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_faculty_see_own_grades" model="ir.rule">
+            <field name="name">Faculty - See Own Evaluation Grades</field>
+            <field name="model_id" ref="model_mc_evaluation_grades"/>
+            <field name="groups" eval="[(4, ref('mc_app.employee_group'))]"/>
+            <field name="domain_force">
+                ['&amp;', '&amp;',
+                 ('company_id', 'in', company_ids),
+                 ('create_uid', '=', user.id),
+                 '|',
+                 ('syllabus_id', 'in', user.faculty_id.allowed_syllabus_ids.ids),
+                 ('class_id', 'in', user.faculty_id.allowed_class_division_ids.ids)
+                ]
+            </field>
+        </record>
+
+        <!-- Rule للـ Admin - يشوف كل اللي في شركته -->
+        <record id="rule_admin_see_company_grades" model="ir.rule">
+            <field name="name">Admin - See Company Evaluation Grades</field>
+            <field name="model_id" ref="model_mc_evaluation_grades"/>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+        <!-- Rule للـ Control Grades - Faculty -->
+        <record id="rule_faculty_see_own_control_grades" model="ir.rule">
+            <field name="name">Faculty - See Own Control Grades</field>
+            <field name="model_id" ref="model_mc_control_grades"/>
+            <field name="groups" eval="[(4, ref('mc_app.employee_group'))]"/>
+            <field name="domain_force">
+                ['&amp;', '&amp;',
+                 ('company_id', 'in', company_ids),
+                 ('create_uid', '=', user.id),
+                 '|',
+                 ('syllabus_id', 'in', user.faculty_id.allowed_syllabus_ids.ids),
+                 ('grade_id', 'in', user.faculty_id.allowed_grade_ids.ids)
+                ]
+            </field>
+        </record>
+
+        <!-- Rule للـ Control Grades - Admin -->
+        <record id="rule_admin_see_company_control_grades" model="ir.rule">
+            <field name="name">Admin - See Company Control Grades</field>
+            <field name="model_id" ref="model_mc_control_grades"/>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+</odoo>

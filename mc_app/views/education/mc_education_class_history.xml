@@ -1,0 +1,51 @@
+<odoo>
+    <data>
+        <record id="mc_education_class_history_tree_view" model="ir.ui.view">
+            <field name="name">mc_education_class_history_tree_view</field>
+            <field name="model">education.class.history</field>
+             <field name="arch" type="xml">
+                <list string="Student History" modifiers="{}">
+                    <field name="student_code" modifiers="{}"/>
+                    <field name="grade_id" string="Grade" can_create="true" can_write="true" modifiers="{}"/>
+                    <field name="academic_year_id" string="academic year" can_create="true" can_write="true" modifiers="{}"/>
+                    <field name="student_id" string="Student" can_create="true" can_write="true" modifiers="{}"/>
+                </list>
+            </field>
+        </record>
+
+
+        <record id="mc_education_class_history_form_view" model="ir.ui.view">
+            <field name="name">mc_education_class_history_form_view</field>
+            <field name="model">education.class.history</field>
+             <field name="arch" type="xml">
+                <form modifiers="{}">
+                    <sheet string="Class room history" modifiers="{}">
+                        <group col="4" modifiers="{}">
+                            <field name="academic_year_id" can_create="true" can_write="true" modifiers="{}"/>
+                            <field name="class_id" can_create="true" can_write="true" modifiers="{}"/>
+                            <field name="student_id" can_create="true" can_write="true" modifiers="{}"/>
+                            <field name="grade_id" can_create="true" can_write="true" modifiers="{}"/>
+                            <field name="student_code" modifiers="{}"/>
+                            <separator modifiers="{}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        
+        <record id="action_mc_education_class_history" model="ir.actions.act_window">
+            <field name="name">Student History</field>
+            <field name="res_model">education.class.history</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_mc_education_class_history"
+                name="Student History" 
+                parent="menu_application_class_setup"
+                action="action_mc_education_class_history"/>
+
+    </data>
+</odoo>

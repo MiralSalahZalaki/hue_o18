@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <record id="assessments_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">assessments.report.wizard.form</field>
+            <field name="model">assessments.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Assessments Report wizard" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="grade_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field  name="assessments_times"    
+                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}" required="not distribution"  invisible = "distribution"/>
+                            <field name="distribution"/>
+                            <field name="term_id" invisible = "not distribution"  required="distribution"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                         
+                    </group>
+
+                    <footer >
+                        <button name="generate_assessments_report_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_assessments_report_wizard" model="ir.actions.act_window">
+            <field name="name">Assessments Report wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">assessments.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="assessments_report_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="assessments_report_wizard_report_menu" 
+                    name="Assessments Report Up"
+                    parent="menu_grading_reports"
+                    action="action_assessments_report_wizard"
+                    sequence = "2"/>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        <record id="mc_total_term_wizard_form_view" model="ir.ui.view">
+            <field name="name">mc.total.term.wizard.form</field>
+            <field name="model">mc.total.term.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Total Term score" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"   required="1"/>
+                            <field name="full_academic_year"/>
+                            <field name="academic_year" invisible="not full_academic_year"/>
+                            <field name="previos_result"/>
+                            <field name="term_id"  invisible="full_academic_year" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            
+                            <field name="grade_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="class_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="student_ids"  domain="student_ids_domain"  options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />         
+                            <field name="arabic_report"/>
+                            <field name="final_report"/>
+                    </group>
+
+                    <footer >
+                        <button name="generate_mc_total_term_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_mc_total_term_wizard" model="ir.actions.act_window">
+            <field name="name">Total Term score</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mc.total.term.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mc_total_term_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="mc_total_term_wizard_report_menu" 
+                    name="Total Term score"
+                    parent="menu_mc_mmc_reports"
+                    action="action_mc_total_term_wizard"
+                    sequence = "1"/>
+
+
+    </data>
+</odoo>

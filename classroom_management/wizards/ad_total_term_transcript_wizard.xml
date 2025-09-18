@@ -1,0 +1,51 @@
+<odoo>
+    <data>
+        <record id="total_term_transcript_wizard_form_view" model="ir.ui.view">
+            <field name="name">total.term.transcript.wizard.form</field>
+            <field name="model">total.term.transcript.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Total Term Score Transcript" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"   required="1"/>
+                            <field name="full_academic_year" />
+                            <field name="term_id" invisible="full_academic_year" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="academic_year" invisible="not full_academic_year" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />         
+                            <field name="grade_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="class_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="student_ids"  domain="student_ids_domain"  options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />         
+                            <field name="student_view" />
+                    </group>
+
+                    <footer >
+                        <button name="generate_ad_total_term_transcript_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_total_term_transcript_wizard" model="ir.actions.act_window">
+            <field name="name">Total Term Score Transcript</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">total.term.transcript.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="total_term_transcript_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="total_term_transcript_wizard_report_menu" 
+                    name="Total Term Score Transcript"
+                    parent="menu_ad_reports"
+                    action="action_total_term_transcript_wizard"
+                    sequence = "3"/>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--Groups-->
+        <record id="mc_education_pr" model="res.groups">
+            <field name="name">MC Education PR</field>
+            <field name="category_id" ref="education_core.module_category_education"/>
+        </record>
+
+         <record id="mc_service_manager" model="res.groups">
+            <field name="name">MC Service Manager</field>
+        </record>
+
+
+        <!-- Adding ACCESS rights for mc_education_pr group -->
+        <record id="access_education_application_pr_education" model="ir.model.access">
+            <field name="name">access.education.application.pr.education</field>
+            <field name="model_id" ref="education_core.model_education_application"/>
+            <field name="group_id" ref="mc_app.mc_education_pr"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+        
+        <record id="access_education_docauments_pr_education" model="ir.model.access">
+            <field name="name">access.education.docuaments.pr.education</field>
+            <field name="model_id" ref="education_core.model_education_document"/>
+            <field name="group_id" ref="mc_app.mc_education_pr"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+
+        
+
+        <!-- Adding ACCESS rights for Admin group -->
+        <record id="access_education_student_admin" model="ir.model.access">
+            <field name="name">access.education.student.admin</field>
+            <field name="model_id" ref="education_core.model_education_student"/>
+            <field name="group_id" ref="base.group_system"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- Record Rule: Admin can see all students -->
+        <record id="rule_education_student_admin" model="ir.rule">
+            <field name="name">Education Student: Admin Full Access</field>
+            <field name="model_id" ref="education_core.model_education_student"/>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+        
+        <!--Employee Group-->
+        <record id="employee_group" model="res.groups">
+            <field name="name">Employee</field>
+            <field name="category_id" ref="base.module_category_human_resources_employees"/>
+        </record>
+
+
+        <!-- Adding ACCESS rights for Employee group -->
+         <record id="access_education_application_employee" model="ir.model.access">
+            <field name="name">access.education.application.employee</field>
+            <field name="model_id" ref="education_core.model_education_application"/>
+            <field name="group_id" ref="mc_app.employee_group"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+         <record id="access_education_student_employee" model="ir.model.access">
+            <field name="name">access.education.student.employee</field>
+            <field name="model_id" ref="education_core.model_education_student"/>
+            <field name="group_id" ref="mc_app.employee_group"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+         <record id="access_education_academic_year_employee" model="ir.model.access">
+            <field name="name">access.education.academic.year.employee</field>
+            <field name="model_id" ref="education_core.model_education_academic_year"/>
+            <field name="group_id" ref="mc_app.employee_group"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+
+
+        <record id="access_res_partner_employee" model="ir.model.access">
+      <field name="name">access.res.partner.employee</field>
+      <field name="model_id" ref="base.model_res_partner"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+
+
+    <record id="access_mc_education_institute_employee" model="ir.model.access">
+      <field name="name">access.mc.education.institute.employee</field>
+      <field name="model_id" ref="mc_app.model_mc_education_institute"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+    <record id="access_mc_prev_school_type_employee" model="ir.model.access">
+      <field name="name">access.mc.prev.school.type.employee</field>
+      <field name="model_id" ref="mc_app.model_mc_prev_school_type"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+    <record id="access_mc_block_reason_employee" model="ir.model.access">
+      <field name="name">access.mc.block.reason.employee</field>
+      <field name="model_id" ref="mc_app.model_mc_block_reason"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+    <record id="access_mc_bus_city_employee" model="ir.model.access">
+      <field name="name">access.mc.bus.city.employee</field>
+      <field name="model_id" ref="mc_app.model_mc_bus_city"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+    <record id="access_mc_student_relation_employee" model="ir.model.access">
+      <field name="name">access.mc.student.relation.employee</field>
+      <field name="model_id" ref="mc_app.model_mc_student_relation"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+    <record id="access_education_medium_employee" model="ir.model.access">
+      <field name="name">access.education.medium.employee</field>
+      <field name="model_id" ref="education_core.model_education_medium"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+    <record id="access_education_subject_employee" model="ir.model.access">
+      <field name="name">access.education.subject.employee</field>
+      <field name="model_id" ref="education_core.model_education_subject"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+    <record id="access_education_syllabus_employee" model="ir.model.access">
+      <field name="name">access.education.syllabus.employee</field>
+      <field name="model_id" ref="education_core.model_education_syllabus"/>
+      <field name="group_id" ref="mc_app.employee_group"/>
+      <field name="perm_read">1</field>
+      <field name="perm_write">0</field>
+      <field name="perm_create">0</field>
+      <field name="perm_unlink">0</field>
+    </record>
+
+
+    <record id="rule_faculty_see_assigned_students" model="ir.rule">
+        <field name="name">Faculty - See Only Assigned Students</field>
+        <field name="model_id" ref="education_core.model_education_student"/>
+        <field name="groups" eval="[(4, ref('mc_app.employee_group'))]"/>
+        <field name="domain_force">
+
+            [
+            '&amp;',
+                ('company_id', 'in', company_ids),
+                ('id', 'in',
+                    (user.faculty_id.syllabus_special_class.enrollment_per_class_ids.filtered(lambda e: e.role == 'student').mapped('student_id').ids or []) +
+                    (user.faculty_id.syllabus_class.enrollment_per_class_ids.filtered(lambda e: e.role == 'student').mapped('student_id').ids or [])
+                )
+            ]
+
+        </field>
+    </record>
+        
+    <!-- <record id="rule_faculty_see_assigned_students" model="ir.rule">
+        <field name="name">Faculty - See Only Assigned Students</field>
+        <field name="model_id" ref="education_core.model_education_student"/>
+        <field name="groups" eval="[(4, ref('mc_app.employee_group'))]"/>
+        <field name="domain_force">
+            ['&amp;',
+                ('company_id', 'in', company_ids),
+                ('id', 'in', [
+                student.student_id.id 
+                for enrollment in user.faculty_id.syllabus_special_class.enrollment_per_class_ids 
+                if enrollment.role == 'student'
+                ] + [
+                student.student_id.id 
+                for enrollment in user.faculty_id.syllabus_class.enrollment_per_class_ids 
+                if enrollment.role == 'student'
+                ])
+            ]
+        </field>
+    </record> -->
+
+
+        <record id="access_education_syllabus_employee" model="ir.model.access">
+            <field name="name">access.education.syllabus.employee</field>
+            <field name="model_id" ref="education_core.model_education_syllabus"/>
+            <field name="group_id" ref="mc_app.employee_group"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+        
+
+
+        <record id="access_education_education_class_division_employee" model="ir.model.access">
+            <field name="name">access.education.education.class.division.employee</field>
+            <field name="model_id" ref="education_core.model_education_class_division"/>
+            <field name="group_id" ref="mc_app.employee_group"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+        
+
+        <record id="access_education_education_class_employee" model="ir.model.access">
+            <field name="name">access.education.education.class.employee</field>
+            <field name="model_id" ref="education_core.model_education_class"/>
+            <field name="group_id" ref="mc_app.employee_group"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+        
+
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        <record id="student_result_wizard_form_view" model="ir.ui.view">
+            <field name="name">student.result.wizard.form</field>
+            <field name="model">student.result.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Student Grades Result Wizard" >
+                    <group>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"   required="1"/>
+                        <field name="term_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                        <field name="grade_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                        <field name="class_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                        <field name="student_ids"  domain="student_ids_domain"  options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                        <field name="top_student" />
+                    </group>
+                    <footer >
+                        <button name="generate_student_result_report_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_student_result_wizard" model="ir.actions.act_window">
+            <field name="name">Student Result Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">student.result.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="student_result_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem   id="student_result_wizard_report_menu" 
+                    name="Student Grades Result"
+                    parent="menu_ad_reports"
+                    action="action_student_result_wizard"
+                    sequence = "1"/>
+    </data>
+</odoo>

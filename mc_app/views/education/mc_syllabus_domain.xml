@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <record id="mc_syllabus_domain_tree_view" model="ir.ui.view">
+            <field name="name">mc_syllabus_domain_tree_view</field>
+            <field name="model">mc.syllabus.domain</field>
+             <field name="arch" type="xml">
+                <list>
+                    <field name="english_name"/>
+                    <field name="arabic_name"/>
+                    <field name="sep_syllabus"/>
+                </list>
+            </field>
+        </record>
+
+
+            <record id="mc_syllabus_domain_form_view" model="ir.ui.view">
+            <field name="name">mc_syllabus_domain_form_view</field>
+            <field name="model">mc.syllabus.domain</field>
+             <field name="arch" type="xml">
+                <form>
+                   <sheet>
+                    <group>
+                        <group>
+                            <field name="english_name"/>
+                            <field name="sep_syllabus"/>
+                        </group>
+                        <group>
+                            <field name="arabic_name"/>
+                        </group>
+                    </group>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_mc_syllabus_domain" model="ir.actions.act_window">
+            <field name="name">Syllabus Domain</field>
+            <field name="res_model">mc.syllabus.domain</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_mc_syllabus_domain"
+                name="Syllabus Domain" 
+                parent="education_core.menu_education_class_conf"
+                action="action_mc_syllabus_domain"/>
+
+    </data>
+</odoo>

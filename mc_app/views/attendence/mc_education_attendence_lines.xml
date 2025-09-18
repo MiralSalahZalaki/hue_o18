@@ -1,0 +1,86 @@
+<odoo>
+    <data>
+
+        <record id="mc_attendence_lines_list_inherit" model="ir.ui.view">
+            <field name="name">education.attendence.lines.list.inherit</field>
+            <field name="model">education.attendance.line</field>
+            <field name="inherit_id" ref="education_attendances.education_attendance_line_view_tree"/>
+            <field name="arch" type="xml">
+
+                 <!-- <xpath expr="//list" position="attributes">
+                    <attribute name="delete">1</attribute>
+                </xpath> -->
+
+                 <xpath expr="//field[@name='half_day_absent']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="column_invisible">True</attribute>
+                </xpath>
+
+                 <xpath expr="//field[@name='full_day_absent']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="column_invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='student_name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="column_invisible">True</attribute>
+                </xpath>
+
+             
+                <xpath expr="//field[@name='class_id']" position="before">
+                    <field name="student_english_name"/>
+                    <field name="student_arabic_name"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mc_attendence_lines_form_inherit" model="ir.ui.view">
+            <field name="name">education.attendence.lines.form.inherit</field>
+            <field name="model">education.attendance.line</field>
+            <field name="inherit_id" ref="education_attendances.education_attendance_line_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='student_name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="column_invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='present_afternoon']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+                <xpath expr="//field[@name='class_id']" position="before">
+                    <field name="student_english_name"/>
+                    <field name="student_arabic_name"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="education_attendance_lines_action" model="ir.actions.act_window">
+            <field name="name">Attendance Lines</field>
+            <field name="res_model">education.attendance.line</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+        <menuitem 
+                id="mc_education_attendence_lines_menu" 
+                parent="education_attendances.education_attendance_main_menu"
+                name="Attendance Lines"
+                sequence="11"
+                action="education_attendance_lines_action"
+                />
+
+        <menuitem id="education_attendances.education_attendance_report_menu"
+              parent="education_attendances.education_attendance_main_menu"
+              name="Reports" sequence="13"/>
+
+        <menuitem id="education_attendances.education_attendance_report_sub_menu"
+                parent="education_attendances.education_attendance_report_menu"
+                action="education_attendances.education_attendance_line_report_action" name="Report"
+                sequence="0"/>
+
+    </data>
+</odoo>
+
+

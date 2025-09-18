@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <record id="mc_follow_up_situation_tree_view" model="ir.ui.view">
+            <field name="name">mc_follow_up_situation_tree_view</field>
+            <field name="model">mc.follow.up.situation</field>
+            <field name="arch" type="xml">
+            <list string="Follow-Up Situation">
+                <field name="name"/>
+            </list>
+            </field>
+        </record>
+
+        <record id="mc_follow_up_situation_form_view" model="ir.ui.view">
+            <field name="name">mc_follow_up_situation_form_view</field>
+            <field name="model">mc.follow.up.situation</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet string="Follow-Up Situation">
+                   <group>
+                        <field name="name" required="1"/>
+                        <field name="color" widget="color"/>
+
+                   </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+
+
+
+        
+        <record id="action_mc_follow_up_situation" model="ir.actions.act_window">
+            <field name="name">Follow-Up Situation</field>
+            <field name="res_model">mc.follow.up.situation</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_mc_follow_up_situation"
+                name="Follow-Up Situation" 
+                parent="menu_follow_up_sheet"
+                action="action_mc_follow_up_situation"
+                sequence="6"
+                />
+
+    </data>
+</odoo>

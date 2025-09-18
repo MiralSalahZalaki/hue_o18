@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <record id="mc_timetable_period_list_inherit" model="ir.ui.view">
+            <field name="name">education.timetable.period.list.inherit</field>
+            <field name="model">timetable.period</field>
+            <field name="inherit_id" ref="education_time_table.timetable_period_view_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="break_flag"/>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="mc_timetable_period_form_inherit" model="ir.ui.view">
+            <field name="name">education.timetable.period.form.inherit</field>
+            <field name="model">timetable.period</field>
+            <field name="inherit_id" ref="education_time_table.timetable_period_view_form"/>
+            <field name="arch" type="xml">
+
+                
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="domain">[('id', 'in', allowed_company_ids)]</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="break_flag"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Edit Action domain -->
+          <record id="education_time_table.timetable_period_action" model="ir.actions.act_window">
+               <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        </record>
+
+    </data>
+</odoo>
+
+
+

@@ -1,0 +1,67 @@
+<odoo>
+    <template id="submission_failed_template" name="Student Form - Submission Failed">
+        <t>
+            <link rel="icon" href="mc_app/static/description/mccion.png" type="image/x-icon"/>
+            <title>Mansoura College Student Application Form - لم يتم ارسال طلب التحاق طالب</title>
+            <script type="text/javascript" src="/mc_app/static/src/js/mc_form_validation.js"></script>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link t-att-href="'https://fonts.googleapis.com/css2?family=Oswald&amp;display=swap'" rel="stylesheet"/>
+            <link t-att-href="'https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&amp;family=Oswald&amp;display=swap'" rel="stylesheet"/>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+                <div class="form-body">
+                    <div class="container">
+                        <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_admission_application_form.css" />
+                        <div class="form-container">
+                            <div class="form-header">
+
+                                <img src="mc_app/static/description/mclogo.png" class="logo" alt=""
+                                    style="width: auto; display: block; margin: 0 auto;"/>
+
+                                <div class="row"
+                                style= "padding: 8px 16px; border-radius: 24px; background: #bf172814; border: 1px solid #BF1728;
+                                        gap: 16px; width: 100%; justify-content: center; margin:16px 0; align-items: center !important;">
+                                    
+                                    <i style="color:#BF1728 !important;" class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>
+                                    <h1 style="color:#BF1728;"> Submission Failed - 
+                                                                <span class="arabic_span">لم يتم التسجيل</span></h1>
+                                </div>
+
+                                <!-- <p style="font-size:16px; margin: 16px 0;">Your application was not submitted due to:</p> -->
+                                <p style="font-size:16px"><strong><t t-out="en_reason"/></strong></p>
+                                <p  class="arabic_span" style="font-size:16px"><t t-out="ar_reason"/></p>
+                            </div>
+                             <t t-if="existing_application">
+                                <div class="l-col-12">
+                                   <div class="row" 
+                                        t-att-style="can_edit and 'display: flex; flex-direction: row; justify-content: center; margin-top: 16px;' or 'display: flex; flex-direction: column; align-items: center;'" 
+                                        style="margin-top: 1.5rem; justify-content: center !important;">
+
+                                        <t t-if="can_edit">
+                                            <a t-att-href="'/apply/' + 
+                                                            '?student_national_id=' + str(existing_application.student_national_id) + 
+                                                            '&amp;application_id=' + str(existing_application.id)" 
+
+                                                class="btn-form px-2"
+                                                style="text-decoration:none; height: 48px; align-items: center; display: flex; padding: 0 24px;">
+                                                Edit - تعديل التقديم
+                                                </a>
+                                        </t>
+                                        <t t-else="">
+                                            <p class="arabic_span" style="color: #BF1728; font-weight: bold; text-align: center; margin: 16px 0;">
+                                                تمت مراجعة الطلب ولا يمكن التعديل فيه
+                                            </p>
+                                        </t>     
+                                        <a t-att-href="'/apply/' + str(existing_application.company_id.id)" 
+                                        class="btn-form"
+                                        style="text-decoration:none; height: 48px; align-items: center; display: flex; padding: 0 24px;">
+                                        Cancel - إلغاء
+                                        </a>
+                                    </div>
+                                </div>                             
+                             </t>
+                        </div>    
+                    </div> 
+                </div> 
+        </t>
+    </template>
+</odoo>

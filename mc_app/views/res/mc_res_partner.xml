@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherited" model="ir.ui.view">
+        <field name="name">res.partner.form.inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Education Tab -->
+            <!-- Update the title section to include is_parent and is_driver -->
+            <xpath expr="//h1" position="inside">
+                <br/>
+                Is Parent: <field name="is_parent" string="Is Parent"/>
+                <br/>
+                Is Driver: <field name="is_driver" string="Is Driver"/>
+            </xpath>
+
+            <!-- Add nationality, national_id, religion, and status to the first group -->
+            <xpath expr="//group[1]/field[@name='vat']" position="after">
+                <field name="nationality" can_create="false" can_write="false"/>
+                <field name="national_id"/>
+                <field name="religion"/>
+                <field name="status"/>
+            </xpath>
+
+
+            <xpath expr="//page[@name='education']/group[@name='container_education']" position="inside">
+                <group string="Student Information" name="student_info"  >
+                    <field name="student_id" can_create="true" can_write="true"/>
+                </group>
+            </xpath>
+            <!-- Add Sales Tab -->
+            <xpath expr="//page[@name='sales_purchases']" position="inside">
+                 <group>
+                        <field name="customer"/>
+                        <field name="opt_out"/>
+                    </group>
+            </xpath>
+
+            <xpath expr="//group[@name='misc']" position="after">
+             <group string="Payments" name="banks">
+                    <field name="currency_id" invisible="1" can_create="true" can_write="true" modifiers="{'invisible':true,'readonly':true}"/>
+                    <!--<div>
+                        <button type="action" class="btn-link" name="56" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}">
+                            <field string="Bank account(s)" name="bank_account_count" widget="statinfo" modifiers="{'readonly':true}"/>
+                        </button>
+                    </div>
+                    <button type="action" class="btn-link" name="408" context="{'search_default_partner_id': active_id}">
+                        <field name="payment_token_count" widget="statinfo" string="Credit card(s)" modifiers="{'readonly':true}"/>
+                    </button>-->
+                </group>
+            </xpath>
+
+            <xpath expr="//group[@name='fiscal_information']" position="replace"/>
+
+
+            <xpath expr="//notebook" position="before">
+                <group string="Users">
+                    <field name="user_ids"/>
+                </group>
+            </xpath>
+            <!-- Add Invoicing Tab -->
+            <xpath expr="//page[@name='accounting']" position="replace">
+                <page name="invoicing" string="Invoicing">
+                    <group>
+                        <separator string="Sale" colspan="4"/>
+                        <field name="property_payment_term_id"/>
+                        <field name="trust"/>
+
+                        <separator string="Purchase" colspan="4"/>
+                        <field name="property_supplier_payment_term_id"/>
+
+                        <separator string="Fiscal Information" colspan="4"/>
+                        <field name="property_account_position_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

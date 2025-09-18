@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+        <record id="absence_days_wizard_form_view" model="ir.ui.view">
+            <field name="name">absence.days.wizard.form</field>
+            <field name="model">absence.days.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Absence Days wizard" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" can_create="false" can_write="false" />
+                            <field name="grade_id"/>
+                            <field name="class_division_id"/>
+                    </group>
+                    <field name="student_id"/>
+
+                    <footer >
+                        <button name="generate_absence_days_wizard" type="object"   
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_absence_days_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Absence Days</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">absence.days.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="absence_days_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="absence_days_report_menu" 
+                    name="Student Absence Days"
+                    parent="education_attendances.education_attendance_report_menu"
+                    action="action_absence_days_wizard"
+                    sequence = "2"/>
+
+
+    </data>
+</odoo>

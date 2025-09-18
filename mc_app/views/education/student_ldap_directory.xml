@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Kanban View -->
+    <record id="student_ldap_directory_kanban" model="ir.ui.view">
+        <field name="name">student.ldap.directory.kanban</field>
+        <field name="model">student.ldap.directory</field>
+        <field name="arch" type="xml">
+           <kanban delete="false">
+                <field name="name"/>
+                <field name="dn"/>
+                <field name="obj_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click rounded-0">
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <strong>
+                                        <field class="fw-bold fs-3" name="name"/>
+                                    </strong>
+                                </div>
+                                
+                                <ul>
+                                    <li class="d-flex flex-column" t-if="record.dn.raw_value">
+                                        <span class="fw-semibold">DN :</span>
+                                        <field class="text-start text-wrap" name="dn" widget="text"/>
+                                    </li>
+                                    <li class="d-flex flex-column"  t-if="record.obj_id.raw_value">
+                                        <span class="fw-semibold">obj_id :</span>
+                                        <field name="obj_id"  class="text-start" />
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+
+        </field>
+    </record>
+    
+    <!-- Form View -->
+    <record id="view_student_ldap_directory_list" model="ir.ui.view">
+        <field name="name">student.ldap.directory.list</field>
+        <field name="model">student.ldap.directory</field>
+        <field name="arch" type="xml">
+            <list string="LDAP Directory" >
+                <field name="name" />
+                        <field name="dn" />
+                        <field name="obj_id" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_student_ldap_directory_form" model="ir.ui.view">
+        <field name="name">student.ldap.directory.form</field>
+        <field name="model">student.ldap.directory</field>
+        <field name="arch" type="xml">
+            <form string="LDAP Directory" delete="false" >
+                <sheet >
+                    <group >
+                        <field name="name" />
+                        <field name="dn" />
+                        <field name="obj_id" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_student_ldap_directory" model="ir.actions.act_window">
+        <field name="name">LDAP Directory</field>
+        <field name="res_model">student.ldap.directory</field>
+        <field name="view_mode">kanban,form,list</field>
+        <field name="view_id" ref="student_ldap_directory_kanban"/>
+        <field name="context">{'create': False}</field>
+        <field name="domain">[]</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menu item -->
+    <menuitem   id="menu_student_ldap_directory" 
+                name="LDAP Directory" 
+                parent="menu_application_class_setup" 
+                action="action_student_ldap_directory"/>
+</odoo>

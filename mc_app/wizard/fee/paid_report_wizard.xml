@@ -1,0 +1,74 @@
+<odoo>
+    <data>
+        <!-- Form View for Treasury Report Wizard -->
+        <record id="paid_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">paid.report.wizard.form</field>
+            <field name="model">paid.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Invoices Paid Fee Report">
+
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   
+                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group>
+                            <field name="date_from" string="Date from" widget="date" required="True"/>
+                        </group>
+                        <group>
+                            <field name="date_to" string="Date to" widget="date" required="True"/>
+                        </group>
+                    </group>
+
+                  <group>
+                      <group>
+                        <field name="account_id"  widget="many2many_tags"/>
+                        <field name="term_id"  widget="many2many_checkboxes"/>
+                        <field name="grade_ids" widget="many2many_tags" />
+                    </group>
+                    <group>
+                        <field name="financial_years"/>
+                        <field name="account_journal" widget="many2many_checkboxes" options="{'no_create': True}"/>
+                    </group>
+                    
+                  </group>
+  
+
+                    <footer>
+                        <button name="generate_paid_report_wizard" 
+                                type="object" 
+                                string="Generate Report" 
+                                class="btn-primary" 
+                                default_focus="1"/>
+
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for Treasury Report Wizard -->
+        <record id="action_paid_report_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Invoices Paid Fee Report</field>
+            <field name="res_model">paid.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="paid_report_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Menu Item for Treasury Report Wizard -->
+        <menuitem id="paid_report_wizard_menu"
+                  name="Invoices Paid Fee"
+                  parent="fee_reports_menu"
+                  action="action_paid_report_wizard"
+                  sequence="3"/>
+    </data>
+</odoo>

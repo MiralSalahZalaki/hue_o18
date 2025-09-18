@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+        <record id="team_owners_tree_view" model="ir.ui.view">
+            <field name="name">team_owners_tree_view</field>
+            <field name="model">mc.team.owners</field>
+             <field name="arch" type="xml">
+                <list>
+                    <field name="grade" widget="many2many_tags"/>
+                    <field name="syllabus" widget="many2many_tags"/>
+                    <field name="responsibles" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+
+        <record id="team_owners_form_view" model="ir.ui.view">
+            <field name="name">team_owners_form_view</field>
+            <field name="model">mc.team.owners</field>
+             <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="grade" widget="many2many_tags" string="Grade"/>
+                        <field name="syllabus" widget="many2many_tags" string="Syllabus"/>
+                        <field name="responsibles" widget="many2many_tags" string="Responsibles"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        
+        <record id="action_team_owners" model="ir.actions.act_window">
+            <field name="name">Team Owners</field>
+            <field name="res_model">mc.team.owners</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_team_owners"
+                name="Team Owners" 
+                parent="menu_application_class_setup"
+                action="action_team_owners"/>
+
+    </data>
+</odoo>

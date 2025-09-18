@@ -1,0 +1,67 @@
+<odoo>
+    <record id="mc_timetable_list_view" model="ir.ui.view">
+        <field name="name">mc_timetable_list</field>
+        <field name="model">mc.timetable</field>
+        <field name="arch" type="xml">
+            <list string="Education Stage">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="mc_timetable_form_view" model="ir.ui.view">
+        <field name="name">mc_timetable_form</field>
+        <field name="model">mc.timetable</field>
+        <field name="arch" type="xml">
+            <form string="Education Stages">
+                <sheet>
+                   <group>
+                        <field name="name"/>
+                        <field name="educational_stage_id"/>
+                        <field name="grade_id"/>
+                        <field name="holiday_one"/>
+                        <field name="holiday_two"/>
+                    </group>
+                    <notebook>
+                        <page string="Periods">
+				            <field name="educational_stage_period">
+                                <list>
+                                    <field name="period_id"/>
+                                    <field name="time_from" widget="float_time"/>
+                                    <field name="time_till" widget="float_time"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Online Periods">
+                            <field name="online_period">
+                                <list>
+                                    <field name="period_id"/>
+                                    <field name="time_from" widget="float_time"/>
+                                    <field name="time_till" widget="float_time"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+            
+    <record id="action_mc_timetable" model="ir.actions.act_window">
+        <field name="name">Education Stages Periods</field>
+        <field name="res_model">mc.timetable</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+
+     <menuitem
+            id="education_stages_period_sub_menu"
+            name="Education Stages Periods"
+            parent="education_time_table.education_timetable_menu_configuration"
+            action="action_mc_timetable"/>
+
+
+</odoo>

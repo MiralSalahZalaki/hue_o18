@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="mc_education_academic_year_form_inherit" model="ir.ui.view">
+            <field name="name">education.academic_year.form.inherit</field>
+            <field name="model">education.academic.year</field>
+            <field name="inherit_id" ref="education_core.education_academic_year_view_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='ay_start_date']" position="after">
+                    <field name="code"/>
+                    <field name="admission"/>
+                    <field name="current"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record id="mc_education_promotion_form_inherit" model="ir.ui.view">
+            <field name="name">education.promotion.form.inherit</field>
+            <field name="model">education.promotion</field>
+            <field name="inherit_id" ref="education_promotion.education_promotion_view_form"/>
+             <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field  name="company_id" 
+                        domain="[('id', 'in', allowed_company_ids)]"/>
+             </xpath>
+             
+            </field>
+        </record>
+
+        <record id="mc_education_promotion_tree_inherit" model="ir.ui.view">
+            <field name="name">education.promotion.tree.inherit</field>
+            <field name="model">education.promotion</field>
+            <field name="inherit_id" ref="education_promotion.education_promotion_view_tree"/>
+             <field name="arch" type="xml">
+             <xpath expr="//list" position="inside">
+                <field name="company_id"/>
+             </xpath>
+            </field>
+        </record>
+
+        <record id="education_promotion.education_promotion_action" model="ir.actions.act_window">
+               <field name="domain">[('company_id', 'in', allowed_company_ids)]</field> 
+        </record>
+    </data>
+</odoo>

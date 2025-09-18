@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_ig_student_template">
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <style>
+                    body {
+                        font-size:12px !important;
+                    }
+                    .container {
+                        max-width: 100% !important;
+                        width: 100% !important;
+                    }
+
+                    /* لضمان وجود Scroll */
+                    .table-container {
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                        margin-top: 10px;
+                    }
+                    .table-container table {
+                        min-width: 1000px; 
+                        white-space: nowrap;
+                    }
+
+                    table {
+                        border: 1px solid #000 !important;
+                        background-color: #EEEEEE !important;
+                        width: 100% !important;
+                        text-align: center !important;
+                        border-collapse: collapse !important;
+                        font-family: 'Lato', sans-serif !important;
+                        font-size: 13px !important;
+                    }
+                    td {
+                        white-space: nowrap !important;
+                    }
+                    td, th {
+                        border: 1px solid #000 !important;
+                        text-transform: capitalize !important;
+                        padding: 4px !important;
+                    }
+                    table tr:nth-child(even) {
+                        background: #D0E4F5 !important;
+                    }
+                    table thead {
+                        border-bottom: 2px solid #000 !important;
+                    }
+                    table thead th {
+                        font-size: 13px !important;
+                        font-weight: 600 !important;
+                        color: #3B4345 !important;
+                        text-align: center !important;
+                        vertical-align: inherit !important;
+                        background-color: #B8D4EA !important;
+                    }
+                    .subject-header {
+                        font-weight: bold !important;
+                    }
+                    .total-header {
+                        font-size: 13px !important;
+                    }
+                    .max-score-header {
+                        font-weight: bold !important;
+                        font-size: 13px !important;
+                    }
+                    .student-row {
+                        background-color: #f9f9f9 !important;
+                    }
+                    .score-cell {
+                        font-weight: 500 !important;
+                    }
+                    .total-cell {
+                        font-weight: bold !important;
+                    }
+                    .grade-cell {
+                        font-weight: bold !important;
+                    }
+                    .print {
+                        display: none;
+                    }
+                    .report-header {
+                        text-align: center;
+                        margin-bottom: 20px;
+                        font-family: 'Lato', sans-serif;
+                    }
+                    .report-title {
+                        font-size: 20px;
+                        font-weight: bold;
+                        color: #2c3e50;
+                        margin-bottom: 10px;
+                    }
+                    .report-info {
+                        font-size: 13px;
+                        color: #7f8c8d;
+                        margin-bottom: 5px;
+                    }
+                    @media print {
+                        .print {
+                            display: block;
+                        }
+                        .btn-print {
+                            display: none;
+                        }
+                    }
+                </style>
+            </head>
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            <hr/>
+            <div class="page">
+                <!--  Report Header -->
+                <div class="report-header">
+                    <div class="report-title">IG Student Results Report</div>
+                    <div class="d-flex justify-content-between w-100">
+                        <div class="report-info">
+                            <strong>Grade:</strong>
+                            <span t-esc="grade_name"/>
+                            <t t-if="class_name">
+                            -
+                                <strong>Class:</strong>
+                                <span t-esc="class_name"/>
+                            </t>
+                        </div>
+                        <div class="report-info">
+                            <strong>Term:</strong>
+                            <span t-esc="term_name"/>
+                        </div>
+                        <div class="report-info">
+                            <strong>Total Students:</strong>
+                            <span t-esc="total_students"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <!-- Numeric System -->
+                    <t t-if="grading_method_type == 'numeric'">
+                        <div class="row">
+                            <table class="table blueTable">
+                                <thead>
+                                    <!-- First Header Row: Subject Names -->
+                                    <tr>
+                                        <th rowspan="3" class="name-col">#</th>
+                                        <th rowspan="3">Code</th>
+                                        <th rowspan="3">Student</th>
+                                        <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                            <th colspan="4" class="subject-header">
+                                                <span t-esc="syllabus_info.get('name')"/>
+                                            </th>
+                                        </t>
+                                        <th rowspan="3" class="total-header">Total</th>
+                                        <t t-if="top_rank != 0">
+                                            <th rowspan="3" class="total-header">Rank</th>
+                                        </t>
+                                    </tr>
+                                    <!-- Second Header Row: Assessment Categories -->
+                                    <tr>
+                                        <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                            <th class="total-header">Weekly</th>
+                                            <th class="total-header">Monthly</th>
+                                            <th class="total-header">Exam</th>
+                                            <th class="total-header">Total</th>
+                                        </t>
+                                    </tr>
+                                    <!-- Third Header Row: Max Scores -->
+                                    <tr>
+                                        <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                            <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                            <!-- Get max scores from the first student who has this subject -->
+                                            <t t-set="first_student_with_subject" t-value="None"/>
+                                            <t t-foreach="students_data" t-as="temp_student">
+                                                <t t-set="temp_subject_result" t-value="temp_student.get('subjects_results', {}).get(subject_id, {})"/>
+                                                <t t-if="temp_subject_result and not first_student_with_subject">
+                                                    <t t-set="first_student_with_subject" t-value="temp_subject_result"/>
+                                                </t>
+                                            </t>
+                                            <th class="max-score-header">
+                                                <span t-esc="first_student_with_subject.get('british_weekly_max', 0.0) if first_student_with_subject else 0.0"/>
+                                            </th>
+                                            <th class="max-score-header">
+                                                <span t-esc="first_student_with_subject.get('british_monthly_max', 0.0) if first_student_with_subject else 0.0"/>
+                                            </th>
+                                            <th class="max-score-header">
+                                                <span t-esc="first_student_with_subject.get('british_exam_max', 0.0) if first_student_with_subject else 0.0"/>
+                                            </th>
+                                            <th class="max-score-header">
+                                                <span t-esc="first_student_with_subject.get('british_total_max', 0.0) if first_student_with_subject else 0.0"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Student Data Rows -->
+                                    <t t-foreach="students_data" t-as="student">
+                                        <tr class="student-row">
+                                            <!-- Serial Number -->
+                                            <td class="score-cell">
+                                                <span t-esc="student.get('serial_no')"/>
+                                            </td>
+                                            <!-- Student Code/Seat Number -->
+                                            <td class="score-cell">
+                                                <span t-esc="student.get('student_code', '')"/>
+                                            </td>
+                                            <!-- Student Name -->
+                                            <td style="text-align: left; min-width: 150px;">
+                                                <span t-esc="student.get('student')"/>
+                                            </td>
+                                            <!-- Subject Scores -->
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                                <t t-set="subject_id" t-value="str(syllabus_info.get('id'))"/>
+                                                <t t-set="subject_result" t-value="student.get('subjects_results', {}).get(subject_id, {})"/>
+                                                <!-- Weekly Score -->
+                                                <td class="score-cell">
+                                                    <span t-esc="subject_result.get('british_weekly', 0.0)"/>
+                                                </td>
+                                                <!-- Monthly Score -->
+                                                <td class="score-cell">
+                                                    <span t-esc="subject_result.get('british_monthly', 0.0)"/>
+                                                </td>
+                                                <!-- Exam Score -->
+                                                <td class="score-cell">
+                                                    <span t-esc="subject_result.get('british_exam', 0.0)"/>
+                                                </td>
+                                                <!-- Subject Total with Grade -->
+                                                <td class="total-cell">
+                                                    <span t-esc="subject_result.get('british_total', 0.0)"/>
+                                                    <br/>
+                                                    <small class="grade-cell">
+                                                        <span t-esc="subject_result.get('grade', '')"/>
+                                                    </small>
+                                                </td>
+                                            </t>
+                                            <!-- Student Total Score -->
+                                            <td class="total-cell">
+                                                <span t-esc="student.get('total_score', 0.0)"/>
+                                                /
+                                                <span t-esc="student.get('total_max', 0.0)"/>
+                                            </td>
+                                            <!-- Student Rank -->
+                                            <t t-if="top_rank != 0">
+                                                <td class="grade-cell">
+                                                    <span t-esc="student.get('rank', '')"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                    
+                    <!-- Q Colors System -->
+                    <t t-if="grading_method_type == 'q_colors'">
+                        <div class="row">
+                            <table class="table blueTable">
+                                <thead>
+                                    <!-- First Header Row: Subject Names -->
+                                    <tr>
+                                        <th rowspan="3" class="name-col">#</th>
+                                        <th rowspan="3">Code</th>
+                                        <th rowspan="3">Student</th>
+                                        <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                            <t t-set="assessment_count" t-value="len(syllabus_info.get('assessments', [])) or 1"/>
+                                            <th t-att-colspan="assessment_count" class="subject-header">
+                                                <span t-esc="syllabus_info.get('certificate_name')"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <!-- Second Header Row: Assessment Categories -->
+                                    <tr>
+                                        <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                            <!-- Assessments -->
+                                            <t t-foreach="syllabus_info.get('assessments', [])" t-as="assessment">
+                                                <th class="assessment-header">
+                                                    <span t-esc="assessment.get('name', ' ')"/>
+                                                </th>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Student Data Rows -->
+                                    <t t-foreach="students_data" t-as="student" t-as-index="student_index">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="student_index + 1"/>
+                                            </td>
+                                            <td style="text-align:left;">
+                                                <span t-esc="student.get('student_code', '')"/>
+                                            </td>
+                                            <td style="text-align:left;">
+                                                <span t-esc="student.get('student')"/>
+                                            </td>
+                                            <!-- Loop through subjects -->
+                                            <t t-foreach="syllabus_data" t-as="syllabus_info" t-as-index="syllabus_index">
+                                                <t t-set="syllabus_id" t-value="syllabus_info.get('syllabus_id')"/>
+                                                <t t-set="subject_result" t-value="student.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                                <!-- Assessments -->
+                                                <t t-foreach="syllabus_info.get('assessments', [])" t-as="assessment" t-as-index="assess_index">
+                                                    <td>
+                                                        <t t-set="assess_id" t-value="assessment.get('id')"/>
+                                                        <t t-set="assess_data" t-value="subject_result.get('assessments', {}).get(assess_id)"/>
+                                                        <t t-if="not syllabus_info.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                            <t t-if="assess_data">
+                                                                <span t-esc="'{0:g}'.format(float('{:.2f}'.format(assess_data.get('score', 0.0))))"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span style="color:red">Abs</span>
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span> </span>
+                                                        </t>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+                <!-- Report Footer -->
+                <div class="report-header" style="margin-top: 20px;">
+                    <div class="report-info">
+                        Report Generated on:
+                        <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+        <record id="mc_follow_up_notes_tree_view" model="ir.ui.view">
+            <field name="name">mc_follow_up_notes_tree_view</field>
+            <field name="model">mc.follow.up.notes</field>
+            <field name="arch" type="xml">
+            <list string="Follow-Up Notes">
+                <field name="name"/>
+            </list>
+            </field>
+        </record>
+
+        <record id="mc_follow_up_notes_form_view" model="ir.ui.view">
+            <field name="name">mc_follow_up_notes_form_view</field>
+            <field name="model">mc.follow.up.notes</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet string="Follow-Up Notes">
+                   <group>
+                        <field name="name" required="1"/>
+                   </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+
+
+
+        
+        <record id="action_mc_follow_up_notes" model="ir.actions.act_window">
+            <field name="name">Follow-Up Notes</field>
+            <field name="res_model">mc.follow.up.notes</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_mc_follow_up_notes"
+                name="Follow-Up Notes" 
+                parent="menu_follow_up_sheet"
+                action="action_mc_follow_up_notes"
+                sequence="5"
+                />
+
+    </data>
+</odoo>

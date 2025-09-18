@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+        <record id="mc_grading_types_tree_view" model="ir.ui.view">
+            <field name="name">mc_grading_types_tree_view</field>
+            <field name="model">mc.grading.types</field>
+            <field name="arch" type="xml">
+            <list string="Grading Types" editable="bottom" >
+                <field name="name" required="1"/>
+            </list>
+            </field>
+        </record>
+
+
+
+        
+        <record id="action_mc_grading_types" model="ir.actions.act_window">
+            <field name="name">Grading Types</field>
+            <field name="res_model">mc.grading.types</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{}</field>
+
+        </record>
+
+
+
+        <menuitem id="menu_mc_grading_types"
+                name="Grading Types" 
+                parent="menu_student_grading"
+                action="action_mc_grading_types"
+                sequence="4"
+                />
+
+    </data>
+</odoo>

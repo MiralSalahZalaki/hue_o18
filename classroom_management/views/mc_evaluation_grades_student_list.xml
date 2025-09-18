@@ -1,0 +1,61 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="mc_evaluation_grades_student_list_tree_view" model="ir.ui.view">
+        <field name="name">mc.evaluation.grades.student.list.tree</field>
+        <field name="model">mc.evaluation.grades.student.list</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="seat_number"/>
+                <field name="student_id"/>
+                <field name="class_id"/>
+                <field name="connect_id"/>
+                <field name="score"/>
+           
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mc_evaluation_grades_student_list_form_view" model="ir.ui.view">
+        <field name="name">mc.evaluation.grades.student.list.form</field>
+        <field name="model">mc.evaluation.grades.student.list</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Evaluation Grades Student List">
+                   <group>
+                            <group>
+                                <field name="connect_id"/>
+                                <field name="score_selection"/>
+                                <field name="score"/>
+                                <field name="color"/>
+                                <field name="comment"/>
+                                <field name="check"/>
+                                <field name="grading_method"/>
+                                <field name="student_code"/>
+                            </group>
+                            <group>
+                                <field name="student_id"/>
+                              
+                                <field name="class_id"/>
+                                <field name="seat_number"/>
+                            </group>
+                   </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_mc_evaluation_grades_student_list" model="ir.actions.act_window">
+        <field name="name">Evaluation Grades Lines</field>
+        <field name="res_model">mc.evaluation.grades.student.list</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_mc_evaluation_grades_student_list"
+              name="Evaluation Grades Lines" 
+              parent="menu_grading_setup"
+              sequence = "4"
+              action="action_mc_evaluation_grades_student_list"/>
+</odoo>

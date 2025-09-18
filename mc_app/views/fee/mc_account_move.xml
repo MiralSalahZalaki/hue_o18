@@ -1,0 +1,99 @@
+<odoo>
+    <data>
+        <record id="receipt_form_inherit" model="ir.ui.view">
+            <field name="name">receipt.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="education_fee.receipt_form"/>
+             <field name="arch" type="xml">
+         
+                <xpath expr="//field[@name='class_division_id']" position="after">
+                    <field name="student_code"/>
+                </xpath>
+                <xpath expr="//field[@name='fee_category_id']" position="before">
+                    <field name="financial_year"/>
+                </xpath>
+                <xpath expr="//field[@name='fee_structure_id']" position="after">
+                    <field name="fee_payment_term"/>
+                    <field name="is_fee"/>
+                    <field name="state"/>
+                    <field name="has_refund"/>
+                    <field name="bus_cancel"/>
+                </xpath>
+
+                <xpath expr="//field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>   
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_date_due']" position="after">
+                    <field name="currency_id" />   
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="options">{'display': ['name']}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='fee_structure_id']" position="attributes">
+                    <attribute name="domain">[('category_id', '=', fee_category_id)]</attribute>
+                </xpath>
+
+                <xpath expr="//page[@id='invoice_tab']//field[@name='product_id']" position="after">
+                    <field name="account_id" domain="[('deprecated','=',False)]"/>
+                </xpath>
+
+
+                <xpath expr="//field[@name='invoice_line_ids']/list" position="attributes">
+                    <attribute name="editable"/>
+                </xpath>
+
+               <xpath expr="//notebook/page[@name='payments_done']" position="replace">
+                    <page string="Payments Done" name="payments_done_tab">
+                        <field name="payed_done_line_ids">
+                            <list string="Paid Lines">
+                                <field name="date"/>
+                                <field name="payment_id"/>
+                                <!-- <field name="invoice_line_id"/>  --><field name="product_id"/>
+                                <field name="account_id"/>
+                                <field name="price_unit" sum="Total Paid Amount"/> <field name="student_id"/>
+                                <field name="fee_category_id"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+
+                
+
+            </field>
+        </record>
+
+        <record id="receipt_list_inherit" model="ir.ui.view">
+            <field name="name">receipt.list.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="education_fee.view_move_tree"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="replace">
+                    <field name="student_id" string="Student"/>
+                </xpath>
+                <xpath expr="//field[@name='ref']" position="replace">
+                    <field name="class_division_id" />
+                    <field name="student_code" />
+                    <field name="invoice_date" string="Receipt Date" />
+                </xpath>
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="invoice_user_id" string="Responsible"/>
+                    <field name="invoice_date_due" />
+                    <field name="financial_year" />
+                    <field name="fee_category_id" />
+                    <field name="fee_structure_id" />
+                    <field name="fee_payment_term" />
+                    <field name="invoice_line_ids" widget="many2many_tags" width="220"/>
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="replace">
+                    <field name="amount_residual" />
+                </xpath>
+
+             
+             </field>
+        </record>
+  
+    </data>
+</odoo>

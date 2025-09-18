@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_mc_total_term_template">
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+                <style>
+                table tbody tr td:last-child {
+                    background-color: #eeeeee;
+                }
+               .o_report_layout_boxed{ 
+                font-size: 13px !important;
+                }
+                table.blueTable {
+                border: 3px solid #555555;
+                width: 100%;
+                text-align: center;
+                border-collapse: inherit !important;
+                border-radius:6px;
+                margin-bottom: 20px;
+                }
+                table.blueTable td, table.blueTable th {
+                border: 1px solid #000000;
+                padding: 3px 2px;
+                }
+                table.blueTable tbody td {
+                font-size: 13px;
+                font-weight: bold;
+                }
+                table.blueTable thead {
+                border-bottom: 2px solid #000000;
+                }
+                table.blueTable thead th {
+                font-size: 15px;
+                font-weight: bold;
+                color: #000000;
+                text-align: center;
+                border-left: 0px solid #D0E4F5;
+                }
+                table.blueTable thead th:first-child {
+                border-left: none;
+                }
+                table.blueTable tfoot td {
+                font-size: 14px;
+                }
+                table.blueTable tfoot .links {
+                text-align: right;
+                }
+                table.blueTable tfoot .links a{
+                display: inline-block;
+                background: #1C6EA4;
+                color: #FFFFFF;
+                padding: 2px 8px;
+                border-radius: 5px;
+                }
+                .print {
+                display:none
+                }
+                @media print {
+                .print {display:block}
+                .btn-print {display:none;}
+                }
+                /* Colors for evaluation */
+                .distinguished { background-color: #ADD8E6 !important; }
+                .required-successfully { background-color: #90EE90 !important; }
+                .needs-care { background-color: #FFFF99 !important; }
+                .needs-great-care { background-color: #FFB6C1 !important; }
+
+                 .table-container {
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                        margin-top: 10px;
+                    }
+                    .table-container table {
+                        min-width: 1000px; 
+                        white-space: nowrap;
+                    }
+
+                    /* فصل كل طالب في صفحة منفصلة */
+                    .page-content {
+                        margin-bottom: 20px;
+                    }
+                    
+                    .page-break {
+                        page-break-before: always !important;
+                    }
+
+                     @media print {
+                        * {
+                            box-sizing: border-box !important;
+                        }
+                        
+                        html, body {
+                            height: auto !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            overflow: visible !important;
+                        }
+                        
+                        .btn-print {
+                            display: none !important;
+                        }
+                        
+                        .table-container {
+                            overflow: visible !important;
+                            -webkit-overflow-scrolling: auto !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                        }
+                        
+                        .table-container table {
+                            min-width: auto !important;
+                            white-space: normal !important;
+                            width: 100% !important;
+                        }
+                        
+                        table {
+                            font-size: 10px !important;
+                            margin: 0 !important;
+                        }
+                        
+                        /* كل طالب في صفحة منفصلة */
+                        .page-content {
+                            page-break-after: always !important;
+                            margin: 0 !important;
+                            padding: 10px !important;
+                            min-height: auto !important;
+                            height: auto !important;
+                        }
+
+                        /* الطالب الأخير لا يحتاج page break */
+                        .page-content:last-child {
+                            page-break-after: avoid !important;
+                        }
+
+                        .page-break {
+                            page-break-before: always !important;
+                            display: block !important;
+                            height: 0 !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                        }
+                        
+                        /* تقليل المساحات */
+                        .my-3, .mb-3, .d-flex {
+                            margin: 3px 0 !important;
+                        }
+                        
+                        h1, h2, h3, h4 {
+                            margin: 5px 0 !important;
+                            page-break-after: avoid !important;
+                        }
+                        
+                        /* منع تقسيم الجداول */
+                        table {
+                            page-break-inside: avoid !important;
+                        }
+                        
+                        /* تأكد من عدم وجود مساحات فارغة */
+                        div:empty {
+                            display: none !important;
+                        }
+                    }
+    
+               </style>
+            </head>
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            <div>
+                <t t-foreach="students_data" t-as="student" t-as-index="student_index">
+                    <div t-att-class="'page-content' + (' page-break' if student_index > 0 else '')">
+                        <!-- Report Title -->
+                        <div class="report-title">
+                            <h1 style="margin-top: 20px;margin-bottom: 10px; text-align: center;">
+                                <t t-if="full_academic_year">
+                                    <span t-if="not arabic_report">Academic Final Report</span>
+                                    <span t-if="arabic_report">التقرير الأكاديمي النهائي</span>
+                                </t>
+                                <t t-else="">
+                                    <span t-if="not arabic_report">Score Transcript</span>
+                                    <span t-if="arabic_report">كشف الدرجات</span>
+                                </t>
+                            </h1>
+                            <h3>
+                                <span t-esc="term_name"/>
+                                <t t-if="academic_year">
+                                    -
+                                    <span t-esc="academic_year"/>
+                                </t>
+                            </h3>
+                        </div>
+                        <!-- Student Information -->
+                        <div class="d-flex justify-content-between mb-3">
+                            <div class="col-xs-6">
+                                <strong>
+                                    <span t-if="not arabic_report">Student Name:</span>
+                                    <span t-if="arabic_report">اسم الطالب:</span>
+                                </strong>
+                                <span t-esc="student.get('student', '')"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>
+                                    <span t-if="not arabic_report">Grade:</span>
+                                    <span t-if="arabic_report">الصف:</span>
+                                </strong>
+                                <span t-esc="student.get('grade_name', '')"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>
+                                    <span t-if="not arabic_report">Seat Number:</span>
+                                    <span t-if="arabic_report">رقم الجلوس:</span>
+                                </strong>
+                                <span t-esc="student.get('seat_number', '')"/>
+                            </div>
+                        </div>
+                        <!-- Subjects Table -->
+                        <div class="table-container">
+                            <table class="blueTable mt-2">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span t-if="not arabic_report">Subject</span>
+                                            <span t-if="arabic_report">المادة</span>
+                                        </th>
+                                        <t t-if="grading_method == 'numeric'">
+                                            <t t-foreach="syllabus_data" t-as="syllabus">
+                                                <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                                <t t-set="student_subject_data" t-value="student.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                                <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                    <th>
+                                                        <span t-esc="syllabus.get('certificate_name', syllabus.get('syllabus_name', ''))"/>
+                                                    </th>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t t-if="grading_method == 'evaluation'">
+                                            <th>
+                                                <span t-if="not arabic_report">Evaluation</span>
+                                                <span t-if="arabic_report">التقييم</span>
+                                            </th>
+                                            <th>
+                                                <span t-if="not arabic_report">Comment</span>
+                                                <span t-if="arabic_report">التعليق</span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Numeric Grading Method -->
+                                    <t t-if="grading_method == 'numeric'">
+                                        <tr>
+                                            <td>Max.</td>
+                                            <t t-foreach="syllabus_data" t-as="syllabus">
+                                                <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                                <t t-set="student_subject_data" t-value="student.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                                <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                    <td>
+                                                        <span t-esc="student_subject_data.get('max_score', 0)"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                        <tr>
+                                            <td>Mark.</td>
+                                            <t t-foreach="syllabus_data" t-as="syllabus">
+                                                <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                                <t t-set="student_subject_data" t-value="student.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                                <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                    <td>
+                                                        <span t-esc="student_subject_data.get('score', 0)"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                    <!-- Evaluation Method -->
+                                    <t t-if="grading_method == 'evaluation'">
+                                        <t t-foreach="syllabus_data" t-as="syllabus">
+                                            <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                            <t t-set="student_subject_data" t-value="student.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                            <!-- Skip elective subjects if student is not registered -->
+                                            <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                <tr>
+                                                    <!-- Subject Name -->
+                                                    <td class="subject-name">
+                                                        <span t-esc="syllabus.get('certificate_name', syllabus.get('syllabus_name', ''))"/>
+                                                    </td>
+                                                    <!-- Evaluation -->
+                                                    <t t-if="grading_method == 'evaluation'">
+                                                        <!-- Grade -->
+                                                        <t t-if="student_subject_data.get('color')">
+                                                            <td t-att-style="'width: 20%;' + (' background-color: %s !important;' % student_subject_data.get('color') if student_subject_data.get('color') else '')">
+                                                            
+                                                        </td>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <td style="width: 20%;">
+                                                                <span t-esc="student_subject_data.get('grade', '')"/>
+                                                                <t t-if="student_subject_data.get('score', 0) > 0">
+                                                                -
+                                                                    <span t-esc="'{0:g}'.format(float('{0:.2f}'.format(student_subject_data.get('score', 0))))"/>
+                                                                </t>
+                                                            </td>
+                                                        </t>
+                                                        <!-- Comment -->
+                                                        <td style="text-align: left; padding-left: 10px;">
+                                                            <span t-esc="student_subject_data.get('comment', '')"/>
+                                                            <t t-if="student_subject_data.get('score', 0) > 0">
+                                                            -
+                                                                <span t-esc="'{0:g}'.format(float('{0:.2f}'.format(student_subject_data.get('score', 0))))"/>
+                                                            </t>
+                                                        </td>
+                                                    </t>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                        <tr>
+                                            <td>
+                                                <span t-if="not arabic_report">Comment</span>
+                                                <span t-if="arabic_report">التعليق</span>
+                                            </td>
+                                            <td colspan="2" style="text-align: start; padding-inline:24px">
+                                                <span>
+                                                    <t t-esc="grading_method_comment"/>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Grading Comments Table -->
+                        <t t-set="check_comment" t-value="student.get('grading_comments', [])"/>
+                        <t t-if="check_comment">
+                            <table class="blueTable">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span t-if="not arabic_report">#</span>
+                                            <span t-if="arabic_report">#</span>
+                                        </th>
+                                        <th>
+                                            <span t-if="not arabic_report">Type</span>
+                                            <span t-if="arabic_report">النوع</span>
+                                        </th>
+                                        <!-- <th>
+                                       <span t-if="not arabic_report">Syllabus</span>
+                                       <span t-if="arabic_report">المادة</span>
+                                    </th> -->
+                                        <th>
+                                            <span t-if="not arabic_report">Comment</span>
+                                            <span t-if="arabic_report">التعليق</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="count" t-value="0"/>
+                                    <t t-foreach="check_comment" t-as="gcomment">
+                                        <t t-set="count" t-value="count+1"/>
+                                        <tr>
+                                            <td>
+                                                <span t-esc="count"/>
+                                            </td>
+                                            <td>
+                                                <t t-set="grading_type" t-value="gcomment.get(str('grading_type'),{})"/>
+                                                <span t-esc="grading_type"/>
+                                            </td>
+                                            <!-- <td>
+                                        <t t-set="syllabus" t-value="gcomment.get(str('syllabus'),{})"/>
+                                        <span t-esc="syllabus"/>
+                                       </td> -->
+                                            <td>
+                                                <t t-set="notes" t-value="gcomment.get(str('notes'),{})"/>
+                                                <span t-esc="notes"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <!-- Academic Year Promotion Message -->
+                        <t t-if="full_academic_year">
+                            <div style="text-align: center; margin-top: 20px; font-weight: bold; color: #27ae60;">
+                                <h4>
+                                    <span t-if="not arabic_report">The student passed and promoted to next grade</span>
+                                    <span t-if="arabic_report">نجح الطالب وتم ترقيته للصف التالي</span>
+                                </h4>
+                            </div>
+                        </t>
+                        <!-- Grading Scale Legend for Evaluation Method -->
+                        <t t-if="grading_method == 'evaluation' and grading_scales">
+                            <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                                <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                                    <t t-foreach="grading_scales" t-as="scale">
+                                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                            <span t-att-style="'background-color:' + str(scale.get('color', '#ccc')) + 
+                                                ' !important; height: 20px; width: 20px; border-radius: 50%; display: inline-block; margin-right: 8px; border: 1px solid #ddd;'"/>
+                                            <span style="font-size: 12px; color: #495057;" t-esc="scale.get('description', '')"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                        <!-- Digital Signatures Section -->
+                        <div style="margin-top: 40px;">
+                            
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

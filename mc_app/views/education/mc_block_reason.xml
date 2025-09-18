@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record id="result_block_reason_tree_view" model="ir.ui.view">
+            <field name="name">result_block_reason_tree_view</field>
+            <field name="model">mc.block.reason</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+        <record id="result_block_reason_form_view" model="ir.ui.view">
+            <field name="name">result_block_reason_form_view</field>
+            <field name="model">mc.block.reason</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record id="action_result_block_reason" model="ir.actions.act_window">
+            <field name="name">Result Block Reason</field>
+            <field name="res_model">mc.block.reason</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_result_block_reason"
+                name="Result Block Reason" 
+                parent="menu_application_admission_setup"
+                action="action_result_block_reason"/>
+    </data>
+</odoo>

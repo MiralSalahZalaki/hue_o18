@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <record id="revealer_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">revealer.report.wizard.form</field>
+            <field name="model">revealer.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Revealer Report" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" string="School"/>
+                            <field name="stage_id" 
+                                    placeholder="Select the educational stage"
+                                    options="{'no_create': True}" string="Stage"/>
+                            <field name="total_sessions"/>
+                    </group>
+                    
+                    <footer >
+                        <button name="generate_timetable_revealer_report" type="object"
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_revealer_report_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Revealer Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">revealer.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="revealer_report_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="timetable_revealer_report_menu" 
+                    name="Revealer Report"
+                    parent="main_menu_timtable_reports"
+                    action="action_revealer_report_wizard"
+                    sequence = "6"/>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_revealer_reports">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>            
+        <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_reports_style.css" />
+        
+        </head>
+
+                <div class="page">
+                <div class="my-3">
+                    <button class="print-button" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+                        <i class="fa fa-print"/> Print
+                    </button>
+                </div>
+                     <div class="container mt-5">
+                    <div class="row mb-4">
+                        <div class="d-flex align-items-center align-items-sm-start border-bottom border-2 border-dark">
+                            <div class="col-6 text-start">
+                                <h2>Revealer Reports</h2>
+                                <h5><t t-esc="company_name"/></h5>
+                            </div>
+                            <div class="col-6" style="display: flex; justify-content: end;">
+                                <img src="/mc_app/static/description/mclogo.png" class="d-none d-lg-block" alt="" style="width: 250px;"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <t t-foreach="department_data" t-as="dept">
+                                <div>
+                                    <div style="background: #2c3691; color: #fff; text-align:center; padding: 4px 0px;">
+                                        <t t-esc="dept['department_name']"/>
+                                    </div>
+
+                                    <t t-if="not total_sessions">
+                                        <t t-set="all_days" t-value="[]"/>
+                                        <t t-foreach="dept['faculty_members']" t-as="faculty">
+                                            <t t-if="'timetable_data' in faculty">
+                                                <t t-foreach="faculty['timetable_data'].keys()" t-as="day">
+                                                    <t t-if="day not in all_days">
+                                                        <t t-set="all_days" t-value="all_days + [day]"/>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <table class="table table-bordered table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center font-weight-bold" style="width:50px">No.</th>
+                                                <th class="text-center font-weight-bold">Name</th>
+                                                <th class="text-center font-weight-bold"  style="width:150px">Employee code</th>
+                                                <th class="text-center font-weight-bold"  style="width:150px">Sessions</th>
+                                                <t t-if="not total_sessions">
+                                                    <t t-foreach="sorted(all_days)" t-as="day">
+                                                        <th class="text-center font-weight-bold"><t t-esc="day"/></th>
+                                                    </t>
+                                                </t>
+                                            </tr>
+                                        </thead>
+                                         <tbody>
+                                            <t t-set="counter" t-value="1"/>
+                                            <t t-foreach="dept['faculty_members']" t-as="faculty">
+                                                <tr>
+                                                    <td class="text-center"><t t-esc="counter"/></td>
+                                                    <td class="text-center"><t t-esc="faculty['name']"/></td>
+                                                    <td class="text-center"><t t-esc="faculty['employee_code']"/></td>
+                                                    <td class="text-center"><t t-esc="faculty['sessions_count']"/></td>
+                                                    <t t-if="not total_sessions">
+                                                        <t t-foreach="sorted(all_days)" t-as="day">
+                                                            <td class="text-center">
+                                                                <t t-if="'timetable_data' in faculty and day in faculty['timetable_data']">
+                                                                    <t t-foreach="faculty['timetable_data'][day]" t-as="period_data">
+                                                                        <div class="period-cell">
+                                                                            <div class="time-range">
+                                                                                <span><t t-esc="period_data['time_from']"/> - <t t-esc="period_data['time_till']"/></span>
+                                                                            </div>
+                                                                            <div class="subject-name"><t t-esc="period_data['subject']"/></div>
+                                                                            <hr style="border: 0.5px solid; color: #c5c5c5;"/>
+                                                                        </div>
+                                                                    </t>
+                                                                </t>
+                                                            </td>
+                                                        </t>
+                                                    </t>
+                                                </tr>
+                                                <t t-set="counter" t-value="counter + 1"/>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 footer">
+                        <div class="col-12">
+                            <div class="text-center text-muted generated-date">
+                                <small>Generated on: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            
+        </t>
+    </template>
+
+    
+</odoo>

@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+        <record id="mc_education_faculty_form_inherit" model="ir.ui.view">
+            <field name="name">education.faculty.form.inherit</field>
+            <field name="model">education.faculty</field>
+            <field name="inherit_id" ref="education_core.education_faculty_view_form"/>
+             <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="user_id" />
+                </xpath>
+             
+                <xpath expr="//field[@name='father_name']" position="before">
+                    <field name="company_id" readonly="1"/>
+                </xpath>
+                <xpath expr="//notebook/page[2]" position="inside">
+                    <group  string="Syllabuses and Classes Details">
+                        <field name="syllabus_class"/>
+                        <field name="syllabus_special_class"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mc_education_faculty_kanban_inherit" model="ir.ui.view">
+            <field name="name">education.faculty.kanban.inherit</field>
+            <field name="model">education.faculty</field>
+            <field name="inherit_id" ref="education_core.education_faculty_view_kanban"/>
+             <field name="arch" type="xml">
+                <xpath expr="//strong" position="attributes">
+                    <attribute name="style">display: flex ; gap: 1px; flex-flow: row-reverse; padding-right: 8px;</attribute>
+                </xpath>              
+            </field>
+        </record>
+    </data>
+</odoo>

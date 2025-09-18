@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+        <record id="education_fee_structure_form_inherit" model="ir.ui.view">
+            <field name="name">education.fee.structure.form.inherit</field>
+            <field name="model">education.fee.structure</field>
+            <field name="inherit_id" ref="education_fee.education_fee_structure_view_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='academic_year_id']" position="attributes">
+                    <attribute name="string">Entrance Year</attribute>
+                </xpath>
+                <xpath expr="//field[@name='academic_year_id']" position="after">
+                    <field name="financial_year"/>
+                </xpath>
+                <xpath expr="//notebook" position="before">
+                    <group>
+                        <field name="grade"/>
+                    </group>
+                </xpath>
+
+          
+
+                 <!-- Fee Heading form and list Adjusts -->
+
+                
+
+                <xpath expr="//field[@name='fee_type_ids']" position="attributes">
+                    <attribute name="mode">list,form</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='fee_type_ids']" position="inside">
+                    <list string="Fee Types">
+                        <field name="fee_type_id"/>
+                        <field name="fee_description"/>
+                        <field name="apply_discount"/>
+                        <field name="fee_amount" readonly="0"   required="1" widget="monetary"/>
+                        <field name="fee_installment_ids"/>
+                    </list>
+                    <form>
+                        <group>
+                            <field name="fee_type_id"/>
+                            <field name="fee_amount"  readonly="0"  required="1" widget="monetary"/>
+                            <field name="apply_discount"/>
+                        </group>
+                        <group>
+                            <field name="fee_description"/>                        
+                            <field name="fee_installment_ids"  widget="one2many" mode="list,form">
+                                <list string="Fee Installment">
+                                    <field name="installment"/>
+                                    <field name="fee_amount"  widget="monetary"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="installment"/>
+                                        <field name="fee_amount" widget="monetary"/>
+                                    </group>
+                                </form>
+                            </field>
+                                                    
+                        </group>
+                       
+                    </form>
+                </xpath>
+
+
+            </field>
+        </record>
+
+        <record id="education_fee_structure_view_tree_inherit" model="ir.ui.view">
+            <field name="name">education.fee.structure.list.inherit</field>
+            <field name="model">education.fee.structure</field>
+            <field name="inherit_id" ref="education_fee.education_fee_structure_view_tree"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='academic_year_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="nolabel">1</attribute>
+
+                </xpath>
+                <xpath expr="//field[@name='category_id']" position="before">
+                    <field name="financial_year"/>
+                    <field name="grade"/>
+                </xpath>
+                
+            </field>
+        </record>
+
+        
+    </data>
+</odoo>

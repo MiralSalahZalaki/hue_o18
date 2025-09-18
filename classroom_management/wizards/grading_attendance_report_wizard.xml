@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <record id="grading_attendance_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">grading.attendance.report.wizard.form</field>
+            <field name="model">grading.attendance.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Grading Attendance Report wizard" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"   required="1"/>
+                            <field name="term_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="grade_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="class_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field  name="assessments_times"
+                                    widget="many2many_tags"  
+                                    domain="assessment_times_domain"  
+                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />         
+                            <field name="student_ids"  domain="student_ids_domain"  options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />         
+                    </group>
+
+                    <footer >
+                        <button name="generate_grading_attendence_report_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_grading_attendance_report_wizard" model="ir.actions.act_window">
+            <field name="name">Grading Attendance Report wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">grading.attendance.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="grading_attendance_report_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="grading_attendance_report_wizard_report_menu" 
+                    name="Attendence Report"
+                    parent="menu_grading_reports"
+                    action="action_grading_attendance_report_wizard"
+                    sequence = "4"/>
+
+
+    </data>
+</odoo>

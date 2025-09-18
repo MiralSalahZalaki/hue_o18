@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_absence_days_report">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>            
+        <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_reports_style.css" />
+        </head>
+
+        <div class="page">
+            <div class="my-3">
+                    <button class="print-button" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+                        <i class="fa fa-print"/> Print
+                    </button>
+            </div>
+          
+            <div class="container mt-5">
+                <t t-set="grouped_data" t-value="{}"/>
+                <t t-foreach="result" t-as="record">
+                    <t t-if="not record['student_name'] in grouped_data">
+                        <t t-set="grouped_data" t-value="grouped_data | dict({record['student_name']: []})"/>
+                    </t>
+                    <t t-set="dummy" t-value="grouped_data[record['student_name']].append(record)"/>
+                </t>
+
+                <!-- عرض البيانات لكل طالب -->
+                <t t-foreach="grouped_data.keys()" t-as="student_name">
+                    <t t-set="student_info" t-value="grouped_data[student_name][0]"/>
+                    <div class="container mt-5">
+                    <div class="row mb-4">
+                        <div class="d-flex align-items-center align-items-sm-start border-bottom border-2 border-dark">
+                            <div class="col-6 text-start">
+                                <h2>Absence Listing</h2>
+                                <h5><t t-esc="company_name"/> </h5>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    </div>
+                    <div class="student-section mb-4">
+                        <div class="row mt20">
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Student Name: </strong>
+                                <span><t t-esc="student_name"/></span>
+                            </div>
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Birth Date: </strong>
+                                <span><t t-esc="student_info['date_of_birth']"/></span>
+                            </div>
+                            
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Grade: </strong>
+                                <span><t t-esc="student_info['grade']"/></span>
+                            </div>
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Class: </strong>
+                                <span><t t-esc="student_info['class']"/></span>
+                            </div>
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Guardian of Student Name: </strong>
+                                <span><t t-esc="student_info['guardian_name']"/></span>
+                            </div>
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Guardian of Student Job: </strong>
+                                <span><t t-esc="student_info['guardian_job']"/></span>
+                            </div>
+                            <div class="col-xs-6" style="width:50% !important">
+                                <strong>Guardian of Student Address: </strong>
+                                <span><t t-esc="student_info['guardian_address']"/></span>
+                            </div>
+                        </div>
+                        
+                        <table class="table table-bordered table-sm mt-4"
+                                style="'border: 1px solid #cccccc; direction">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">Date</th>
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">State</th>
+                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">Reason</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-foreach="grouped_data[student_name]" t-as="absence">
+                                    <tr>
+                                        <td class="col-4 text-center"><t t-esc="absence['date']"/></td>
+                                        <td class="col-4 text-center" t-att-style="(absence['state'] == 'Excused') and 'background-color:#d2fadb' or 'background-color:#fad2d2'">
+                                            
+                                            <span t-att-class="'excused' if absence['state'] == 'Excused' else 'unexcused'">
+                                                <t t-if="absence['state'] == 'Excused'">Excused</t>
+                                                <t t-else="">Unexcused</t>
+                                            </span>
+                                        </td>
+                                        <td class="col-4 text-center"><t t-esc="absence['reasons'] or '---'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- جدول ملخص الغياب -->
+                        <table class="table table-bordered table-sm mt-3">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-weight-bold" style="background: #eeeeee; color: #111111;">Absence Type</th>
+                                    <th class="text-center font-weight-bold" style="background: #eeeeee; color: #111111;">Days Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center" style="background-color:#d2fadb">Excused Days</td>
+                                    <td class="text-center"><t t-esc="student_info['excused_count']"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center" style="background-color:#fad2d2">Unexcused Days</td>
+                                    <td class="text-center"><t t-esc="student_info['unexcused_count']"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center font-weight-bold">Total</td>
+                                    <td class="text-center font-weight-bold"><t t-esc="student_info['excused_count'] + student_info['unexcused_count']"/></td>
+                                </tr>
+                            </tbody>
+                        </table>     
+                    </div>
+                <hr/>
+                </t>
+            </div>
+        </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="mc_periodic_assessment_template">
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+                <style>
+                    table tbody tr td:last-child {
+                        background-color: #eeeeee;
+                    }
+                .o_report_layout_boxed{ 
+                    font-size: 13px !important;
+                    }
+                    table.blueTable {
+                    border: 3px solid #555555;
+                    width: 100%;
+                    text-align: center;
+                    border-collapse: inherit !important;
+                    border-radius:6px;
+                    margin-bottom: 20px;
+                    }
+                    table.blueTable td, table.blueTable th {
+                    border: 1px solid #000000;
+                    padding: 3px 2px;
+                    }
+                    table.blueTable tbody td {
+                    font-size: 13px;
+                    font-weight: bold;
+                    }
+                    table.blueTable thead {
+                    border-bottom: 2px solid #000000;
+                    }
+                    table.blueTable thead th {
+                    font-size: 15px;
+                    font-weight: bold;
+                    color: #000000;
+                    text-align: center;
+                    border-left: 0px solid #D0E4F5;
+                    }
+                    table.blueTable thead th:first-child {
+                    border-left: none;
+                    }
+                    table.blueTable tfoot td {
+                    font-size: 14px;
+                    }
+                    table.blueTable tfoot .links {
+                    text-align: right;
+                    }
+                    table.blueTable tfoot .links a{
+                    display: inline-block;
+                    background: #1C6EA4;
+                    color: #FFFFFF;
+                    padding: 2px 8px;
+                    border-radius: 5px;
+                    }
+                    .print {
+                    display:none
+                    }
+                    @media print {
+                    .print {display:block}
+                    .btn-print {display:none;}
+                    }
+                    /* Colors for evaluation */
+                    .distinguished { background-color: #ADD8E6 !important; }
+                    .required-successfully { background-color: #90EE90 !important; }
+                    .needs-care { background-color: #FFFF99 !important; }
+                    .needs-great-care { background-color: #FFB6C1 !important; }
+               </style>
+            </head>
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            <div class="page container">
+                <t t-foreach="students_data" t-as="student" t-as-index="student_index">
+                    <div t-att-class="'page-content' + (' page-break' if student_index > 0 else '')">
+                        <!-- Report Header -->
+                        <div class="col-xs-12" style="text-align: center;" name="company_address">
+                            <h1 style="text-align: center;">
+                                Periodic Assessment Report
+                            </h1>
+                            <br/>
+                            <div class="col-xs-12">
+                                <strong>Assessments Adding Time :</strong>
+                                <t t-foreach="assessment_times" t-as="times">
+                                    <span t-esc="times.get('name', '')"/>
+                                    <t t-if="not times_last">, </t>
+                                </t>
+                            </div>
+                        </div>
+                        <!-- Student Information -->
+                        <div class="row mt30">
+                            <div class="col-xs-12">
+                                <strong>Student Name :</strong>
+                                <span t-esc="student.get('student', '')"/>
+                            </div>
+                            <div class="col-xs-12">
+                                <strong>Grade :</strong>
+                                <span t-esc="student.get('grade_name', '')"/>
+                            </div>
+                            <div class="col-xs-12">
+                                <strong>Class :</strong>
+                                <span t-esc="student.get('class_name', '')"/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <!-- Q Colors Method (Colored Evaluation) -->
+                        <div class="row" t-if="grading_method == 'q_colors'">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Adding Times</th>
+                                        <th>Evaluation</th>
+                                        <th>Comment.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="i" t-value="0"/>
+                                    <t t-foreach="syllabus_data" t-as="syllabus">
+                                        <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                        <!-- Skip elective subjects if not registered -->
+                                        <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                            <t t-set="style_class" t-value="'style1' if i%2==0 else ''"/>
+                                            <tr t-att-class="style_class">
+                                                <td t-att-rowspan="len(assessment_times) + 1" style="text-align:center;">
+                                                    <span t-esc="syllabus.get('syllabus_name', '')"/>
+                                                </td>
+                                            </tr>
+                                            <t t-foreach="assessment_times" t-as="assessment_time">
+                                                <tr t-att-class="style_class">
+                                                    <td>
+                                                        <span t-esc="assessment_time.get('name', '')"/>
+                                                    </td>
+                                                    <!-- Get student results for this subject and time -->
+                                                    <t t-set="subject_results" t-value="student.get('subjects_results', {}).get(str(assessment_time.get('id', '')), {}).get(syllabus_id, {})"/>
+                                                    <t t-set="grade_scale" t-value="subject_results.get('grade_scale', {})"/>
+                                                    <td t-att-style="'background-color:' + str(subject_results.get('color', '')) + ' !important' if subject_results.get('color') else ''"/>
+                                                    <td>
+                                                        <span t-esc="subject_results.get('comment', '')"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-set="i" t-value="i+1"/>
+                                        </t>
+                                    </t>
+                                </tbody>
+                                <tfooter>
+                                    <tr>
+                                        <td>Comment</td>
+                                        <td colspan="3">
+                                            <span style="vertical-align: 7px;" t-esc="grading_method_comment"/>
+                                        </td>
+                                    </tr>
+                                </tfooter>
+                            </table>
+                            <br/>
+                        </div>
+                        <!-- Qualitative Method -->
+                        <div class="row" t-if="grading_method == 'qualitative'">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Adding Times</th>
+                                        <th t-if="not distribution">Assessments</th>
+                                        <th>Evaluation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="i" t-value="0"/>
+                                    <t t-foreach="syllabus_data" t-as="syllabus">
+                                        <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                        <!-- Skip elective subjects if not registered -->
+                                        <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                            <t t-set="style_class" t-value="'style1' if i%2==0 else ''"/>
+                                            <t t-set="assessments" t-value="syllabus.get('assessments', [])"/>
+                                            <!-- Distribution Mode -->
+                                            <t t-if="distribution">
+                                                <tr t-att-class="style_class">
+                                                    <td t-att-rowspan="len(assessment_times) + 1" style="text-align:center;">
+                                                        <span t-esc="syllabus.get('syllabus_name', '')"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-foreach="assessment_times" t-as="assessment_time">
+                                                    <tr t-att-class="style_class">
+                                                        <td>
+                                                            <span t-esc="assessment_time.get('name', '')"/>
+                                                        </td>
+                                                        <t t-set="subject_results" t-value="student.get('subjects_results', {}).get(str(assessment_time.get('id', '')), {}).get(syllabus_id, {})"/>
+                                                        <td>
+                                                            <span t-esc="subject_results.get('grade', '')"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                            <!-- Non-Distribution Mode -->
+                                            <t t-if="not distribution">
+                                                <tr t-att-class="style_class">
+                                                    <td t-att-rowspan="len(assessment_times) * (len(assessments) + 1) + 1" style="text-align:center;">
+                                                        <span t-esc="syllabus.get('syllabus_name', '')"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-foreach="assessment_times" t-as="assessment_time">
+                                                    <tr t-att-class="style_class">
+                                                        <td t-att-rowspan="len(assessments) + 1">
+                                                            <span t-esc="assessment_time.get('name', '')"/>
+                                                        </td>
+                                                    </tr>
+                                                    <t t-if="not assessments">
+                                                        <tr t-att-class="style_class">
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </t>
+                                                    <t t-foreach="assessments" t-as="assessment">
+                                                        <tr t-att-class="style_class">
+                                                            <td>
+                                                                <span t-esc="assessment.get('name', '')"/>
+                                                            </td>
+                                                            <t t-set="subject_results" t-value="student.get('subjects_results', {}).get(str(assessment_time.get('id', '')), {}).get(syllabus_id, {})"/>
+                                                            <t t-set="assessment_result" t-value="subject_results.get('assessments', {}).get(str(assessment.get('id', '')), {})"/>
+                                                            <td>
+                                                                <span t-esc="assessment_result.get('grade', '')"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                            <t t-set="i" t-value="i+1"/>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <br/>
+                        </div>
+                        <!-- Numeric Method -->
+                        <div class="row" t-if="grading_method == 'numeric'">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Adding Times</th>
+                                        <th>Assessments</th>
+                                        <th>Mark</th>
+                                        <th>Max Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="i" t-value="0"/>
+                                    <t t-foreach="syllabus_data" t-as="syllabus">
+                                        <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                        <!-- Skip elective subjects if not registered -->
+                                        <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                            <t t-set="style_class" t-value="'style1' if i%2==0 else ''"/>
+                                            <t t-set="assessments" t-value="syllabus.get('assessments', [])"/>
+                                            <tr t-att-class="style_class">
+                                                <td t-att-rowspan="len(assessment_times) * (len(assessments) + 1) + 1" style="text-align:center;">
+                                                    <span t-esc="syllabus.get('syllabus_name', '')"/>
+                                                </td>
+                                            </tr>
+                                            <t t-foreach="assessment_times" t-as="assessment_time">
+                                                <tr t-att-class="style_class">
+                                                    <td t-att-rowspan="len(assessments) + 1">
+                                                        <span t-esc="assessment_time.get('name', '')"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-if="not assessments">
+                                                    <tr t-att-class="style_class">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </t>
+                                                <t t-foreach="assessments" t-as="assessment">
+                                                    <tr t-att-class="style_class">
+                                                        <td>
+                                                            <span t-esc="assessment.get('name', '')"/>
+                                                        </td>
+                                                        <td>
+                                                            <!-- Corrected score access -->
+                                                            <t t-set="assessment_time_id" t-value="str(assessment_time.get('id', ''))"/>
+                                                            <t t-set="subject_results" t-value="student.get('subjects_results', {}).get(assessment_time_id, {}).get(syllabus_id, {})"/>
+                                                            <t t-set="assessment_id" t-value="str(assessment.get('id', ''))"/>
+                                                            <t t-set="assessment_result" t-value="subject_results.get('assessments', {}).get(assessment_id, {})"/>
+                                                            <t t-set="score" t-value="assessment_result.get('score', 0.0)"/>
+                                                            <!-- Simplified score display -->
+                                                            <span t-esc="score"/>
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="assessment.get('max_score', 0)"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                            <t t-set="i" t-value="i+1"/>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <br/>
+                        </div>
+                        <!-- Attendance Table -->
+                        <table class="table table-bordered">
+                            <thead>
+                                <th>Adding Times</th>
+                                <th>No of Absence days</th>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="assessment_times" t-as="assessment_time">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="assessment_time.get('name', '')"/>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                <span t-esc="student.get('absence_days', {}).get(str(assessment_time.get(str('id'), '')), 0)"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div style="page-break-after: always;"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

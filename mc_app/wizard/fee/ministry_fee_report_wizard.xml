@@ -1,0 +1,75 @@
+<odoo>
+    <data>
+        <!-- Form View for Treasury Report Wizard -->
+        <record id="ministry_fee_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">ministry.fee.report.wizard.form</field>
+            <field name="model">ministry.fee.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Ministry Fee Report">
+
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   
+                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group>
+                            <field name="date_from" string="Date from" widget="date" required="True"/>
+                        </group>
+                        <group>
+                            <field name="date_to" string="Date to" widget="date" required="True"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group>
+                        <field name="account_id" domain="[('company_ids', 'in', company_id)]" widget="many2many_tags"/>
+                        <field name="term_id"  widget="many2many_checkboxes"/>
+                    </group>
+                    <group>
+                        <field name="inv_status"/>
+                        <field name="account_journal" widget="many2many_checkboxes" options="{'no_create': True}"/>
+                    </group>
+                    </group>
+                    <group>
+                        <field name="financial_years" />
+                    </group>
+  
+
+                    <footer>
+                        <button name="generate_ministry_fee_report_wizard" 
+                                type="object" 
+                                string="Generate Report" 
+                                class="btn-primary" 
+                                default_focus="1"/>
+
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for Treasury Report Wizard -->
+        <record id="action_ministry_fee_report_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Ministry Fee Report</field>
+            <field name="res_model">ministry.fee.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="ministry_fee_report_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Menu Item for Treasury Report Wizard -->
+        <menuitem id="ministry_fee_report_wizard_menu"
+                  name="Ministry Fee Report"
+                  parent="fee_reports_menu"
+                  action="action_ministry_fee_report_wizard"
+                  sequence="4"/>
+    </data>
+</odoo>

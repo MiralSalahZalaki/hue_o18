@@ -1,0 +1,55 @@
+<odoo>
+    <data>
+        <record id="mc_student_result_wizard_form_view" model="ir.ui.view">
+            <field name="name">mc.student.result.wizard.form</field>
+            <field name="model">mc.student.result.wizard</field>
+            <field name="arch" type="xml">
+                <form string="MC Student Grades Result Wizard" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"   required="1"/>
+                            <field name="assessments" />
+                            <field name="term_id" invisible="assessments" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="grade_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="class_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                             <field  name="assessments_times"
+                                    domain="assessment_times_domain"     
+                                    invisible="not assessments"
+                                    required="1"  
+                                    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />     
+                            <field name="student_ids"  domain="student_ids_domain"  options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />         
+                            <field name="top_student" />
+                    </group>
+
+                    <footer >
+                        <button name="generate_mc_student_result_report_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_mc_student_result_wizard" model="ir.actions.act_window">
+            <field name="name">MC Student Result Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mc.student.result.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mc_student_result_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="mc_student_result_wizard_report_menu" 
+                    name="MC Student Result Report"
+                    parent="menu_mc_mmc_reports"
+                    action="action_mc_student_result_wizard"
+                    sequence = "3"/>
+
+
+    </data>
+</odoo>

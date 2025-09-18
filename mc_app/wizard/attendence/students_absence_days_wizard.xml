@@ -1,0 +1,58 @@
+<odoo>
+    <data>
+        <record id="student_absence_days_form_view" model="ir.ui.view">
+            <field name="name">students.absence.days.wizard.form</field>
+            <field name="model">students.absence.days.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Students Absence Days" >
+                    <group col="2" >
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" can_create="false" can_write="false"  options="{'no_create': True}" />
+                        <field name="grade_id" options="{'no_create': True}"  />
+                        <field name="class_division_id" options="{'no_create': True}" />
+                    </group>
+                    <group>
+                        <group>
+                            <field name="date_from" options="{'no_create': True}" />
+                        </group>
+
+                        <group>
+                            <field name="date_to" options="{'no_create': True}" />
+                        </group>
+
+                        <group>
+                            <field name="permitted_absence" string="Permitted Absence" />
+                        </group>
+                    </group>
+                    <footer >
+                        <button name="generate_students_absence_days_report" type="object"   
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_student_absence_days" model="ir.actions.act_window">
+            <field name="name">Generate Students Absence Days</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">students.absence.days.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="student_absence_days_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="student_absence_days_menu" 
+                    name="Absence Days"
+                    parent="education_attendances.education_attendance_report_menu"
+                    action="action_student_absence_days"
+                    sequence = "3"/>
+
+
+    </data>
+</odoo>

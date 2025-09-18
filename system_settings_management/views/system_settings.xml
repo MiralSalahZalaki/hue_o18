@@ -1,0 +1,111 @@
+<odoo>
+    <data>
+        <!-- Original List View -->
+        <record id="system_settings_list_view" model="ir.ui.view">
+            <field name="name">system.settings.list</field>
+            <field name="model">system.settings</field>
+            <field name="arch" type="xml">
+                <list string="System Settings" create="0" edit="0" delete="0">
+                    <field name="name"/>
+                    <field name="grades" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="sync_companies_to_settings" model="ir.actions.server">
+            <field name="name">Sync Companies</field>
+            <field name="model_id" ref="system_settings_management.model_system_settings"/>
+            <field name="binding_model_id" ref="system_settings_management.model_system_settings"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.server_action_sync_companies_to_settings()
+            </field>
+        </record>
+        <!-- Onboarding List View (inherits above) -->
+        <record id="system_settings_list_view_with_onboarding" model="ir.ui.view">
+            <field name="name">system.settings.list.onboarding</field>
+            <field name="model">system.settings</field>
+            <field name="inherit_id" ref="system_settings_list_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="." position="attributes">
+                    <attribute name="js_class">system_onboarding_list</attribute>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Form View for System Settings -->
+        <record id="system_settings_form_view" model="ir.ui.view">
+            <field name="name">system.settings.form</field>
+            <field name="model">system.settings</field>
+            <field name="arch" type="xml">
+                <form string="System Setting" create="0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id"/>
+                            <field name="active"/>
+                            <field name="system_type"/>
+                            <field name="student_code_prefix"/>
+                            <field name="stages" widget="many2many_tags" readonly="1" />
+                        </group>
+                        <notebook>
+                            <page name="Grades" string="Grades">
+                                <list edit="0" create="0" delete="0">
+                                   <field name="grades" readonly="1" />
+                                </list>
+                            </page>
+                        </notebook>
+
+                        <div class="oe_button_box" name="button_box">
+                            <button name="add_stages_to_company" 
+                                    type="object" 
+                                    string="Add Educational Stages" 
+                                    class="oe_stat_button"
+                                    icon="fa-plus"/>
+                            <button name="add_grades_to_company" 
+                                    type="object" 
+                                    string="Add Grades" 
+                                    class="oe_stat_button"
+                                    icon="fa-plus"/>
+                            <button name="fetch_company_data" 
+                                    type="object" 
+                                    string="Refresh Data" 
+                                    class="oe_stat_button"
+                                    icon="fa-refresh"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Window Action -->
+        <record id="action_system_settings" model="ir.actions.act_window">
+            <field name="name">System Settings</field>
+            <field name="res_model">system.settings</field>
+            <field name="view_id" ref="system_settings_list_view_with_onboarding"/>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+        <!-- Action to sync companies -->
+        <record id="action_sync_companies" model="ir.actions.server">
+            <field name="name">Sync Companies to Settings</field>
+            <field name="model_id" ref="model_system_settings"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.sync_companies_to_settings()
+            </field>
+        </record>
+        
+        <!-- Menus -->
+        <menuitem id="menu_system_settings_root" name="Configuration"
+                  web_icon="system_settings_management,static/description/system_settings_icon.png"
+                  groups="base.group_system"
+                  sequence="1"/>
+        <menuitem id="menu_system_settings"
+                  name="System Settings"
+                  parent="menu_system_settings_root"
+                  action="action_system_settings"/>
+    </data>
+</odoo>

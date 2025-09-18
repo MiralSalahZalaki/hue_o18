@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+        <record id="timetable_master_wizard_form_view" model="ir.ui.view">
+            <field name="name">timetable.master.wizard.form</field>
+            <field name="model">timetable.master.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Master Schedule" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" string="School"/>
+                            <field name="stage_id" 
+                                    placeholder="Select the educational stage"
+                                    options="{'no_create': True}" widget="selection" string="Stage"/>
+                    </group>
+                    
+                    <footer >
+                        <button name="generate_timetable_master_report" type="object"
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_timetable_master_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Master Schedule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">timetable.master.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="timetable_master_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="timetable_master_report_menu" 
+                    name="Master Schedule"
+                    parent="main_menu_timtable_reports"
+                    action="action_timetable_master_wizard"
+                    sequence = "5"/>
+
+
+    </data>
+</odoo>

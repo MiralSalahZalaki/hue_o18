@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="ig_periodic_assessment_template">
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+               <style>.style1{
+                  background-color: rgba(0, 0, 0, 0.2) !important ;
+              }
+              .style2{
+                  background-color: blue;
+              }.o_report_layout_boxed table tbody tr td:last-child {
+                      background-color: unset !important;
+                 }.table-bordered &gt; tbody &gt; tr &gt; td{
+                     border: 1px solid #555555 !important;
+                 }#wrapwrap table.table.table-bordered td{
+                     vertical-align: middle !important;
+                     text-align: center !important;
+                     padding: 1px !important;
+                 }#wrapwrap table.table.table-bordered{
+                     font-size: 14px !important;
+                     font-weight: 700 !important;
+                     border-collapse: collapse;
+                 }.table-bordered &gt; thead &gt; tr &gt; th{
+                     border: 1px solid #555555 !important;
+                      text-align: center !important;
+                      padding: 1px 2px !important;
+                 }</style>
+            </head>
+
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            
+            <div class="page container">
+                <t t-foreach="students_data" t-as="student" t-as-index="student_index">
+                    <div t-att-class="'page-content' + (' page-break' if student_index > 0 else '')">
+                        
+                        <!-- Report Header -->
+                        <div class="col-xs-12" style="text-align: center;margin-top:20px" name="company_address">
+                            <h5 style="text-align: center;">
+                                IG Periodic Assessment Report
+                            </h5>
+                            <br/>
+                            
+                        </div>
+
+                        <!-- Student Information -->
+                        <div class="row mt30">
+                            <div class="col-xs-12">
+                                <strong>Student Name :</strong>
+                                <span t-esc="student.get('student', '')"/>
+                            </div>
+                            <div class="col-xs-12">
+                                <strong>Grade :</strong>
+                                <span t-esc="student.get('grade_name', '')"/>
+                            </div>
+                            <div class="col-xs-12">
+                                <strong>Class :</strong>
+                                <span t-esc="student.get('class_name', '')"/>
+                            </div>
+                            <div class="col-xs-12">
+                                <strong>Assessments Adding Time :</strong>
+                                <t t-foreach="assessment_times" t-as="times">
+                                    <span t-esc="times.get('name', '')"/>
+                                    <t t-if="not times_last">, </t>
+                                </t>
+                            </div>
+                        </div>
+                        <hr/>
+                        <!-- Numeric Method -->
+                        <div class="row" t-if="grading_method == 'numeric'">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Adding Times</th>
+                                        <th>Assessments</th>
+                                        <th>Mark</th>
+                                        <th>Max Score</th>
+                                        <th>F Mark.</th>
+                                    </tr>
+                                    
+                                </thead>
+                                <tbody>
+                                    <t t-set="i" t-value="0"/>
+                                    <t t-set="total_final_mark" t-value="0"/>
+                                    <t t-foreach="syllabus_data" t-as="syllabus">
+                                        <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                        
+                                        <!-- Skip elective subjects if not registered -->
+                                        <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                            <t t-set="style_class" t-value="'style1' if i%2==0 else ''"/>
+                                            <t t-set="assessments" t-value="syllabus.get('assessments', [])"/>
+                                            
+                                            <tr t-att-class="style_class">
+                                                <td t-att-rowspan="len(assessment_times) * (len(assessments) + 1) + 1" style="text-align:center;">
+                                                    <span t-esc="syllabus.get('syllabus_name', '')"/>
+                                                </td>
+                                            </tr>
+                                            
+                                            <t t-foreach="assessment_times" t-as="assessment_time">
+                                                <tr t-att-class="style_class">
+                                                    <td t-att-rowspan="len(assessments) + 1">
+                                                        <span t-esc="assessment_time.get('name', '')"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-if="not assessments">
+                                                    <tr t-att-class="style_class">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </t>
+                                                <t t-foreach="assessments" t-as="assessment">
+                                                   <tr t-att-class="style_class">
+                                                    <td>
+                                                        <span t-esc="assessment.get('name', '')"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- Corrected score access -->
+                                                        <t t-set="assessment_time_id" t-value="str(assessment_time.get('id', ''))"/>
+                                                        <t t-set="subject_results" t-value="student.get('subjects_results', {}).get(assessment_time_id, {}).get(syllabus_id, {})"/>
+                                                        <t t-set="assessment_id" t-value="str(assessment.get('id', ''))"/>
+                                                        <t t-set="assessment_result" t-value="subject_results.get('assessments', {}).get(assessment_id, {})"/>
+                                                        <t t-set="score" t-value="assessment_result.get('score', 0.0)"/>
+                                                    
+                                                        <!-- Simplified score display -->
+                                                        <span t-esc="score"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-esc="assessment.get('max_score', 0)"/>
+                                                    </td>
+                                                    
+                                                    <!-- Add the rowspan cell only for the first assessment -->
+                                                    <t t-if="assessment_index == 0">
+                                                        <td t-att-rowspan="len(assessments)">
+                                                            <!-- Calculate total scores for all assessments in this assessment_time -->
+                                                            <t t-set="total_scores" t-value="0"/>
+                                                            <t t-set="total_max" t-value="0"/>
+                                                            <t t-foreach="assessments" t-as="assessment_calc">
+                                                                <t t-set="assessment_time_id" t-value="str(assessment_time.get('id', ''))"/>
+                                                                <t t-set="subject_results" t-value="student.get('subjects_results', {}).get(assessment_time_id, {}).get(syllabus_id, {})"/>
+                                                                <t t-set="assessment_id" t-value="str(assessment_calc.get('id', ''))"/>
+                                                                <t t-set="assessment_result" t-value="subject_results.get('assessments', {}).get(assessment_id, {})"/>
+                                                                <t t-set="assessment_score" t-value="assessment_result.get('score', 0.0)"/>
+                                                                
+                                                                <!-- Get max score from assessment definition, not from result -->
+                                                                <t t-set="assessment_max" t-value="assessment_calc.get('max_score', 0.0)"/>
+                                                                
+                                                                <t t-set="total_scores" t-value="total_scores + assessment_score"/>
+                                                                <t t-set="total_max" t-value="total_max + assessment_max"/>
+                                                            </t>
+                                                            
+                                                            <!-- Calculate Total Out of -->
+                                                            <t t-set="average_max" t-value="total_max / len(assessments) if len(assessments) > 0 else 0"/>
+                                                            <!-- <t t-set="total_out_of" t-value="average_max"/> -->
+                                                            <t t-set="total_out_of" t-value="average_max * len(syllabus_data) * len(assessment_times)"/> 
+                                                            
+                                                            <!-- Calculate average score and round up -->
+                                                            <t t-set="average_score" t-value="total_scores / len(assessments) if len(assessments) > 0 else 0"/>
+                                                            <t t-set="final_mark" t-value="int(average_score) + (1 if average_score % 1 > 0 else 0)"/>
+                                                            <t t-set="total_final_mark" t-value="total_final_mark + final_mark "/>
+
+                                                            <strong t-esc="final_mark"/>
+                                                        </td>
+                                                    </t>
+                                                </tr>
+                                                </t>
+                                            </t>
+                                            <t t-set="i" t-value="i+1"/>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td colspan="5">Total Out of : (<t t-esc="total_out_of"/>)</td>
+                                        <td><t t-esc="total_final_mark"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                        </div>
+
+                        <t t-if="show_attendance">
+                            <!-- Attendance Table -->
+                            <table class="table table-bordered">
+                                <thead>
+                                    <th>Adding Times</th>
+                                    <th>No of Absence days</th>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="assessment_times" t-as="assessment_time">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="assessment_time.get('name', '')"/>
+                                            </td>
+                                            <td>
+                                                <strong>
+                                                    <span t-esc="student.get('absence_days', {}).get(str(assessment_time.get(str('id'), '')), 0)"/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>                            
+                        </t>
+
+                        <div style="page-break-after: always;"/>
+                    </div>
+                </t>
+
+        
+                <!-- Table of Top Rank -->
+                <!-- Student Name Col | Final Total Col -->
+                <!-- Table of Top Rank -->
+                <t t-if="top_rank != 0">
+                    <div class="row mt30">
+                        <div class="col-xs-12">
+                            <h4 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">
+                                <strong>Top Rank Students</strong>
+                            </h4>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Calculate total score for each student and sort -->
+                            <t t-set="student_scores" t-value="[]"/>
+                            <t t-foreach="students_data" t-as="student">
+                                <t t-set="total_final_mark" t-value="0"/>
+                                <t t-foreach="syllabus_data" t-as="syllabus">
+                                    <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                    <!-- Skip elective subjects if not registered -->
+                                    <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                        <t t-foreach="assessment_times" t-as="assessment_time">
+                                            <t t-set="assessments" t-value="syllabus.get('assessments', [])"/>
+                                            <t t-set="assessment_time_id" t-value="str(assessment_time.get('id', ''))"/>
+                                            <t t-set="subject_results" t-value="student.get('subjects_results', {}).get(assessment_time_id, {}).get(syllabus_id, {})"/>
+                                            <t t-set="total_scores" t-value="0"/>
+                                            <t t-set="total_max" t-value="0"/>
+                                            <t t-foreach="assessments" t-as="assessment_calc">
+                                                <t t-set="assessment_id" t-value="str(assessment_calc.get('id', ''))"/>
+                                                <t t-set="assessment_result" t-value="subject_results.get('assessments', {}).get(assessment_id, {})"/>
+                                                <t t-set="assessment_score" t-value="assessment_result.get('score', 0.0)"/>
+                                                <t t-set="assessment_max" t-value="assessment_calc.get('max_score', 0.0)"/>
+                                                <t t-set="total_scores" t-value="total_scores + assessment_score"/>
+                                                <t t-set="total_max" t-value="total_max + assessment_max"/>
+                                            </t>
+                                            <!-- Calculate average score and final mark -->
+                                            <t t-set="average_score" t-value="total_scores / len(assessments) if len(assessments) > 0 else 0"/>
+                                            <t t-set="final_mark" t-value="int(average_score) + (1 if average_score % 1 > 0 else 0)"/>
+                                            <t t-set="total_final_mark" t-value="total_final_mark + final_mark"/>
+                                        </t>
+                                    </t>
+                                </t>
+                                <!-- Store student and their total score -->
+                                <t t-set="student_scores" t-value="student_scores + [(student.get('student', ''), total_final_mark)]"/>
+                            </t>
+                            <!-- Sort students by total score in descending order and limit to top_rank -->
+                            <t t-set="sorted_students" t-value="sorted(student_scores, key=lambda x: x[1], reverse=True)[:top_rank]"/>
+                            <!-- Display top-ranked students -->
+                            <t t-foreach="sorted_students" t-as="student_score">
+                                <tr>
+                                    <td><span t-esc="student_score[0]"/></td>
+                                    <td><span t-esc="student_score[1]"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+                    
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record id="education_fee_category_form_inherit" model="ir.ui.view">
+            <field name="name">education.fee.category.form.inherit</field>
+            <field name="model">education.fee.category</field>
+            <field name="inherit_id" ref="education_fee.education_fee_category_view_form"/>
+             <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="alias_name"/>
+                </xpath>
+
+                <xpath expr="//field[@name='fee_structure']" position="after">
+                    <field name="bus_fee"/>
+                    <field name="run_discount"/>
+                </xpath>
+
+                <xpath expr="//field[@name='journal_id']" position="before">
+                    <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="education_fee_category_list_inherit" model="ir.ui.view">
+            <field name="name">education.fee.category.list.inherit</field>
+            <field name="model">education.fee.category</field>
+            <field name="inherit_id" ref="education_fee.education_fee_category_view_tree"/>
+             <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="company_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="bus_fee"/>
+                    <field name="run_discount"/>
+                </xpath>
+            </field>
+        </record>
+
+        
+    </data>
+</odoo>

@@ -1,0 +1,98 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="mc_generic_template_tree_view" model="ir.ui.view">
+        <field name="name">mc.generic.template.tree</field>
+        <field name="model">mc.generic.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="grading_method"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mc_generic_template_form_view" model="ir.ui.view">
+        <field name="name">mc.generic.template.form</field>
+        <field name="model">mc.generic.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Generic Template">
+                    <group>
+                        <field name="name"/>
+                        <field name="grading_method"/>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                    </group>  
+
+
+                    <span class="o_form_label" invisible="grading_method != 'numeric'">Academic Report Grade Max</span>
+                    <field name="academic_report_grade_max" style="margin-right:10px;" class="oe_inline" required="[['grading_method', '=', 'numeric']]" invisible = "grading_method != 'numeric'" />
+                    <span class="o_form_label" invisible="grading_method != 'numeric'">Academic Report Grade Min</span>
+                    <field name="academic_report_grade_min" style="margin-right:10px;" class="oe_inline"  required="[['grading_method', '=', 'numeric']]" invisible = "grading_method != 'numeric'" />
+                   
+                    <notebook invisible="not grading_method">
+                        <page string="Grade Distribution Template">
+
+                            <field name="grade_distribution_template"  invisible="not grading_method" widget="one2many" mode="list,form">
+                                <list editable="bottom" string="Grade Distribution Template">
+                                    <field name="item"/>
+                                    <field name="maximum" column_invisible= "parent.grading_method != 'numeric'"/>
+                                    <field name="minimum" column_invisible= "parent.grading_method != 'numeric'"/>
+                                    <field name="weight"/>
+                                    <field name="control"/>
+                                    <field name="best_of"/>
+                                </list>
+                            </field>
+                            <span class="o_form_label">Total Grades</span>
+                            <div>
+                                <label for="maximum" class="mx-2" invisible="grading_method != 'numeric'">Maximum</label>
+                                <field name="maximum" class="oe_inline" invisible="grading_method != 'numeric'"/>
+
+                                <label for="minimum" class="mx-2" invisible="grading_method != 'numeric'">Minimum</label>
+                                <field name="minimum" class="oe_inline" invisible="grading_method != 'numeric'"/>
+
+                                <label for="weight" class="mx-2">Weight</label>
+                                <field name="weight" class="oe_inline"/>
+                            </div>
+
+                        </page> 
+                    </notebook>  
+
+                    <notebook invisible="not check_field">
+                        <page string="Assessments Category">
+                        <field name="check_field" invisible="1"/>
+                            <div>
+                                <label for="total_assessments_score" >Total Assessments Score </label>
+                                <field name="total_assessments_score" style="margin-right:10px;" class="oe_inline"/>
+                            </div>
+                            <field name="assessments_category_id"   widget="one2many" mode="list,form">
+                                <list editable="bottom" string="Assessments Category">
+                                    <field name="item"/>
+                                    <field name="max_score" />
+                                    <field name="weight" />
+                                    <field name="best_of"/>
+                                    <field name="control"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_mc_generic_template" model="ir.actions.act_window">
+        <field name="name">Generic Template</field>
+        <field name="res_model">mc.generic.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_mc_generic_template"
+              name="Generic Template" 
+              parent="menu_grading_setup"
+              sequence = "6"
+              action="action_mc_generic_template"/>
+</odoo>

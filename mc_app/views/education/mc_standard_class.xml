@@ -1,0 +1,80 @@
+<odoo>
+    <data>
+        <record id="mc_standard_class_tree_view" model="ir.ui.view">
+            <field name="name">mc_standard_class_tree_view</field>
+            <field name="model">mc.standard.class</field>
+             <field name="arch" type="xml">
+                <list default_group_by = 'class_id'>
+         
+                    <field name="class_id"/>
+                    <field name="class_division_id"/>
+                    <field name="company_id"/>
+                </list>
+            </field>
+        </record>
+
+
+            <record id="mc_standard_class_form_view" model="ir.ui.view">
+            <field name="name">mc_standard_class_form_view</field>
+            <field name="model">mc.standard.class</field>
+             <field name="arch" type="xml">
+                <form>
+                   <sheet>
+                       <group>
+
+                            <field name="name"   readonly="1"/>
+                            <field name="class_id"   readonly="1"/>
+                            <field name="company_id" readonly="1"/>
+                            <field name="class_division_id"  readonly="1" />
+                       </group>
+                        <notebook>
+                            <page string="Subjects">
+                               <field name="standard_per_class_id"
+                                    domain="[('class_id','=',class_id),('division','=',class_division_id)]">
+                                    <list editable="bottom" delete="false" create="false" >
+                                        <field name="syllabus_name"/>
+                                        <button name="action_open_syllabus" type="object" icon="fa-external-link"/>
+                                        <field name="faculty_regular_id" placeholder="Select the faculty" options="{'no_create': True}" widget="many2one"/>
+                                        <button name="action_open_regular_faculty" type="object" icon="fa-external-link"/>
+                                        <field name="room_regular_id" placeholder="Select the room"  options="{'no_create': True}" widget="many2one"/>
+                                        <field name="faculty_special_id" placeholder="Select the faculty"  options="{'no_create': True}" widget="many2one"/>
+                                        <button name="action_open_special_faculty" type="object" icon="fa-external-link"/>
+                                        <field name="room_special_id" placeholder="Select the room"  options="{'no_create': True}" widget="many2one"/>
+
+                                   </list>
+                                </field>
+                            </page>
+                        </notebook>
+                   </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_mc_standard_class" model="ir.actions.act_window">
+            <field name="name">Standard For Class</field>
+            <field name="res_model">mc.standard.class</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+            <field name="context">{'create': False}</field>
+        </record>
+
+
+
+        <menuitem id="menu_mc_standard_class"
+                name="Standard For Class" 
+                parent="education_core.menu_education_class_conf"
+                action="action_mc_standard_class"/>
+
+        <!-- From timetable -->
+        <menuitem   id="menu_standard_class_from_timtable"
+                    name="Standard For Class"
+                    parent="menu_curriculum_from_timtable"
+                    action="action_mc_standard_class"
+                    sequence="2"
+                    />
+
+    </data>
+</odoo>

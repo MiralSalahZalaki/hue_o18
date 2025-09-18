@@ -1,0 +1,140 @@
+<odoo>
+    <data>
+        <record id="mc_evaluation_grades_tree_view" model="ir.ui.view">
+            <field name="name">mc_evaluation_grades_tree_view</field>
+            <field name="model">mc.evaluation.grades</field>
+             <field name="arch" type="xml">
+                <list string="Evaluation Grades ">
+
+                    <field name="syllabus_id" />
+                    <field name="class_id" />
+                    <field name="grade_id" />
+                    <field name="date" />
+                    <field name="distribution_id" />
+                    <field name="assessments_category_id" />
+                    <field name="assessments_times" />
+
+                </list>
+            </field>
+        </record>
+
+
+        <record id="mc_evaluation_grades_form_view" model="ir.ui.view">
+            <field name="name">mc_evaluation_grades_form_view</field>
+            <field name="model">mc.evaluation.grades</field>
+            <field name="arch" type="xml">
+                <form string="Evaluation Grades">
+                   
+
+                    <header>
+                        <button name="set_done" string="Set to Done" class="oe_highlight" type="object" 
+                                invisible="state == 'done'" />
+                    
+                        <button name="set_draft" string="set to draft" class="oe_highlight" type="object" 
+                                invisible="state == 'draft'"/>
+                        
+                        <button name="get_students_list" type="object" 
+                                invisible="state != 'draft'" string="Get Students" help="Click to get student list" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" required="1"/>
+                    </header>
+                    <sheet>
+
+
+                        <group>
+                            <field name="syllabus_domain" invisible="1"/>
+                            <field name="class_division_domain" invisible="1"/>
+                            <field name="syllabus_id" domain="syllabus_domain" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}" readonly= "state == 'done'"/>
+                            <field name="grade_id" options="{'no_open': True}"/>
+                            <field name="filter_comp" invisible="1"/>
+                            <field name="check_student" invisible="1"/>
+                            <field name="is_distribution_assessment" invisible="1"/>
+
+
+                            <field name="class_id" domain="class_division_domain" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"  readonly= "state == 'done'"/>
+                            <field name="distribution_id" domain="distribution_domain" />
+                            <field name="assessments_category_id" invisible="not is_distribution_assessment" domain="assessments_domain"  />
+                            <field name="date" readonly = "state == 'done'" />
+                            <field name="grading_method_type" readonly="1" options="{'no_open': True}"/>
+                            <field name="assessments_times" />
+
+                        <!--  <field name="max_score" invisible = "filter_comp = True | grading_method_type in ""['qualitative','q_colors']" string="Max Score"/> -->
+                            <field name="max_score" invisible = "1" string="Max Score"/>
+
+                        <!--  <field name="another_max_score" invisible = "filter_comp = True | grading_method_type in ""['qualitative','q_colors']" string="Max Score"/> -->
+                            <field name="another_max_score" invisible = "1" string="Max Score"/>
+
+
+                            <field name="custom_max_score"
+                                string="Max Score"
+                                readonly = "state == 'done' "
+                                invisible = "grading_method_type in ['qualitative', 'q_colors']"
+                                />
+
+                            <button name="fill_score"
+                                    string="Fill Max Score"
+                                    class="oe_highlight"
+                                    type="object"
+                                    invisible="grading_method_type in ['qualitative', 'q_colors'] or state == 'done' or not student_list"
+                                    readonly="state == 'done'"/>
+
+                        </group>
+
+                        <notebook>
+                            <page string="Student List">
+                                <field name="student_list" widget="one2many" mode="list,form" readonly = "state == 'done'">
+                                    <list string="Student List" create="false"  editable="bottom" open="false">
+                                        <field name="check"/>
+                                        <field name="seat_number" readonly="1"/>
+                                        <field name="student_code" readonly="1" />
+                                        <field name="student_id" readonly="1" options='{"no_open": True}'/>
+                                        <field name="score_selection" column_invisible="parent.grading_method_type in ['evaluation', 'numeric']" domain="[('grading_scale_id', '=', grading_method), ('grading_scale_id.grade_id', '=', parent.grade_id)]"/>
+                                        <field name="score" column_invisible="parent.grading_method_type in ['qualitative', 'q_colors']"/>
+                                        <field name="color" widget="color" column_invisible="parent.grading_method_type in ['evaluation', 'numeric']"/>
+                                        <field name="comment" />
+                                    </list>
+                                          
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <chatter/>
+
+
+                </form>
+            </field>
+        </record>
+
+
+          <!-- Onboarding list view with custom renderer -->
+        <record id="view_mc_evaluation_grades_tree_with_onboarding" model="ir.ui.view">
+            <field name="name">mc.evaluation.grades.list.onboarding</field>
+            <field name="model">mc.evaluation.grades</field>
+            <field name="inherit_id" ref="mc_evaluation_grades_tree_view"/>
+            <field name="mode">primary</field>
+           
+        </record>
+
+
+         <!-- Action -->
+        <record id="action_mc_evaluation_grades_with_onboarding" model="ir.actions.act_window">
+            <field name="name">Evaluation Grades</field>
+            <field name="path">grades</field>
+            <field name="res_model">mc.evaluation.grades</field>
+            <field name="view_id" ref="view_mc_evaluation_grades_tree_with_onboarding"/>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[]</field>
+            <!-- إزالة الـ domain من هنا لأن Record Rules هتتولى الموضوع -->
+            <field name="context">{}</field>
+        </record>
+
+        
+             <!-- Menu item -->
+        <menuitem id="menu_mc_evaluation_grades"
+            name="Add Evaluation Grades"
+            action="action_mc_evaluation_grades_with_onboarding"
+            parent="menu_student_grading"
+            sequence="1"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,116 @@
+<odoo>
+    <data>
+        <record id="mc_timetable_schedule_form_inherit" model="ir.ui.view">
+            <field name="name">education.timetable.schedule.from.inherit</field>
+            <field name="model">education.timetable.schedule</field>
+            <field name="inherit_id" ref="education_time_table.education_timetable_schedule_view_form"/>
+             <field name="arch" type="xml">
+
+                <form position="attributes">
+                    <attribute name="create">false</attribute>
+                </form>
+
+                <xpath expr="//field[@name='period_id']" position="before">
+                    <field name="online"/>
+
+                </xpath>
+
+ 
+                <xpath expr="//field[@name='subject_id']" position="after">
+                   <field name="syllabus" 
+                       options="{'no_create': True, 'no_open': True}"
+                       domain="[('subject_id', '=', subject_id)]"/>
+                    
+                    <field name="syllabus_special"/>
+                </xpath>
+
+                <xpath expr="//field[@name='faculty_id']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+                </xpath>  
+
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="domain">[('id', 'in', allowed_company_ids)]</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="mc_timetable_schedule_list_inherit" model="ir.ui.view">
+            <field name="name">education.timetable.schedule.list.inherit</field>
+            <field name="model">education.timetable.schedule</field>
+            <field name="inherit_id" ref="education_time_table.education_timetable_schedule_view_tree"/>
+             <field name="arch" type="xml">
+
+                <list position="attributes">
+                    <attribute name="create">false</attribute>
+                </list>
+
+                <xpath expr="//field[@name='faculty_id']" position="replace"/>
+
+                <xpath expr="//field[@name='subject_id']" position="replace">
+                   <field name="syllabus"/>
+                   <field name="syllabus_special" string="Special"/>
+                   <field name="company_id"/>
+                </xpath>  
+
+                <xpath expr="//field[@name='time_from']" position="attributes">
+                    <attribute name="widget">float_time</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='time_till']" position="attributes">
+                    <attribute name="widget">float_time</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        
+
+
+        <record id="education_time_table.education_timetable_schedule_view_search" model="ir.ui.view">
+            <field name="name">timetable.schedule.filter</field>
+            <field name="model">education.timetable.schedule</field>
+            <field name="arch" type="xml">
+                <search  string="Timetable Schedule">
+                <separator/>
+                    <group expand="1" string="Group By">
+                        <filter string="Class" name="group_timetable_id" context="{'group_by':'timetable_id'}"/>
+                        <filter string="Class Division" name="group_class_division" context="{'group_by':'class_division_id'}"/>
+                        <filter string="Week" name="group_week_day" context="{'group_by':'week_day'}"/>
+                        <filter string="Faculty" name="group_faculty" context="{'group_by':'faculty_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+        
+
+         <!-- Edit Action domain -->
+          <record id="education_time_table.education_timetable_schedule_action" model="ir.actions.act_window">
+                  <field name="context">{'search_default_weekday':
+                        1,'search_default_group_timetable_id': 1,
+                        'search_default_group_week_day': 1}
+                    </field>
+        </record>
+    
+    <!-- <record id="education_time_table.education_timetable_schedule_action"
+            model="ir.actions.act_window">
+             <field name="domain">[('class_division_id', '=', context.get('active_id', False)), 
+                           ('company_id', 'in', context.get('allowed_company_ids', []))]</field>
+    </record>
+    //Record for Timetable View Class Division Wise 
+        <record id="education_time_table.action_education_time_table_view_class_division_wise"
+                model="ir.actions.act_window">
+            <field name="domain">[('class_division_id', '=', context.get('active_id', False)), 
+                           ('company_id', 'in', context.get('allowed_company_ids', []))]</field>
+        </record>
+        //Record for Timetable View Faculty Wise
+        <record id="education_time_table.action_education_time_table_view_faculty_wise"
+                model="ir.actions.act_window">
+            <field name="domain">[('faculty_id', '=', active_id),('class_division_id', '=', active_id),('company_id', 'in', allowed_company_ids)]</field>
+        </record> -->
+
+    </data>
+</odoo>
+
+
+

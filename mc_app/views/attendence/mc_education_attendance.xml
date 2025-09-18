@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+        <record id="mc_attendence_form_inherit" model="ir.ui.view">
+            <field name="name">education.attendence.from.inherit</field>
+            <field name="model">education.attendance</field>
+            <field name="inherit_id" ref="education_attendances.education_attendance_view_form"/>
+             <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='division_id']" position="before">
+                    <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                    <field name="class_id"  options="{'no_create': True}" widget="selection"/>
+                </xpath>
+                <xpath expr="//field[@name='division_id']" position="after">
+                    <field name="academic_year_id"  readonly="1" options="{'no_create': True}" widget="selection"/>
+                </xpath>
+                <xpath expr="//field[@name='faculty_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='present_afternoon']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="column_invisible">True</attribute>
+                </xpath>
+        
+                <xpath expr="//button[@name='action_mark_all_present_afternoon']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+        
+                <xpath expr="//field[@name='student_name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="column_invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='attendance_line_ids']/list/field[@name='present_morning']" position="before">
+                    <field name="student_english_name"/>
+                    <field name="student_arabic_name"/>
+                </xpath>
+
+                <xpath expr="//field[@name='attendance_line_ids']/list/field[@name='present_morning']" position="after">
+                    <field name="sickness_reason"/>
+            
+                </xpath>
+
+
+       
+            </field>
+        </record>
+
+
+        <!-- Edit Action domain -->
+          <record id="education_attendances.education_attendance_action" model="ir.actions.act_window">
+               <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        </record>
+
+        <menuitem id="education_attendances.education_attendance_root_menu"
+          name="Attendance"
+          sequence="12"
+          web_icon="education_attendances,static/description/icon.png"
+          groups="base.group_system"/>
+
+    </data>
+</odoo>
+
+

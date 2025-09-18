@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_report_student_statistics">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>            
+        <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_reports_style.css" />
+        </head>
+
+                <div class="page">
+                    <div class="my-3">
+                        <button class="print-button" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+                            <i class="fa fa-print"/> Print
+                        </button>
+                    </div>
+                    <div class="container mt-5" >
+                        <!-- Report Header -->
+                        <div class="row mb-4">
+                            <div class="d-flex align-items-center align-items-sm-start border-bottom border-2 border-dark">
+                            <div class="col-6 text-start">
+                                <h2>Student Statistics Report</h2>
+                                <h5><t t-esc="company_name"/> </h5>
+                            </div>
+                            <div class="col-6" style="display: flex; justify-content: end;">
+                                <img src="/mc_app/static/description/mclogo.png" class="d-none d-lg-block" alt=""
+                                style="width: 250px;"/>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- Student Information Table -->
+                        <div class="row">
+                            <div class="col-12">
+                               <table  class="table table-bordered table-sm"
+                                        t-att-style="'border: 1px solid #cccccc; direction: ' + direction">
+
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="background: #2c3691; color:#fff;">Grade</th>
+                                        <th class="text-center" style="background: #2c3691; color:#fff;">Classes</th>
+                                        <th class="text-center" style="background: #2c3691; color:#fff;">Males</th>
+                                        <th class="text-center" style="background: #2c3691; color:#fff;">Females</th>
+                                        <th class="text-center" style="background: #2c3691; color:#fff;">Nationlaity</th>
+                                        <th class="text-center" style="background: #2c3691; color:#fff;">Ages</th>
+                                        <th class="text-center" style="background: #2c3691; color:#fff;">Religion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_data" t-as="item">
+                                        <tr>
+                                            <td class="text-center"><t t-esc="item['Grade']"/></td>
+                                            <td class="text-center"><t t-esc="item['Classes']"/></td>
+                                            <td class="text-center"><t t-esc="item['Males']"/></td>
+                                            <td class="text-center"><t t-esc="item['Females']"/></td>
+                                            <td class="text-start"><t t-esc="item['Nationlaity']"/></td>
+                                            <td class="text-start"><t t-esc="item['Ages']"/></td>
+                                            <td class="text-start"><t t-esc="item['Religion']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            </div>
+                        </div>
+
+                        <!-- Report Footer -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="text-center text-muted">
+                                    <small>Generated on: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <!-- Form View for Treasury Report Wizard -->
+        <record id="students_report_wizard_form_view" model="ir.ui.view">
+            <field name="name">students.report.wizard.form</field>
+            <field name="model">students.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="All Students Report">
+                    <group>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                        <field name="grade_ids" widget="many2many_tags" />
+                    </group>
+                    <group>
+                        <field name="class_ids" widget="many2many_tags" />
+                        <field name="invoice_state"/>
+                    </group>
+                    <group>
+                        <field name="invoice_type"/>
+                        <field name="std_status"/>
+                    </group>
+                    <group>
+                        <field name="invoice_customer_credit"/>
+                    </group>
+                    <footer>
+                        <button name="generate_students_report_wizard" 
+                                type="object" 
+                                string="Generate Report" 
+                                class="btn-primary" 
+                                default_focus="1"/>
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- Action for Treasury Report Wizard -->
+        <record id="action_students_report_wizard" model="ir.actions.act_window">
+            <field name="name">All Students Report</field>
+            <field name="res_model">students.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="students_report_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+        <!-- Menu Item for Treasury Report Wizard -->
+        <!-- <menuitem id="students_report_wizard_menu"
+                  name="All Students Report"
+                  parent="fee_reports_menu"
+                  action="action_students_report_wizard"
+                  sequence="2"/> -->
+    </data>
+</odoo>

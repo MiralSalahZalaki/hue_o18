@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="ad_total_term_template">
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+                <style>
+                    body {
+                        font-size:12px !important;
+                    }
+                    .container {
+                        max-width: 100% !important;
+                        width: 100% !important;
+                    }
+                    table {
+                        border: 1px solid #000 !important;
+                        background-color: #f9f9f9 !important;
+                        width: 100% !important;
+                        text-align: center !important;
+                        border-collapse: collapse !important;
+                    }
+                    /* لضمان وجود Scroll */
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 10px;
+}
+.table-container table {
+    min-width: 1000px; 
+    white-space: nowrap;
+}
+                    td {
+                        white-space: nowrap !important;
+                    }
+                    td, th {
+                        border: 1px solid #000 !important;
+                        text-transform: capitalize !important;
+                    }
+                    table tr:nth-child(even) {
+                        background: #D0E4F5 !important;
+                    }
+                    table thead {
+                        border-bottom: 2px solid #000 !important;
+                    }
+                    table thead th {
+                        font-size: 13px !important;
+                        font-weight: 600 !important;
+                        color: #3B4345 !important;
+                        text-align: center !important;
+                        vertical-align: inherit !important;
+                    }
+                    table tfoot td {
+                        font-size: 14px !important;
+                    }
+                    table tfoot .links {
+                        text-align: right !important;
+                    }
+                    table tfoot .links a {
+                        display: inline-block !important;
+                        background: #1C6EA4 !important;
+                        color: #FFFFFF !important;
+                        padding: 2px 8px !important;
+                        border-radius: 5px !important;
+                    }
+                    .table &gt; thead &gt; tr &gt; th, .table &gt; tbody &gt; tr &gt; th, .table &gt; tfoot &gt; tr &gt; th,
+                    .table &gt; thead &gt; tr &gt; td, .table &gt; tbody &gt; tr &gt; td, .table &gt; tfoot &gt; tr &gt; td {
+                        padding: 0px !important;
+                        line-height: 1.42857143 !important;
+                        vertical-align: middle !important;
+                        border-top: 1px solid #dddddd !important;
+                    }
+                    @media print {
+    .btn-print {
+        display: none !important;
+    }
+    .table-container {
+        overflow: visible !important;
+        -webkit-overflow-scrolling: auto !important;
+    }
+    .table-container table {
+        min-width: auto !important;
+        white-space: normal !important;
+    }
+    table {
+        page-break-inside: auto;
+        font-size: 10px !important;
+    }
+    .page {
+        page-break-after: always !important;
+    }
+    .page:last-child {
+        page-break-after: avoid !important;
+    }
+}
+                </style>
+            </head>
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            <t t-foreach="students_data" t-as="student" t-as-index="student_index">
+                <div class="page" style="padding-bottom:48px">
+                    <div class="col-xs-12 " style="text-align: center;">
+                        <h1>Academic Final Report</h1>
+                    </div>
+                    <div class="student-info">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <strong>Student Name:</strong>
+                                <span t-esc="student.get('student', '')"/>
+                            </div>
+                            <div class="col-xs-6">
+                                <strong>Student Code:</strong>
+                                <span t-esc="student.get('student_code', '')"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <strong>Seat Num:</strong>
+                                <span t-esc="student.get('seat_number', '')"/>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>Grade:</strong>
+                                <span t-esc="student.get('grade_name', '')"/>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>Class:</strong>
+                                <span t-esc="student.get('class_name', '')"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>SUBJECT</th>
+                                    <th>ASSESSMENTS</th>
+                                    <th>MAX SCORE</th>
+                                    <th>SCORE</th>
+                                    <th t-if="not student_view">TOTAL</th>
+                                    <th t-if="not student_view">GRADE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="syllabus_data" t-as="syllabus">
+                                    <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                    <t t-set="student_subject_data" t-value="student.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                    <!-- Skip elective subjects if student is not registered -->
+                                    <t t-if="not syllabus.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                        <t t-set="assessments" t-value="syllabus.get('assessments', [])"/>
+                                        <t t-set="distributions" t-value="syllabus.get('distributions', [])"/>
+                                        <t t-set="all_items" t-value="assessments + distributions"/>
+                                        <t t-foreach="all_items" t-as="item">
+                                            <!-- Skip assessment if hidden_student_report is True and student_view is True -->
+                                            <t t-if="not (item in assessments and item.get('hidden_student_report', False) and student_view)">
+                                                <tr>
+                                                    <!-- Subject column - only show in first row -->
+                                                    <t t-if="item_index == 0">
+                                                        <td t-att-rowspan="len([item for item in all_items if not (item in assessments and item.get('hidden_student_report', False) and student_view)])" class="subject-col">
+                                                            <span t-esc="syllabus.get('syllabus_name', '')"/>
+                                                        </td>
+                                                    </t>
+                                                    <!-- Assessment/Distribution name -->
+                                                    <td>
+                                                        <span t-esc="item.get('name', '')"/>
+                                                    </td>
+                                                    <!-- Max Score -->
+                                                    <td>
+                                                        <t t-set="item_id" t-value="item.get('id')"/>
+                                                        <t t-if="item in assessments">
+                                                            <span t-esc="student_subject_data.get('assessments', {}).get(item_id, {}).get('max_score', '')"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-esc="student_subject_data.get('distributions', {}).get(item_id, {}).get('max_score', '')"/>
+                                                        </t>
+                                                    </td>
+                                                    <!-- Score -->
+                                                    <td>
+                                                        <t t-if="item in assessments">
+                                                            <span t-esc="student_subject_data.get('assessments', {}).get(item_id, {}).get('score', '')"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-esc="student_subject_data.get('distributions', {}).get(item_id, {}).get('score', '')"/>
+                                                        </t>
+                                                    </td>
+                                                    <!-- Total - only show in first row and if not student view -->
+                                                    <t t-if="not student_view">
+                                                        <t t-if="item_index == 0">
+                                                            <td t-att-rowspan="len([item for item in all_items if not (item in assessments and item.get('hidden_student_report', False) and student_view)])" style="vertical-align: middle; font-weight: bold;">
+                                                                <span t-esc="student_subject_data.get('total', '')"/>
+                                                            </td>
+                                                        </t>
+                                                    </t>
+                                                    <!-- Grade - only show in first row and if not student view -->
+                                                    <t t-if="not student_view">
+                                                        <t t-if="item_index == 0">
+                                                            <td t-att-rowspan="len([item for item in all_items if not (item in assessments and item.get('hidden_student_report', False) and student_view)])" style="vertical-align: middle; font-weight: bold;">
+                                                                <span t-esc="student_subject_data.get('grade', '')"/>
+                                                            </td>
+                                                        </t>
+                                                    </t>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

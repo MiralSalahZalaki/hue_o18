@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_class_missing_attendance_report">
+        <!-- Report Configuration -->
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <!-- Main Container -->
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <!-- External Fonts and Styles -->
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+                <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous"/>
+                <style>
+                    body {
+                        font-family: 'Cairo', sans-serif;
+                    }
+                    .attendance-table th, .attendance-table td {
+                        font-size: 12px;
+                        text-align: center;
+                        vertical-align: middle;
+                    }
+                    .month-header {
+                        width: 75px;
+                        background: #2c3691;
+                        color: #fff;
+                    }
+                    .day-header {
+                        width: 32px;
+                        background: #2c3691;
+                        color: #fff;
+                    }
+                    .unexcused-header {
+                        width: 75px;
+                        background: #ff3b52;
+                        color: #fff;
+                    }
+                    .excused-header {
+                        width: 75px;
+                        background: #8bf277;
+                        color: #fff;
+                    }
+                    .day-cell {
+                        padding: 0;
+                    }
+                    .status-icon {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 20px;
+                        height: 20px;
+                    }
+                    .status-icon.attended {
+                        color: #4CAF50;
+                    }
+                    .status-icon.missing {
+                        background-color: #ff3b52;
+                        color: white;
+                    }
+                    .status-icon.vacation {
+                        background-color: #fcaa58;
+                    }
+                    .status-icon.off {
+                        background-color: #dfdfdf;
+                    }
+                    .status-icon.draft {
+                        background-color: #ffc8c4;
+                    }
+                    .unexcused-count {
+                        font-size: 12px;
+                    }
+                    .excused-count {
+                        font-size: 12px;
+                        background-color: #eeeeee;
+                    }
+                    .class-info .col-6 {
+                        width: 50%;
+                    }
+                    .summary-item {
+                        margin-right: 1rem;
+                        margin-bottom: 0.5rem;
+                    }
+                    .legend-table td {
+                        font-size: 12px;
+                        border: 1px solid #555555;
+                    }
+                    .legend-item {
+                        width: 40px;
+                        text-align: center;
+                    }
+                    .legend-item.attended {
+                        color: #4CAF50;
+                    }
+                    .legend-item.missing {
+                        background-color: #ff3b52;
+                    }
+                    .legend-item.draft {
+                        background-color: #ffc8c4;
+                    }
+                    .legend-item.off {
+                        background-color: #dfdfdf;
+                    }
+                    .legend-item.vacation {
+                        background-color: #fcaa58;
+                    }
+                </style>
+            </head>
+            <div class="page">
+                <div class="container mt-5">
+                    <!-- Header Section -->
+                    <div class="row mb-4">
+                        <div class="d-flex align-items-center border-bottom border-dark pb-3">
+                            <div class="col-6 text-start">
+                                <h2 t-esc="'Class Attendance Report'" t-options="{'widget': 'translate'}"/>
+                                <h6 t-esc="company_name"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Class Information -->
+                    <div class="row mt-3 class-info">
+                        <div class="col-6">
+                            <strong t-esc="'Grade: '" t-options="{'widget': 'translate'}"/>
+                            <span t-esc="grade"/>
+                        </div>
+                        <div class="col-6">
+                            <strong t-esc="'Class: '" t-options="{'widget': 'translate'}"/>
+                            <span t-esc="class"/>
+                        </div>
+                        <div class="col-6">
+                            <strong t-esc="'Date Range: '" t-options="{'widget': 'translate'}"/>
+                            <span t-esc="date_from"/> -
+                            <span t-esc="date_to"/>
+                        </div>
+                        <div class="col-6">
+                            <strong t-esc="'Total Students: '" t-options="{'widget': 'translate'}"/>
+                            <span t-esc="total_students"/>
+                        </div>
+                    </div>
+                    <!-- Attendance Calendar Table -->
+                    <table class="table table-bordered mt-4 attendance-table">
+                        <thead>
+                            <tr>
+                                <th style="font-size:12px; background: #2c3691 !important; color: #fff !important;" class="month-header">Months</th>
+                                <t t-foreach="range(1, 32)" t-as="day">
+                                    <th style="font-size:12px; background: #2c3691 !important; color: #fff !important;" class="day-header" t-esc="day"/>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="attendance_data.keys()" t-as="month_name">
+                                <tr>
+                                    <td class="month-name" t-esc="month_name"/>
+                                    <t t-foreach="range(1, 32)" t-as="day">
+                                        <t t-set="day_data" t-value="attendance_data.get(month_name, {}).get('days', {}).get(day)"/>
+                                        <td class="day-cell">
+                                            <t t-if="day_data">
+                                                <span t-att-class="'status-icon ' + ('attended' if day_data.get('attended') else 'missing' if day_data.get('missing') else 'vacation' if day_data.get('vacation') else 'off' if day_data.get('off') else 'draft' if day_data.get('draft') else '')">
+                                                    <t t-if="day_data.get('attended')">
+                                                        <i class="fa fa-check"/>
+                                                    </t>
+                                                    <t t-elif="day_data.get('missing')">
+                                                        <i class="fa fa-times"/>
+                                                    </t>
+                                                    <t t-elif="day_data.get('draft')">
+                                                        <b>D</b>
+                                                    </t>
+                                                </span>
+                                            </t>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <!-- Summary Section - Now using data from backend -->
+                    <div class="row mt-4 summary-section">
+                        <div class="col-12">
+                            <h5 t-esc="'Summary'" t-options="{'widget': 'translate'}"/>
+                            <div class="d-flex flex-wrap">
+                                <div class="summary-item">
+                                    <strong t-esc="'Total Days: '" t-options="{'widget': 'translate'}"/>
+                                    <span t-esc="summary.get('total_days', 0)"/>
+                                </div>
+                                <div class="summary-item">
+                                    <strong t-esc="'Days with Attendance: '" t-options="{'widget': 'translate'}"/>
+                                    <span t-esc="summary.get('attended_days', 0)"/>
+                                </div>
+                                <div class="summary-item">
+                                    <strong t-esc="'Missing Days: '" t-options="{'widget': 'translate'}"/>
+                                    <span t-esc="summary.get('missing_days', 0)"/>
+                                </div>
+                                <div class="summary-item">
+                                    <strong t-esc="'Vacation Days: '" t-options="{'widget': 'translate'}"/>
+                                    <span t-esc="summary.get('vacation_days', 0)"/>
+                                </div>
+                                <div class="summary-item">
+                                    <strong t-esc="'Off Days: '" t-options="{'widget': 'translate'}"/>
+                                    <span t-esc="summary.get('off_days', 0)"/>
+                                </div>
+                                <div class="summary-item">
+                                    <strong t-esc="'Draft Days: '" t-options="{'widget': 'translate'}"/>
+                                    <span t-esc="summary.get('draft_days', 0)"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Legend Section -->
+                    <div class="mt-3 legend-section">
+                        <table class="table legend-table">
+                            <tbody>
+                                <tr>
+                                    <td class="legend-item attended">
+                                        <i class="fa fa-check attended"/>
+                                    </td>
+                                    <td>Attended</td>
+                                    <td class="legend-item missing">
+                                        <i class="fa fa-times missing"/>
+                                    </td>
+                                    <td>Missing</td>
+                                    <td class="legend-item draft">
+                                        <b>D</b>
+                                    </td>
+                                    <td>Draft</td>
+                                    <td class="legend-item off"> </td>
+                                    <td>Off</td>
+                                    <td class="legend-item vacation"> </td>
+                                    <td>Vacation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Footer -->
+                    <div class="row mt-4 footer">
+                        <div class="col-12 text-center text-muted">
+                            <small>
+                                Generated on:
+                                <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

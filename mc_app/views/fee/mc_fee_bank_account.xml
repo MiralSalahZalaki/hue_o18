@@ -1,0 +1,45 @@
+<odoo>
+    <record id="mc_fee_bank_account_list_view" model="ir.ui.view">
+        <field name="name">mc.fee.bank.account.list</field>
+        <field name="model">mc.fee.bank.account</field>
+        <field name="arch" type="xml">
+            <list string="Bank Account">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="mc_fee_bank_account_form_view" model="ir.ui.view">
+        <field name="name">mc.fee.bank.account.form</field>
+        <field name="model">mc.fee.bank.account</field>
+        <field name="arch" type="xml">
+            <form string="Bank Account">
+               <group>
+                    <field name="name"/>
+                    <field name="iban"/>
+                    <field name="bransh"/>
+                    <field name="bank_account_no"/>
+                    <field name="swift_code"/>
+               </group>
+            </form>
+        </field>
+    </record>
+
+            
+    <record id="action_mc_fee_bank_account" model="ir.actions.act_window">
+        <field name="name">Bank Account</field>
+        <field name="res_model">mc.fee.bank.account</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <menuitem id="menu_mc_fee_bank_account"
+            name="Bank Accounts" 
+            parent="education_fee.education_fee_structure_menu_root"
+            action="action_mc_fee_bank_account"
+            sequence="6"
+            />
+
+
+</odoo>

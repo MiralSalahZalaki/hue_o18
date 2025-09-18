@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="classroom_management.ClassroomListRenderer"
+     t-inherit="web.ListRenderer"
+     t-inherit-mode="primary">
+    <xpath expr="//t[@t-call='web.ActionHelper']" position="replace">
+      <t t-if="showNoContentHelper">
+        <ClassroomActionHelper
+          list="props.list"
+          noContentHelp="''"/>
+      </t>
+    </xpath>
+  </t>
+</templates>

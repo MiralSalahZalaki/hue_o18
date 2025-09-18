@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="action_treasury_report_template" model="ir.actions.report">
+            <field name="name">Treasury Report</field>
+            <field name="model">treasury.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.treasury_report_template</field>
+        </record>
+
+         <record id="action_paid_report_template" model="ir.actions.report">
+            <field name="name">Paid Report</field>
+            <field name="model">paid.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.paid_report_template</field>
+        </record>
+
+
+         <record id="action_ministry_fee_report_template" model="ir.actions.report">
+            <field name="name">Ministry Fee Report</field>
+            <field name="model">ministry.fee.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.ministry_fee_report_template</field>
+        </record>
+
+
+    </data>
+</odoo>    

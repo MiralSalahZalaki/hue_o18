@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="action_report_timetable_by_class_template" model="ir.actions.report">
+            <field name="name">Timeyable by class</field>
+            <field name="model">timetable.by.calss.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_report_timetable_by_class</field>
+        </record>
+
+
+         <record id="action_report_timetable_by_teacher_template" model="ir.actions.report">
+            <field name="name">Timeyable by teacher</field>
+            <field name="model">timetable.by.teacher.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_report_timetable_by_teacher</field>
+        </record>
+
+         <record id="action_report_timetable_by_master_template" model="ir.actions.report">
+            <field name="name">Master Schedule</field>
+            <field name="model">timetable.master.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_report_timetable_master</field>
+        </record>
+
+         <record id="action_revealer_reports_template" model="ir.actions.report">
+            <field name="name">Revealer reports</field>
+            <field name="model">revealer.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">mc_app.template_revealer_reports</field>
+        </record>
+
+    </data>
+</odoo>    

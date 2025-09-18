@@ -1,0 +1,35 @@
+<odoo>
+    <record id="mc_student_permitted_absence_reason_list_view" model="ir.ui.view">
+        <field name="name">mc.student.permitted.absence.reason.list</field>
+        <field name="model">mc.student.permitted.absence.reason</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"  />
+            </list>
+        </field>
+    </record>
+
+            
+    <record id="action_mc_student_permitted_absence_reason" model="ir.actions.act_window">
+        <field name="name">Permitted Absence Reason</field>
+        <field name="res_model">mc.student.permitted.absence.reason</field>
+        <field name="view_mode">list</field>
+    </record>
+
+
+    <menuitem id="menu_mc_attence_config"
+            name="Attendence Config" 
+            parent="education_attendances.education_attendance_root_menu"
+            sequence="4"
+            />
+
+    <menuitem id="menu_mc_student_permitted_absence_reason"
+            name="Absence Reason" 
+            parent="menu_mc_attence_config"
+            action="action_mc_student_permitted_absence_reason"
+            sequence="0"
+            />
+
+
+
+</odoo>

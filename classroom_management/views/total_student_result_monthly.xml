@@ -1,0 +1,54 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="total_student_result_monthly_tree_view" model="ir.ui.view">
+        <field name="name">total.student.result.monthly.tree</field>
+        <field name="model">total.student.result.monthly</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="student_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="total_student_result_monthly_form_view" model="ir.ui.view">
+        <field name="name">total.student.result.monthly.form</field>
+        <field name="model">total.student.result.monthly</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="student_id"/>
+                        <field name="academic_year_id"/>
+                        <field name="assesment_time"/>
+                        <field name="class_id"/>
+                        <field name="degree"/>
+                    </group>
+                    <group>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"/>
+                        <field name="term_id"/>
+                        <field name="grade_id"/>
+                        <field name="syllabus_id"/>
+                    </group>
+                    <group>
+                        <field name="subject_result" placeholder="Type here the result"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="mc_action_total_student_result_monthly" model="ir.actions.act_window">
+        <field name="name">Total Student Result Monthly</field>
+        <field name="res_model">total.student.result.monthly</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="mc_menu_total_student_result_onthly"
+              name="Total Student Result Monthly" 
+              parent="menu_grading_setup"
+              sequence = "3"
+              action="mc_action_total_student_result_monthly"/>
+</odoo>

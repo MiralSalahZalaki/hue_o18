@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_report_student_data">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>            
+        <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_reports_style.css" />
+
+        </head>
+
+                <div class="page">
+                <div class="my-3">
+                    <button class="print-button" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+                        <i class="fa fa-print"/> Print
+                    </button>
+                </div>
+                    <div class="container mt-5" >
+                        <!-- Report Header -->
+                        <div class="row mb-4">
+                            <div class="d-flex align-items-center align-items-sm-start border-bottom border-2 border-dark">
+                            <div class="col-6 text-start">
+                                <h2>Student Data Report - <t t-esc="title"/> </h2>
+                                <h5><t t-esc="company_name"/> </h5>
+                            </div>
+                            <div class="col-6" style="display: flex; justify-content: end;">
+                                <img src="/mc_app/static/description/mclogo.png" class="d-none d-lg-block" alt=""
+                                style="width: 250px;"/>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- Student Information Table -->
+                        <div class="row">
+                            <div class="col-12">
+                                <table  class="table table-bordered table-sm"
+                                        t-att-style="'border: 1px solid #cccccc; direction: ' + direction">
+                                    <thead>
+                                    <tr class="success">
+                                        <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff; width:50px">No.</th>
+                                        <t t-if="student_data">
+                                            <t t-foreach="student_data[0].keys()" t-as="field_name">
+                                                <t t-if="field_name != 'age_next_oct'">
+                                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">
+                                                        <t t-esc="field_name"/>
+                                                    </th>
+                                                </t>
+                                            </t>
+                                            <t t-if="age_details">
+                                                <th class="text-center" style="background: #2c3691; color:#fff; width:55px">Day</th>
+                                                <th class="text-center" style="background: #2c3691; color:#fff; width:55px">Month</th>
+                                                <th class="text-center" style="background: #2c3691; color:#fff; width:55px">Year</th>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                  
+                                </thead>
+                                <tbody>
+                                    <t t-set="counter" t-value="1"/>
+                                    <t t-foreach="student_data" t-as="student">
+                                        <tr>
+                                            <td class="text-center"><t t-esc="counter"/></td>
+                                            <t t-foreach="student.keys()" t-as="field_name">
+                                             <t t-if="field_name != 'age_next_oct'">
+                                                <td class="text-center">
+                                                    <t t-esc="', '.join(student[field_name]) if isinstance(student[field_name], list) else student[field_name]"/>
+                                                </td>
+                                            </t>
+                                             </t>
+                                            <t t-if="age_details">
+                                                <td class="text-center"><t t-esc="student['age_next_oct'].split(',')[2].strip().split(' ')[0]"/></td>
+                                                <td class="text-center"><t t-esc="student['age_next_oct'].split(',')[1].strip().split(' ')[0]"/></td>
+                                                <td class="text-center"><t t-esc="student['age_next_oct'].split(',')[0].strip().split(' ')[0]"/></td>
+                                            </t>
+                                        </tr>
+                                        <t t-set="counter" t-value="counter + 1"/>
+                                    </t>
+                                </tbody>
+
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Report Footer -->
+                        <div class="row mt-4 footer">
+                            <div class="col-12">
+                                <div class="text-center text-muted generated-date">
+                                    <small>Generated on: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+        </t>
+    </template>
+
+    
+</odoo>

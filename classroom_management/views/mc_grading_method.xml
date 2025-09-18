@@ -1,0 +1,61 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="mc_grading_method_tree_view" model="ir.ui.view">
+        <field name="name">mc.grading.method.tree</field>
+        <field name="model">mc.grading.method</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="grade_id"/>
+                <field name="grading_method"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mc_grading_method_form_view" model="ir.ui.view">
+        <field name="name">mc.grading.method.form</field>
+        <field name="model">mc.grading.method</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"/>
+                        <field name="grade_id"/>
+                        <field name="grading_method"/>
+                        <field name="comment"/>
+                        <field name="school_year_id"/>
+                    </group>
+
+                    <notebook invisible = "not grading_method">
+                        <page string="Grading Scale">
+                            <field name="grading_scale_id" widget="one2many" mode="list,form">
+                                    <list string="Grading Scale" create="1" edit="1" open="1">
+                                        <field name="symbol"/>
+                                        <field name="color" widget="color" column_invisible="parent.grading_method in ['evaluation', 'numeric']" />
+                                        <field name="minimum" column_invisible="parent.grading_method in ['q_colors']" />
+                                        <field name="maximum" column_invisible="parent.grading_method in ['q_colors']" />
+                                        <field name="description"/>
+                                    </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="mc_action_grading_method" model="ir.actions.act_window">
+        <field name="name">Grading Method</field>
+        <field name="res_model">mc.grading.method</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="mc_menu_grading_method"
+              name="Grading Method" 
+              parent="menu_grading_setup"
+              sequence = "1"
+              action="mc_action_grading_method"/>
+</odoo>

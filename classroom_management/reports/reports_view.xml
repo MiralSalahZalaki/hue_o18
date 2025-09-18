@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_assessments_report_template" model="ir.actions.report">
+            <field name="name">Assessments Report</field>
+            <field name="model">assessments.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.assessments_report_template</field>
+        </record>
+        <record id="action_report_control" model="ir.actions.report">
+            <field name="name">Control Report</field>
+            <field name="model">control.grades.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.control_report_template</field>
+        </record>
+        <record id="report_educational_student_grades" model="ir.actions.report">
+            <field name="name">Follow Up Report</field>
+            <field name="model">educational.student.grades.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.educational_student_grades_template</field>
+        </record>
+        <record id="action_report_grading_attendence" model="ir.actions.report">
+            <field name="name">Attendance Report</field>
+            <field name="model">grading.attendance.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.report_grading_attendence_template</field>
+        </record>
+        <record id="action_report_final_educational_student_grades" model="ir.actions.report">
+            <field name="name">Educational Student Grades Report</field>
+            <field name="model">final.educational.student.grades.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.final_educational_student_template</field>
+        </record>
+        <!-- Start AD Reports -->
+        <record id="action_report_ad_student_result" model="ir.actions.report">
+            <field name="name">Student Grades Result Wizard</field>
+            <field name="model">student.result.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.ad_student_result_template</field>
+        </record>
+        <record id="action_report_ad_periodic_assessment" model="ir.actions.report">
+            <field name="name">Periodic Assessment Report Wizard</field>
+            <field name="model">periodic.assessment.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.ad_periodic_assessment_template</field>
+        </record>
+        <record id="action_report_ad_total_term_transcript" model="ir.actions.report">
+            <field name="name">Academic Final Report</field>
+            <field name="model">total.term.transcript.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.ad_total_term_template</field>
+        </record>
+        <!-- End AD Reports -->
+        <!-- Start AD Reports -->
+        <record id="action_report_mc_total_term" model="ir.actions.report">
+            <field name="name">Total Student Result Wizard</field>
+            <field name="model">mc.total.term.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.report_mc_total_term_template</field>
+        </record>
+        <record id="action_report_mc_periodic_assessment" model="ir.actions.report">
+            <field name="name">MC Periodic Assessment Report Wizard</field>
+            <field name="model">mc.periodic.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.mc_periodic_assessment_template</field>
+        </record>
+        <record id="action_report_mc_student_result" model="ir.actions.report">
+            <field name="name">MC Student Result Report Wizard</field>
+            <field name="model">mc.student.result.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.report_mc_student_result_template</field>
+        </record>
+        <!-- End AD Reports -->
+        <!-- Start IG Reports -->
+        <record id="action_report_ig_periodic_assessment" model="ir.actions.report">
+            <field name="name">IG Periodic Assessment</field>
+            <field name="model">ig.periodic.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.ig_periodic_assessment_template</field>
+        </record>
+        <record id="action_report_ig_student" model="ir.actions.report">
+            <field name="name">IG Student Result Report</field>
+            <field name="model">ig.student.result.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.report_ig_student_template</field>
+        </record>
+        <record id="action_ig_monthly_report" model="ir.actions.report">
+            <field name="name">IG Monthly Report</field>
+            <field name="model">ig.monthly.report.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.ig_monthly_report_template</field>
+        </record>
+        <record id="action_report_ig_total_term" model="ir.actions.report">
+            <field name="name">IG Total Term Report</field>
+            <field name="model">ig.total.term.wizard</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">classroom_management.ig_total_term_template</field>
+        </record>
+        <!-- End IG Reports -->
+    </data>
+</odoo>

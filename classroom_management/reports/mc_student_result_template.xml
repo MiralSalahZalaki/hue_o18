@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_mc_student_result_template">
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com"/>
+                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+                <style>
+                    body {
+                        font-size:12px !important;
+                    }
+                    .container {
+                        max-width: 100% !important;
+                        width: 100% !important;
+                    }
+
+                    /* Hide print button when printing */
+                    @media print {
+                        .btn-print {
+                            display: none !important;
+                        }
+                        
+                        /* Remove scroll and show all data in print */
+                        .table-container {
+                            overflow: visible !important;
+                            -webkit-overflow-scrolling: auto !important;
+                            margin-top: 10px;
+                        }
+                        
+                        .table-container table {
+                            min-width: auto !important;
+                            white-space: normal !important;
+                            width: 100% !important;
+                        }
+                        
+                        /* Adjust font size for print to fit more content */
+                        body {
+                            font-size: 10px !important;
+                        }
+                        
+                        table thead th {
+                            font-size: 9px !important;
+                        }
+                        
+                        .table  &gt; thead  &gt; tr  &gt; th,
+                        .table  &gt; tbody  &gt; tr  &gt; th,
+                        .table  &gt; tfoot  &gt; tr  &gt; th,
+                        .table  &gt; thead  &gt; tr  &gt; td,
+                        .table  &gt; tbody  &gt; tr  &gt; td,
+                        .table  &gt; tfoot  &gt; tr  &gt; td {
+                            padding: 4px !important;
+                            font-size: 9px !important;
+                        }
+                        
+                        td {
+                            white-space: normal !important;
+                        }
+                    }
+
+                    /* Screen styles */
+                    @media screen {
+                        /* لضمان وجود Scroll على الشاشة فقط */
+                        .table-container {
+                            overflow-x: auto;
+                            -webkit-overflow-scrolling: touch;
+                            margin-top: 10px;
+                        }
+                        .table-container table {
+                            min-width: 1000px; 
+                            white-space: nowrap;
+                        }
+                        
+                        td {
+                            white-space: nowrap !important;
+                        }
+                    }
+
+                    table {
+                        border: 1px solid #000 !important;
+                        background-color: #f9f9f9 !important;
+                        width: 100% !important;
+                        text-align: center !important;
+                        border-collapse: collapse !important;
+                    }
+                    
+                    td, th {
+                        border: 1px solid #000 !important;
+                        text-transform: capitalize !important;
+                    }
+                    table tr:nth-child(even) {
+                        background: #D0E4F5 !important;
+                    }
+                    table thead {
+                        border-bottom: 2px solid #000 !important;
+                    }
+                    table thead th {
+                        font-size: 13px !important;
+                        font-weight: 600 !important;
+                        color: #3B4345 !important;
+                        text-align: center !important;
+                        vertical-align: inherit !important;
+                    }
+                    table tfoot td {
+                        font-size: 14px !important;
+                    }
+                    table tfoot .links {
+                        text-align: right !important;
+                    }
+                    table tfoot .links a {
+                        display: inline-block !important;
+                        background: #1C6EA4 !important;
+                        color: #FFFFFF !important;
+                        padding: 2px 8px !important;
+                        border-radius: 5px !important;
+                    }
+                    .table &gt; thead &gt; tr &gt; th,
+                    .table &gt; tbody &gt; tr &gt; th,
+                    .table &gt; tfoot &gt; tr &gt; th,
+                    .table &gt; thead &gt; tr &gt; td,
+                    .table &gt; tbody &gt; tr &gt; td,
+                    .table &gt; tfoot &gt; tr &gt; td {
+                        line-height: 1.42857143 !important;
+                        vertical-align: middle !important;
+                        border-top: 1px solid #dddddd !important;
+                        padding: 8px !important;
+                        font-weight: 600;
+                        text-align:center
+                    }
+                </style>
+            </head>
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            <div class="page">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>
+                            <strong>Grade :
+                                <span t-esc="grade_name"/>
+                            </strong> |
+                            <t t-if="term_name">
+                                <strong>Term :
+                                    <span t-esc="term_name"/>
+                                </strong> |
+                            </t>
+                            <t t-elif="assessments_times_name">
+                                <strong>Assessments time :
+                                    <span t-esc="assessments_times_name"/>
+                                </strong> |
+                            </t>
+                            <t t-else="">
+                            </t>
+                            <t t-if="class_name">
+                                <strong>Class:
+                                    <span t-esc="class_name"/>
+                                </strong>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <!-- Evaluation -->
+                <div class="row" t-if="grading_method == 'evaluation'">
+                    <div class="table-container">
+                        <table class="table blueTable">
+                            <thead>
+                                <tr>
+                                    <th rowspan="3" class="name-col">Serial no</th>
+                                    <th rowspan="3">Seat no</th>
+                                    <th rowspan="3">Student</th>
+                                    <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                        <t t-set="distributions_count" t-value="len(syllabus_info.get('distributions', []))"/>
+                                        <th t-att-colspan="distributions_count + 2" class="subject-header">
+                                            <span t-esc="syllabus_info.get('syllabus_name')"/>
+                                        </th>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                        <!-- Distributions -->
+                                        <t t-foreach="syllabus_info.get('distributions', [])" t-as="distribution">
+                                            <th class="distribution-header">
+                                                <span t-esc="distribution.get('name', ' ')"/>
+                                            </th>
+                                        </t>
+                                        <!-- Subject Total and Grade -->
+                                        <th class="total-header">Subject Total</th>
+                                        <th class="total-header">Subject Evaluation</th>
+                                    </t>
+                                    <t t-if="term_name">
+                                        <th rowspan='2'>Ministry Total</th>
+                                        <th rowspan='2'>Total</th>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                        <!-- Distributions -->
+                                        <t t-foreach="syllabus_info.get('distributions', [])" t-as="distribution">
+                                            <th style="padding:0 !important;background-color: #d0e4f5;">
+                                                <span t-esc="distribution.get('dist_maximum', ' ')"/>
+                                            </th>
+                                        </t>
+                                        <!-- Subject Total and Grade -->
+                                        <t t-if="term_name">
+                                            <t t-set="total" t-value="sum([d.get('dist_maximum', 0) for d in syllabus_info.get('distributions', [])])"/>
+                                            <th style="padding:0 !important;background-color: #d0e4f5;">
+                                                <t t-esc="total"/>
+                                            </th>
+                                        </t>
+                                        <t t-else="">
+                                            <th></th>
+                                        </t>
+                                        <th></th>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="students_data" t-as="student" t-as-index="student_index">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="student_index + 1"/>
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <span t-esc="student.get('seat_number', '')"/>
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <span t-esc="student.get('student')"/>
+                                        </td>
+                                        <!-- reset المجموع لكل طالب -->
+                                        <t t-set="student_total" t-value="0.0"/>
+                                        <!-- Loop through subjects -->
+                                        <t t-foreach="syllabus_data" t-as="syllabus_info" t-as-index="syllabus_index">
+                                            <t t-set="syllabus_id" t-value="syllabus_info.get('syllabus_id')"/>
+                                            <t t-set="subject_result" t-value="student.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                            <!-- distributions -->
+                                            <t t-foreach="syllabus_info.get('distributions', [])" t-as="distribution" t-as-index="dist_index">
+                                                <td>
+                                                    <t t-set="dist_id" t-value="distribution.get('id')"/>
+                                                    <t t-set="dist_data" t-value="subject_result.get('distributions', {}).get(dist_id)"/>
+                                                    <t t-if="not syllabus_info.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                        <t t-if="dist_data">
+                                                            <t t-if="dist_data.get('check', True)">
+                                                                <span t-esc="'{0:g}'.format(float('{:.2f}'.format(dist_data.get('score', 0.0))))"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span style="color:red">Abs</span>
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <!-- <span style="color:red">Abs</span> -->
+                                                            <span></span>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span> </span>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <!-- Subject Total -->
+                                            <td>
+                                                <t t-if="not syllabus_info.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                    <t t-if="term_name">
+                                                        <t t-set="student_total" t-value="student_total + (subject_result.get('total', 0.0) or 0.0)"/>
+                                                        <span t-esc="'{0:g}'.format(float('{:.2f}'.format(subject_result.get('total', 0.0))))"/>
+                                                    </t>
+                                                    <t t-else="assessments_times_name">
+                                                        <t t-set="student_total" t-value="student_total + (subject_result.get('percentage', 0.0) or 0.0)"/>
+                                                        <span t-esc="'{0:g}'.format(float('{:.2f}'.format(subject_result.get('percentage', 0.0))))"/>
+                                                    </t>
+                                                </t>
+                                                <t t-else="">
+                                                    <span> </span>
+                                                </t>
+                                            </td>
+                                            <!-- Subject Grade -->
+                                            <td t-att-style="'background-color: ' + (subject_result.get('color', '') if subject_result.get('color') else '#FFFFFF')">
+                                                <t t-if="not syllabus_info.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                    <span t-esc="subject_result.get('grade', '')"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span> </span>
+                                                </t>
+                                            </td>
+                                        </t>
+                                        <t t-if="term_name">
+                                            <!-- Extra column (optional) -->
+                                            <td>
+                                                <span> </span>
+                                            </td>
+                                            <!-- Total of all subjects -->
+                                            <td>
+                                                <span t-esc="'{0:g}'.format(float('{:.2f}'.format(student_total)))"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Numeric -->
+                <div class="row" t-if="grading_method == 'numeric'">
+                    <div class="table-container">
+                        <table class="table blueTable">
+                            <thead>
+                                <tr>
+                                    <th rowspan="3" class="name-col">Serial no</th>
+                                    <th rowspan="3">Seat no</th>
+                                    <th rowspan="3">Student</th>
+                                    <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                        <t t-set="distributions_count" t-value="len(syllabus_info.get('distributions', []))"/>
+                                        <th t-att-colspan="distributions_count + 1" class="subject-header">
+                                            <span t-esc="syllabus_info.get('syllabus_name')"/>
+                                        </th>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                        <!-- Distributions -->
+                                        <t t-foreach="syllabus_info.get('distributions', [])" t-as="distribution">
+                                            <th class="distribution-header">
+                                                <span t-esc="distribution.get('name', ' ')"/>
+                                            </th>
+                                        </t>
+                                        <!-- Subject Total and Grade -->
+                                        <th class="total-header">Total</th>
+                                    </t>
+                                    <t t-if="term_name">
+                                        <th rowspan='2'>Ministry Total</th>
+                                        <th rowspan='2'>Total</th>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <t t-foreach="syllabus_data" t-as="syllabus_info">
+                                        <!-- Distributions -->
+                                        <t t-foreach="syllabus_info.get('distributions', [])" t-as="distribution">
+                                            <th style="padding:0 !important;background-color: #d0e4f5;">
+                                                <span t-esc="distribution.get('dist_maximum', ' ')"/>
+                                            </th>
+                                        </t>
+                                        <!-- Subject Total and Grade -->
+                                        <t t-set="total" t-value="sum([d.get('dist_maximum', 0) for d in syllabus_info.get('distributions', [])])"/>
+                                        <th style="padding:0 !important;background-color: #d0e4f5;">
+                                            <t t-esc="total"/>
+                                        </th>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="students_data" t-as="student" t-as-index="student_index">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="student_index + 1"/>
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <span t-esc="student.get('seat_number', '')"/>
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <span t-esc="student.get('student')"/>
+                                        </td>
+                                        <!-- إجمالي درجات الطالب -->
+                                        <t t-set="student_total" t-value="0.0"/>
+                                        <!-- Loop through subjects -->
+                                        <t t-foreach="syllabus_data" t-as="syllabus_info" t-as-index="syllabus_index">
+                                            <t t-set="syllabus_id" t-value="syllabus_info.get('syllabus_id')"/>
+                                            <t t-set="subject_result" t-value="student.get('subjects_results', {}).get(syllabus_id, {})"/>
+                                            <!-- distributions -->
+                                            <t t-foreach="syllabus_info.get('distributions', [])" t-as="distribution" t-as-index="dist_index">
+                                                <td>
+                                                    <t t-set="dist_id" t-value="distribution.get('id')"/>
+                                                    <t t-set="dist_data" t-value="subject_result.get('distributions', {}).get(dist_id)"/>
+                                                    <t t-if="not syllabus_info.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                        <t t-if="dist_data">
+                                                            <t t-if="dist_data.get('check', True)">
+                                                                <span t-esc="'{0:g}'.format(float('{:.2f}'.format(dist_data.get('score', 0.0))))"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span style="color:red">Abs</span>
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span></span>
+                                                            <!--  <span style="color:red">Abs</span> -->
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span> </span>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <!-- Subject Total -->
+                                            <td>
+                                                <t t-if="term_name">
+                                                    <t t-if="not syllabus_info.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                        <t t-set="student_total" t-value="student_total + (subject_result.get('total', 0.0) or 0.0)"/>
+                                                        <span t-esc="'{0:g}'.format(float('{:.2f}'.format(subject_result.get('total', 0.0))))"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span> </span>
+                                                    </t>
+                                                </t>
+                                                <t t-else="assessments_times_name">
+                                                    <t t-if="not syllabus_info.get('is_elective') or syllabus_id in student.get('registered_subjects', [])">
+                                                        <span t-esc="'{0:g}'.format(float('{:.2f}'.format(subject_result.get('max_score', 0.0))))"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span> </span>
+                                                    </t>
+                                                </t>
+                                            </td>
+                                        </t>
+                                        <t t-if="term_name">
+                                            <td>
+                                                <span> </span>
+                                            </td>
+                                            <!-- Total of all subjects -->
+                                            <td>
+                                                <span t-esc="'{0:g}'.format(float('{:.2f}'.format(student_total)))"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

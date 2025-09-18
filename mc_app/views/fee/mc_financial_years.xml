@@ -1,0 +1,51 @@
+<odoo>
+    <record id="mc_financial_years_list_view" model="ir.ui.view">
+        <field name="name">mc.financial.years.list</field>
+        <field name="model">mc.financial.years</field>
+        <field name="arch" type="xml">
+            <list string="Financial Years">
+                <field name="name"/>
+                <field name="year"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="mc_financial_years_form_view" model="ir.ui.view">
+        <field name="name">mc.financial.years.form</field>
+        <field name="model">mc.financial.years</field>
+        <field name="arch" type="xml">
+            <form string="Financial Years">
+               <group>
+                    <field name="name"/>
+                    <field name="academic_year"/>
+                    <field name="year"/>
+                    <field name="current_financial_year"/>
+               </group>
+               <group>
+                    <field name="financial_schools_ids"/>
+               </group>
+               <group>
+                    <field name="discounts"/>
+               </group>
+            </form>
+        </field>
+    </record>
+
+            
+    <record id="action_mc_financial_years" model="ir.actions.act_window">
+        <field name="name">Financial Years</field>
+        <field name="res_model">mc.financial.years</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <menuitem id="menu_mc_financial_years"
+            name="Financial Years" 
+            parent="education_fee.education_fee_structure_menu_root"
+            action="action_mc_financial_years"
+            sequence="4"
+            />
+
+
+</odoo>

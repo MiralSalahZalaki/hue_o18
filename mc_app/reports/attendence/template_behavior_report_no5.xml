@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_behavior_report_no5">
+        <!-- Report Configuration -->
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <!-- Main Container -->
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <!-- External Fonts and Styles -->
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+                <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous"/>
+                <style>
+                    body {
+                        font-family: 'Cairo', sans-serif;
+                    }
+                    [dir="rtl"] {
+                        direction: rtl;
+                        text-align: right;
+                    }
+                    .attendance-table {
+                        width: 100%;
+                        table-layout: fixed;
+                    }
+                    .attendance-table th, .attendance-table td {
+                        font-size: 12px;
+                        text-align: center;
+                        vertical-align: middle;
+                    }
+                    .month-header {
+                        width: 75px;
+                        background: #2c3691 !important;
+                        color: #fff !important;
+                    }
+                    .day-header {
+                        width: 32px;
+                        background: #2c3691 !important;
+                        color: #fff !important;
+                    }
+                    .unexcused-header {
+                        width: 75px;
+                        background: #ff3b52 !important;
+                        color: #fff !important;
+                    }
+                    .excused-header {
+                        width: 75px;
+                        background:#8bf277 !important;
+                        color: #fff !important;
+                    }
+                    .day-cell {
+                        padding: 0;
+                    }
+                    .status-icon {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 20px;
+                        height: 20px;
+                    }
+                    .status-icon.attended {
+                        color: #4CAF50;
+                    }
+                    .status-icon.unexcused {
+                        background-color: #ff3b52;
+                        color: white;
+                    }
+                    .status-icon.excused {
+                        background-color: #8bf277;
+                        color: #101010;
+                    }
+                    .status-icon.vacation {
+                        background-color: #fcaa58;
+                    }
+                    .status-icon.off {
+                        background-color: #dfdfdf;
+                    }
+                    .unexcused-count {
+                        font-size: 12px;
+                    }
+                    .excused-count {
+                        font-size: 12px;
+                        background-color: #eeeeee;
+                    }
+                    .class-info .col-6 {
+                        width: 50%;
+                    }
+                    .summary-item {
+                        margin-right: 1rem;
+                        margin-bottom: 0.5rem;
+                    }
+                    .legend-table td {
+                        font-size: 12px;
+                        border: 1px solid #555555;
+                    }
+                    .legend-item {
+                        width: 40px;
+                        text-align: center;
+                    }
+                    .legend-item.attended {
+                        color: #4CAF50;
+                    }
+                    .legend-item.unexcused {
+                        background-color: #ff3b52;
+                    }
+                    .legend-item.excused {
+                        background-color: #8bf277;
+                    }
+                    .legend-item.off {
+                        background-color: #dfdfdf;
+                    }
+                    .legend-item.vacation {
+                        background-color: #fcaa58;
+                    }
+                    .permitted-absences-table th {
+                        background: #2c3691;
+                        color: #fff;
+                        font-size: 12px;
+                    }
+                </style>
+            </head>
+            <div class="page">
+                <div class="container mt-5">
+                    <!-- Header Section -->
+                    <div class="row mb-4">
+                        <div class="d-flex align-items-center border-bottom border-dark pb-3">
+                            <div class="col-6 text-start">
+                                <h2 t-esc="'Students Absence Listing'" t-options="{'widget': 'translate'}"/>
+                                <h6 t-esc="company_name"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Class Information -->
+                    <t t-foreach="students" t-as="student">
+                        <div class="row mt-3 class-info">
+                            <div class="col-6">
+                                <strong t-esc="'Student Name: '" t-options="{'widget': 'translate'}"/>
+                                <span dir="rtl" t-esc="student['name']"/>
+                            </div>
+                            <div class="col-6">
+                                <strong t-esc="'Birth Date: '" t-options="{'widget': 'translate'}"/>
+                                <span t-esc="student['birth_date']"/>
+                            </div>
+                            <div class="col-6">
+                                <strong t-esc="'Grade: '" t-options="{'widget': 'translate'}"/>
+                                <span t-esc="student['grade']"/>
+                            </div>
+                            <div class="col-6">
+                                <strong t-esc="'Class: '" t-options="{'widget': 'translate'}"/>
+                                <span t-esc="student['class']"/>
+                            </div>
+                            <div class="col-6">
+                                <strong t-esc="'Guardian of Student Name: '" t-options="{'widget': 'translate'}"/>
+                                <span dir="rtl" t-esc="student['guardian_name']"/>
+                            </div>
+                            <div class="col-6">
+                                <strong t-esc="'Guardian of Student Job: '" t-options="{'widget': 'translate'}"/>
+                                <span dir="rtl" t-esc="student['guardian_job']"/>
+                            </div>
+                            <div class="col-6">
+                                <strong t-esc="'Guardian of Student Address: '" t-options="{'widget': 'translate'}"/>
+                                <span dir="rtl" t-esc="student['guardian_address']"/>
+                            </div>
+                        </div>
+                        <!-- Attendance Calendar Table -->
+                        <table class="table table-bordered mt-4 attendance-table">
+                            <thead>
+                                <tr>
+                                    <th class="month-header">Months</th>
+                                    <t t-foreach="range(1, 32)" t-as="day">
+                                        <th class="day-header" t-esc="day"/>
+                                    </t>
+                                    <th class="unexcused-header">Unexcused</th>
+                                    <th class="excused-header">Excused</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="student['attendance'] and student['attendance'].keys()">
+                                    <t t-foreach="student['attendance'].keys()" t-as="month_name">
+                                        <tr>
+                                            <td class="month-name" t-esc="month_name"/>
+                                            <t t-foreach="range(1, 32)" t-as="day">
+                                                <t t-set="day_data" t-value="student['attendance'].get(month_name, {}).get('days', {}).get(day, {})"/>
+                                                <td class="day-cell">
+                                                    <t t-if="day_data">
+                                                        <span t-att-class="'status-icon ' + ('attended' if day_data.get('attended') else 'unexcused' if day_data.get('unexcused') else 'excused' if day_data.get('excused') else 'vacation' if day_data.get('vacation') else 'off' if day_data.get('off') else '')">
+                                                            <t t-if="day_data.get('attended')">
+                                                                <i class="fa fa-check"/>
+                                                            </t>
+                                                            <t t-elif="day_data.get('unexcused')">
+                                                                <i class="fa fa-times"/>
+                                                            </t>
+                                                            <t t-elif="day_data.get('excused')">
+                                                                <i class="fa fa-times"/>
+                                                            </t>
+                                                        </span>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <td class="unexcused-count" t-esc="student['attendance'].get(month_name, {}).get('unexcused_count', 0)"/>
+                                            <td class="excused-count" t-esc="student['attendance'].get(month_name, {}).get('excused_count', 0)"/>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <tr>
+                                        <td colspan="34">No attendance data available for this student</td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <!-- Summary Section -->
+                        <div class="row mt-4 summary-section">
+                            <div class="col-12">
+                                <h5 t-esc="'Summary'" t-options="{'widget': 'translate'}"/>
+                                <div class="d-flex flex-wrap">
+                                    <div class="summary-item">
+                                        <strong t-esc="'Total Days: '" t-options="{'widget': 'translate'}"/>
+                                        <span t-esc="student['attendance'].get('summary', {}).get('total_days', 0)"/>
+                                    </div>
+                                    <div class="summary-item">
+                                        <strong t-esc="'Days with Attendance: '" t-options="{'widget': 'translate'}"/>
+                                        <span t-esc="student['attendance'].get('summary', {}).get('attended_days', 0)"/>
+                                    </div>
+                                    <div class="summary-item">
+                                        <strong t-esc="'Unexcused Days: '" t-options="{'widget': 'translate'}"/>
+                                        <span t-esc="student['attendance'].get('summary', {}).get('unexcused_days', 0)"/>
+                                    </div>
+                                    <div class="summary-item">
+                                        <strong t-esc="'Excused Days: '" t-options="{'widget': 'translate'}"/>
+                                        <span t-esc="student['attendance'].get('summary', {}).get('excused_days', 0)"/>
+                                    </div>
+                                    <div class="summary-item">
+                                        <strong t-esc="'Vacation Days: '" t-options="{'widget': 'translate'}"/>
+                                        <span t-esc="student['attendance'].get('summary', {}).get('vacation_days', 0)"/>
+                                    </div>
+                                    <div class="summary-item">
+                                        <strong t-esc="'Off Days: '" t-options="{'widget': 'translate'}"/>
+                                        <span t-esc="student['attendance'].get('summary', {}).get('off_days', 0)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Legend Section -->
+                        <div class="mt-3 legend-section">
+                            <table class="table legend-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="legend-item attended">
+                                            <i class="fa fa-check attended"/>
+                                        </td>
+                                        <td>Attended</td>
+                                        <td class="legend-item unexcused">
+                                            <i class="fa fa-times unexcused"/>
+                                        </td>
+                                        <td>Unexcused</td>
+                                        <td class="legend-item excused">
+                                            <i class="fa fa-times excused"/>
+                                        </td>
+                                        <td>Excused</td>
+                                        <td class="legend-item off"> </td>
+                                        <td>Off</td>
+                                        <td class="legend-item vacation"> </td>
+                                        <td>Vacation</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Permitted Absences Section -->
+                        <t t-if="student['permitted_absences']">
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h5 t-esc="'Permitted Absences'" t-options="{'widget': 'translate'}"/>
+                                    <table class="table table-bordered permitted-absences-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date From</th>
+                                                <th>Date To</th>
+                                                <th>Days Count</th>
+                                                <th>Reason</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="student['permitted_absences']" t-as="absence">
+                                                <tr>
+                                                    <td>
+                                                        <t t-esc="absence['start_date']"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="absence['end_date']"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="absence['days_count']"/>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="absence['reason']"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                    <!-- Footer -->
+                    <div class="row mt-4 footer">
+                        <div class="col-12 text-center text-muted">
+                            <small>
+                                Generated on:
+                                <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

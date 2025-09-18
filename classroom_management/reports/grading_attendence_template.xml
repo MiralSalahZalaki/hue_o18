@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_grading_attendence_template">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+                <style>
+                    body {
+                        font-size:12px !important;
+                    }
+                    .container {
+                        max-width: 100% !important;
+                        width: 100% !important;
+                    }
+                    table {
+                        border: 1px solid #000 !important;
+                        background-color: #f9f9f9 !important;
+                        width: 100% !important;
+                        text-align: center !important;
+                        border-collapse: collapse !important;
+                    }
+                    td {
+                        white-space: nowrap !important;
+                    }
+                    td, th {
+                        border: 1px solid #000 !important;
+                        text-transform: capitalize !important;
+                        padding: 4px !important;
+                    }
+                    table tr:nth-child(even) {
+                        background: #D0E4F5 !important;
+                    }
+                    table thead {
+                        border-bottom: 2px solid #000 !important;
+                    }
+                    table thead th {
+                        font-size: 13px !important;
+                        font-weight: 600 !important;
+                        color: #3B4345 !important;
+                        text-align: center !important;
+                        vertical-align: inherit !important;
+                    }
+                    table tfoot td {
+                        font-size: 14px !important;
+                    }
+                    table tfoot .links {
+                        text-align: right !important;
+                    }
+                    table tfoot .links a {
+                        display: inline-block !important;
+                        background: #1C6EA4 !important;
+                        color: #FFFFFF !important;
+                        padding: 2px 8px !important;
+                        border-radius: 5px !important;
+                    }
+                    .table &gt; thead &gt; tr &gt; th, .table &gt; tbody &gt; tr &gt; th, .table &gt; tfoot &gt; tr &gt; th, .table &gt; thead &gt; tr &gt; td, .table &gt; tbody &gt; tr &gt; td, .table &gt; tfoot &gt; tr &gt; td {
+                        padding: 4px !important;
+                        line-height: 1.42857143 !important;
+                        vertical-align: middle !important;
+                        border-top: 1px solid #dddddd !important;
+                    }
+                    .student-name {
+                        text-align: left !important;
+                    }
+                     /* لضمان وجود Scroll */
+                    .table-container {
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                        margin-top: 10px;
+                    }
+                    .table-container table {
+                        min-width: 1000px; 
+                        white-space: nowrap;
+                    }
+                    @media print {
+    .btn-print {
+        display: none !important;
+    }
+    .table-container {
+        overflow: visible !important;
+        -webkit-overflow-scrolling: auto !important;
+    }
+    .table-container table {
+        min-width: auto !important;
+        white-space: normal !important;
+    }
+    table {
+        page-break-inside: auto;
+        font-size: 10px !important;
+    }
+    .page {
+        page-break-before: always;
+    }
+    .page:first-child {
+        page-break-before: avoid;
+    }
+    .page-break {
+        display: none;
+    }
+}
+                </style>
+            </head>
+            <button onclick="javascript:window.print()" class="btn-print">Print</button>
+            <div class="page">
+                <div>
+                    <div class="row">
+                        <div class="row mt30">
+                            <div class="col-xs-12">
+                                <strong>Grade :</strong>
+                                <span t-esc="grade_name"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <!-- Single table for all students -->
+                <div class="table-container">
+                    <table class="table blueTable">
+                        <thead>
+                            <!-- Header Row -->
+                            <tr>
+                                <th rowspan="2">Serial No</th>
+                                <th rowspan="2">Seat Number</th>
+                                <th rowspan="2">Student</th>
+                                <th rowspan="2">Assessment Times</th>
+                                <th rowspan="2">Absence Days</th>
+                                <t t-foreach="syllabuses" t-as="syllabus">
+                                    <th t-att-colspan="len(syllabus.get('distributions',[])) if syllabus.get('distributions',[]) else 1">
+                                        <span t-esc="syllabus.get('syllabus_name','')"/>
+                                    </th>
+                                </t>
+                            </tr>
+                            <!-- Sub-header Row for distributions -->
+                            <tr>
+                                <t t-foreach="syllabuses" t-as="syllabus">
+                                    <t t-foreach="syllabus.get('distributions',[])" t-as="distribution">
+                                        <th>
+                                            <span t-esc="distribution.get('name','')"/>
+                                        </th>
+                                    </t>
+                                    <th t-if="not syllabus['distributions']"></th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="i" t-value="1"/>
+                            <t t-foreach="students" t-as="student">
+                                <t t-foreach="assessment_times" t-as="assessment_time">
+                                    <tr>
+                                        <!-- Serial No, Seat Number, and Student Name only for the first assessment time -->
+                                        <t t-if="assessment_time_first">
+                                            <td t-att-rowspan="len(assessment_times)">
+                                                <span t-esc="i"/>
+                                            </td>
+                                            <td t-att-rowspan="len(assessment_times)">
+                                                <span t-esc="student.get('seat_number','')"/>
+                                            </td>
+                                            <td t-att-rowspan="len(assessment_times)" class="student-name">
+                                                <span t-esc="student.get('name','')"/>
+                                            </td>
+                                        </t>
+                                        <!-- Assessment Time and Absence Days -->
+                                        <td>
+                                            <span t-esc="assessment_time.get('name','')"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="student.get('subjects_results',{}).get(str(syllabuses[0].get('syllabus_id')),{}).get('absence_days',0) if syllabuses else 0"/>
+                                        </td>
+                                        <!-- Distributions for each syllabus -->
+                                        <t t-foreach="syllabuses" t-as="syllabus">
+                                            <t t-set="syllabus_id" t-value="syllabus.get('syllabus_id')"/>
+                                            <t t-set="subject_results" t-value="student.get('subjects_results',{}).get(syllabus_id, {})"/>
+                                            <t t-if="syllabus.get('is_elective') and syllabus_id not in student.get('registered_subjects',[])">
+                                                <t t-foreach="syllabus.get('distributions',[])" t-as="distribution">
+                                                    <td>-</td>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-foreach="syllabus.get('distributions',[])" t-as="distribution">
+                                                    <td>
+                                                        <span t-esc="subject_results.get('distributions',{}).get(distribution.get('id'),{}).get('score','-')"/>
+                                                    </td>
+                                                </t>
+                                                <td t-if="not syllabus['distributions']">-</td>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </t>
+                                <t t-set="i" t-value="i+1"/>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+        <record id="mc_seat_number_tree_view" model="ir.ui.view">
+            <field name="name">mc_seat_number_tree_view</field>
+            <field name="model">mc.seat.number</field>
+             <field name="arch" type="xml">
+            <list string="Seat Number" >
+                <field name="company_id"/>
+                <field name="grade_id"/>
+                <field name="start_from"/>
+                <field name="gender"/>
+            </list>
+            </field>
+        </record>
+
+
+            <record id="mc_seat_number_form_view" model="ir.ui.view">
+            <field name="name">mc_seat_number_form_view</field>
+            <field name="model">mc.seat.number</field>
+             <field name="arch" type="xml">
+                <form string="Seat Number">
+                    <header>
+                        <button name="get_students_list" type="object" string="Generate New Seats" help="Click to get student list and  generate seats" />
+                    </header>
+                    <sheet>
+        
+                        <group> 
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                            <field name="grade_id" />
+                            <field name="start_from" />
+                            <field name="gender" />
+                        </group>
+
+                         <notebook>
+                            <page string="Student List">
+                                <field name="student_list" options="{'no_open': True}"  widget="one2many" mode="list,form">
+                                    <list string="Student List">
+                                        <field name="student_id"/>
+                                        <field name="student_code"/>
+                                        <field name="gender"/>
+                                        <field name="seat_number" />
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_mc_seat_number" model="ir.actions.act_window">
+            <field name="name">Seat Number</field>
+            <field name="res_model">mc.seat.number</field>
+            <field name="view_mode">list,form</field>
+
+        </record>
+
+
+
+        <menuitem id="menu_mc_seat_number"
+                name="Seat Number" 
+                parent="menu_seat_config"
+                action="action_mc_seat_number"
+                sequence="1"
+                />
+
+    </data>
+</odoo>

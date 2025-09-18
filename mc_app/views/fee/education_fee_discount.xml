@@ -1,0 +1,101 @@
+<odoo>
+    <record id="education_fee_discount_list_view" model="ir.ui.view">
+        <field name="name">education.fee.discount.list</field>
+        <field name="model">education.fee.discount</field>
+        <field name="arch" type="xml">
+            <list string="Discount Layers">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="financial_year"/>
+                <field name="company_id"/>
+                <field name="property_account_income_id"/>
+                <field name="discount_type"/>
+                <field name="discount_amount"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="education_fee_discount_form_view" model="ir.ui.view">
+        <field name="name">education.fee.discount.form</field>
+        <field name="model">education.fee.discount</field>
+        <field name="arch" type="xml">
+            <form string="Discount Layers">
+           
+               <group>
+                    <field name="name"/>
+               </group>
+               <group>
+                    <group>
+                        <field name="category_id"/>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                        <field name="discount_type"/>
+                    </group>
+
+                    <group>
+                        <field name="financial_year"/>
+                        <field name="property_account_income_id"/>
+                        <field name="discount_amount"/>
+                    </group>
+
+               </group>
+
+               <notebook>
+                <page string="Discount Criteria">
+                            <group>
+                                <group>
+                                    <field name="founder_son"/>
+                                    <field name="worker_son"/>
+                                    <field name="sibling_apply"/>
+                                </group>
+                                <group>
+                                     <field name="founder_son_level" invisible="founder_son == False"/>
+                                    <field name="worker_son_level" invisible="worker_son == False"/>
+                                    <field name="school_transfered_from" />
+                                </group>
+                            </group>
+                </page>
+
+                <page string="Grade Criteria">
+                            <group>
+                                    <field name="grade"/>
+                            </group>
+                </page>
+
+                <page string="Entrance Year">
+                            <group>
+                                    <field name="entrance_year"/>
+                            </group>
+                </page>
+
+                <page string="Join Bus Criteria">
+                            <group>
+                                    <field name="paid_bus"/>
+                                    <field name="paid_bus_financial_year"/>
+                                    <field name="join_bus"/>
+                                    <field name="mc_bus_cities"/>
+                            </group>
+                </page>
+               
+               </notebook>  
+            </form>
+        </field>
+    </record>
+
+            
+    <record id="action_education_fee_discount" model="ir.actions.act_window">
+        <field name="name">Discount Layers</field>
+        <field name="res_model">education.fee.discount</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <menuitem id="menu_education_fee_discount"
+            name="Discount Layers" 
+            parent="discount_config_menu"
+            action="action_education_fee_discount"
+            sequence="1"
+            />
+
+
+</odoo>

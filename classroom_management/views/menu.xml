@@ -1,0 +1,45 @@
+<odoo>
+    <menuitem id="menu_classroom_management_root" name="Classroom"
+              web_icon="classroom_management,static/description/classroom_manag.png"
+              sequence="5"/>
+    <menuitem id="menu_student_grading" name="Student Grading"
+              parent="menu_classroom_management_root"
+              sequence="1"/>
+    <menuitem id="menu_grading_setup" name="Grading Setup"
+              parent="menu_classroom_management_root"
+              groups="base.group_system"
+              sequence="2"/>
+    <menuitem id="menu_grading_config" name="Grading Configuration"
+              parent="menu_classroom_management_root"
+              groups="base.group_system"
+              sequence="3"/>
+    <menuitem id="menu_grading_reports" name="Grading Reports"
+              parent="menu_classroom_management_root"
+              sequence="4"/>
+    <menuitem id="menu_ad_reports" name="AD Reports"
+              parent="menu_grading_reports"
+              sequence="5"/>
+    <menuitem id="menu_mc_mmc_reports" name="MC &amp; MMC Reports"
+              parent="menu_grading_reports"
+              sequence="6"/>
+    <menuitem id="menu_ig_reports" name="IG Reports"
+              parent="menu_grading_reports"
+              sequence="7"/>
+    <menuitem id="menu_follow_up_sheet" name="Follow-Up Sheet"
+              parent="menu_classroom_management_root"
+              sequence="5"/>
+    <menuitem id="menu_elevation_supervisor_config" name="Evaluation Grades Supervisor"
+              parent="menu_classroom_management_root"
+              sequence="6"/>
+    <menuitem id="menu_seat_config" name="Seats Configuration"
+              parent="menu_classroom_management_root"
+              sequence="7"/>
+    <menuitem id="menu_results_config" name="Results"
+              parent="menu_classroom_management_root"
+              sequence="8"/>
+    <menuitem   id="menu_result_block_reason_from_classroom"
+                name="Result Block Reason" 
+                parent="menu_grading_config"
+                sequence = "2"
+                action="mc_app.action_result_block_reason"/>
+</odoo>

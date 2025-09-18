@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="classroom_management.SubjectLinesWidget">
+        <div class="student-subjects">
+            <t t-if="state.subjectLines.length === 0">
+                <div class="no-subjects">
+                    <p t-if="isTermModel()">No subjects found for this student term.</p>
+                    <p t-if="isMonthlyModel()">No subjects found for this student monthly record.</p>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="subjects-grid">
+                    <t t-foreach="state.subjectLines" t-as="subject" t-key="subject.id">
+                        <div class="subject-card">
+                            <!-- Subject Header -->
+                            <div class="subject-header">
+                                <div class="subject-info">
+                                    <h3 class="subject-title">
+                                        <t t-esc="subject.syllabus_name"/>
+                                    </h3>
+                                    <t t-if="isMonthlyModel() or state.systemType != 'british'">
+                                        <p class="assessment-type">
+                                            <t t-if="subject.grading_info">
+                                                <span>
+                                                    <t t-esc="subject.grading_info"/>
+                                                </span>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="grade-letter">—</span>
+                                            </t>
+                                        </p>
+                                    </t>
+                                </div>
+                            </div>
+                            <!-- Total Score -->
+                            <t t-if="subject.grading_method != 'q_colors'">
+                                <div class="total-score">
+                                    <span class="score-number">
+                                        <t t-esc="subject.total_subject_score"/>
+                                    </span>
+                                    <span class="score-divider"> / </span>
+                                    <span class="max-score">
+                                        <t t-esc="subject.total_subject_max"/>
+                                    </span>
+                                </div>
+                            </t>
+                            <!-- British System Components (Term only) -->
+                            <t t-if="state.systemType === 'british' and subject.grading_method === 'numeric' and isTermModel()">
+                                <div class="section british-system">
+                                    <div class="british-components">
+                                        <div class="british-component">
+                                            <span class="component-label">Monthly</span>
+                                            <span class="component-score">
+                                                <t t-esc="subject.british_monthly"/>/
+                                                <t t-esc="subject.british_monthly_max"/>
+                                            </span>
+                                        </div>
+                                        <div class="british-component">
+                                            <span class="component-label">Weekly</span>
+                                            <span class="component-score">
+                                                <t t-esc="subject.british_weekly"/>/
+                                                <t t-esc="subject.british_weekly_max"/>
+                                            </span>
+                                        </div>
+                                        <div class="british-component exam-component">
+                                            <span class="component-label">Exam</span>
+                                            <span class="component-score">
+                                                <t t-esc="subject.british_exam"/>/
+                                                <t t-esc="subject.british_exam_max"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                            <!-- British System Components (Term only) -->
+                            <t t-if="state.systemType === 'british' and subject.grading_method === 'q_colors' and isTermModel()">
+                                <div class="section">
+                                    <h4 class="section-title mb-2">Assessments</h4>
+                                    <t t-if="subject.assessment_lines.length === 0">
+                                        <p class="no-data">No assessments available</p>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="items-list">
+                                            <t t-foreach="subject.assessment_lines" t-as="assessment" t-key="assessment.id">
+                                                <div class="item-col">
+                                                    <div class="item-row">
+                                                        <span class="item-name">
+                                                            <t t-esc="assessment.assessment_name"/>
+                                                        </span>
+                                                        <span class="item-score">
+                                                            <t t-esc="assessment.score"/>
+                                                        </span>
+                                                    </div>
+                                                    <span class="item-score">
+                                                        <t t-esc="assessment.description"/>
+                                                    </span>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                                <div class="section distributions-section">
+                                    <div class="section-header">
+                                        <h4 class="section-title">
+                                            Distributions
+                                        </h4>
+                                    </div>
+                                    <div class="items-list">
+                                        <t t-foreach="subject.distribution_lines" t-as="distribution" t-key="distribution.id">
+                                            <div class="item-col">
+                                                <div class="item-row">
+                                                    <span class="item-name">
+                                                        <t t-esc="distribution.distribution_name"/>
+                                                    </span>
+                                                    <t t-if="distribution.check">
+                                                        <span class="item-score">
+                                                            <t t-esc="distribution.score"/>
+                                                        </span>
+                                                    </t>
+                                                </div>
+                                                <t t-if="distribution.check">
+                                                    <span class="item-score">
+                                                        <t t-esc="distribution.description"/>
+                                                    </span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="absent"></span>
+                                                </t>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                            <!-- Traditional System Components  -->
+                            <t t-if="state.systemType != 'british'">
+                                <!-- Assessments Section -->
+                                <div class="section">
+                                    <h4 class="section-title mb-2">Assessments</h4>
+                                    <t t-if="subject.assessment_lines.length === 0">
+                                        <p class="no-data">No assessments available</p>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="items-list">
+                                            <t t-foreach="subject.assessment_lines" t-as="assessment" t-key="assessment.id">
+                                                <div class="item-row">
+                                                    <span class="item-name">
+                                                        <t t-esc="assessment.assessment_name"/>
+                                                    </span>
+                                                    <span class="item-score">
+                                                        <t t-esc="assessment.score"/> /
+                                                        <t t-esc="assessment.max_score"/>
+                                                    </span>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                                <!-- Distributions Section (Term only) -->
+                                <t t-if="isTermModel() and subject.distribution_lines.length > 0">
+                                    <div class="section distributions-section">
+                                        <div class="section-header">
+                                            <h4 class="section-title">
+                                                Distributions
+                                            </h4>
+                                        </div>
+                                        <div class="items-list">
+                                            <t t-foreach="subject.distribution_lines" t-as="distribution" t-key="distribution.id">
+                                                <div class="item-row">
+                                                    <span class="item-name">
+                                                        <t t-esc="distribution.distribution_name"/>
+                                                    </span>
+                                                    <span class="item-score">
+                                                        <t t-if="distribution.check">
+                                                            <t t-esc="distribution.score"/> /
+                                                            <t t-esc="distribution.max_score"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="absent">— /
+                                                                <t t-esc="distribution.max_score"/>
+                                                            </span>
+                                                        </t>
+                                                    </span>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                                <!-- Monthly Indicator for collapsed distributions -->
+                                <t t-if="isMonthlyModel() and subject.distribution_lines.length > 0">
+                                    <div class="section distributions-section collapsed">
+                                        <div class="section-header">
+                                            <h4 class="section-title">
+                                Distributions
+                            </h4>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+        <style>
+            .student-subjects {
+                padding: 20px;
+                
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+
+            .no-subjects {
+                text-align: center;
+                padding: 60px 20px;
+                color: #6c757d;
+                background: white;
+                border-radius: 8px;
+            }
+
+            .subjects-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+
+            .subject-card {
+                
+                border-radius: 8px;
+                padding: 24px;
+            <!-- box-shadow: 0 1px 3px rgba(0,0,0,0.1); -->
+                border: 1px solid #e5e5e5;
+                width:100%;
+            }
+
+            .subject-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 2px;
+            }
+
+            .subject-info {
+                flex: 1;
+            }
+
+            .subject-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #2c3e50;
+                margin: 0 0 4px 0;
+            }
+
+            .assessment-type {
+                font-size: 13px;
+                color: #6c757d;
+                margin: 0;
+            }
+
+            .grade-info {
+                text-align: right;
+            }
+
+            .grade-letter {
+                font-size: 16px;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .total-score {
+                font-size: 28px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 8px;
+            }
+
+            .score-number {
+                color: #2c3e50;
+            }
+
+            .score-divider {
+                color: #6c757d;
+            }
+
+            .max-score {
+                color: #6c757d;
+            }
+
+            .grade-text {
+                font-size: 14px;
+                font-weight: 500;
+                color: #28a745;
+                margin-bottom: 24px;
+            }
+
+            .grade-text.not-graded {
+                color: #6c757d;
+            }
+
+            .section {
+                margin-bottom: 24px;
+                border-radius: 6px;
+            <!-- padding: 16px;
+                border: 1px solid #e9ecef;
+                transition: all 0.2s ease; -->
+            }
+            <!-- .section:hover {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            } -->
+
+            .section:last-child {
+                margin-bottom: 0;
+            }
+
+            .section-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            .section-title {
+                font-size: 15px;
+                font-weight: 600;
+                color: #ababab;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .expand-icon {
+                font-size: 12px;
+                color: #6c757d;
+            }
+
+            .section-label {
+                font-size: 12px;
+                background: #e9ecef;
+                color: #6c757d;
+                padding: 4px 8px;
+                border-radius: 4px;
+            }
+
+            .details-link {
+                font-size: 12px;
+                color: #007bff;
+                margin-left: auto;
+                cursor: pointer;
+            }
+
+            .items-list {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .item-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding:6px 0;
+                width: 100%;
+                max-width: 100%;
+            
+            }
+
+            .item-row:not(:last-child) {
+                border-bottom: 1px solid #f1f3f5 !important;
+            }
+
+            .item-col {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                align-items: flex-start;
+                padding: 8px 12px;
+                background: #f9fafb;
+                border-radius: 4px;
+                transition: background 0.2s ease;
+            }
+            <!-- .item-col:hover {
+                background: #e9ecef;
+            } -->
+
+            .item-name {
+                font-size: 14px;
+                color: #1a3c34;
+                font-weight: 500;
+            }
+
+            .item-score {
+                font-size: 13px;
+                font-weight: 500;
+                color: #2c3e50;
+                background: #e6f3ff;
+                padding: 2px 8px;
+                border-radius: 12px;
+            }
+
+            .absent {
+                color: #dc3545;
+                font-weight: 500;
+            }
+
+            .no-data {
+                font-size: 14px;
+                color: #6c757d;
+                text-align: center;
+                padding: 12px;
+                background: #f1f3f5;
+                border-radius: 4px;
+            }
+
+            .distributions-section.collapsed .items-list {
+                display: none;
+            }
+
+            /* British System Styles */
+            .british-system {
+                border-radius: 6px;
+                margin-bottom: 16px;
+            }
+
+            .british-components {
+                display: flex;
+                flex-direction: row;
+                gap: 12px;
+                justify-content: space-between;
+            }
+
+            .british-component {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .british-component:not(:last-child) {
+                border-right: 1px solid #e7e7e7;
+            }
+
+            .component-label {
+                font-size: 14px;
+                color: #2c3e50;
+            }
+
+            .component-score {
+                font-size: 14px;
+                font-weight: 500;
+                color: #2c3e50;
+            }
+
+            .exam-component .component-label,
+            .exam-component .component-score {
+                font-weight: 600;
+            }
+
+            @media (max-width: 768px) {
+                .subjects-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </t>
+</templates>

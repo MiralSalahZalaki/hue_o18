@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <record id="mc_follow_up_times_tree_view" model="ir.ui.view">
+            <field name="name">mc_follow_up_times_tree_view</field>
+            <field name="model">mc.follow.up.times</field>
+            <field name="arch" type="xml">
+            <list string="Follow-Up Adding Times">
+                    <field name="name"/>
+                    <field name="company_id" />
+                    <field name="grade_ids"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="publish"/>            
+            </list>
+            </field>
+        </record>
+
+        <record id="mc_follow_up_times_form_view" model="ir.ui.view">
+            <field name="name">mc_follow_up_times_form_view</field>
+            <field name="model">mc.follow.up.times</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet string="Follow-Up Adding Times">
+                      <group>
+                        <field name="active" invisible="1"/>
+                        <field name="name" required="1"/>
+                        <field name="company_id" domain="[('id', 'in', allowed_company_ids)]" options="{'no_create': True}" widget="selection"/>
+                        <field name="grade_ids" widget="many2many_tags"/>
+                        <field name="start_date" placeholder="Set the start date"/>
+                        <field name="end_date" placeholder="Set the end date"/>
+                        <field name="publish"/>
+                    </group>               
+                </sheet>
+            </form>
+            </field>
+        </record>
+
+
+
+        
+        <record id="action_mc_follow_up_times" model="ir.actions.act_window">
+            <field name="name">Follow-Up Adding Times</field>
+            <field name="res_model">mc.follow.up.times</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+
+
+        <menuitem id="menu_mc_follow_up_times"
+                name="Follow-Up Adding Times" 
+                parent="menu_follow_up_sheet"
+                action="action_mc_follow_up_times"
+                sequence="3"
+                />
+
+    </data>
+</odoo>

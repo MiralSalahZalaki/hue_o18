@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="template_report_student_history">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+        <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&amp;display=swap" rel="stylesheet"/>            
+        <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_reports_style.css" />
+        </head>
+
+                <div class="page">
+                    <div class="my-3">
+                        <button class="print-button" style="background: #2c3691; color: #fff; border-radius:4px; border:none" onclick="window.print();">
+                            <i class="fa fa-print"/> Print
+                        </button>
+                    </div>
+                    <div class="container mt-5" >
+                        <!-- Report Header -->
+                        <div class="row mb-4">
+                            <div class="d-flex align-items-center align-items-sm-start border-bottom border-2 border-dark">
+                            <div class="col-6 text-start">
+                                <h2>Academic Sequence</h2>
+                                <h5><t t-esc="company_name"/> </h5>
+                            </div>
+                            <div class="col-6" style="display: flex; justify-content: end;">
+                                <img src="/mc_app/static/description/mclogo.png" class="d-none d-lg-block" alt=""
+                                style="width: 250px;"/>
+                            </div>
+                            </div>
+                        </div>
+                
+                        <!-- Student Information Table -->
+                        <div class="row">
+                        <h6>The administration of the Mansoura College Language School MC reports that the student</h6>
+                        <h4><t t-esc="student_name"/></h4>
+                        <p>Was enrolled In schools as follows :</p>
+                            <div class="col-12">
+                                <table  class="table table-bordered table-sm"
+                                        t-att-style="'border: 1px solid #cccccc; direction: ' + direction">
+                                    <thead>
+                                        <tr>
+                                            <t t-foreach="student_data" t-as="item">
+                                                <t t-if="item['field_name'] != 'Class History'">
+                                                    <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">     
+                                                        <span t-esc="item['field_name']"/>
+                                                    </th>
+                                                </t>
+                                            </t>    
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <t t-foreach="student_data" t-as="item">
+                                                <t t-if="item['field_name'] != 'Class History'">
+                                                    <td class="text-center">
+                                                        <span t-esc="item['field_value']"/>
+                                                    </td>
+                                                </t>
+                                            </t>  
+                                        </tr>
+                                </tbody>
+                                </table>
+
+                                <!-- Class History Table -->
+
+                              <table class="table table-bordered table-sm" style="border: 1px solid #cccccc;">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">Class</th>
+                                            <th class="text-center font-weight-bold" style="background: #2c3691; color: #fff;">Academic Year</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="student_data" t-as="item">
+                                            <t t-if="item.get('field_name') == 'Class History'">
+                                                <t t-foreach="item.get('field_value', [])" t-as="history">
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <span t-esc="history.get('class_name', '')"/>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span t-esc="history.get('academic_year', '')"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+
+                                <table class="table table-borderless mt-4">
+                                    <tr class="mb-2">
+                                        <td class="text-center">School Manager</td>
+                                        <td class="text-center">Financial Affairs</td>
+                                        <td class="text-center">Head of Student Affairs</td>
+                                        <td class="text-center">Student Affairs</td>
+                                    </tr>
+                                </table>
+
+                                <p class="mt-5">
+                                    The statement is approved by transfer No.............. in the amount of ........ on .... / .... / .... 20
+                                    <br/>
+                                    In order to submit it to ..........................................................
+                                </p>
+
+                                <table class="table table-borderless mt-4">
+                                    <tr>
+                                        <td class="text-center">Editor</td>
+                                        <td class="text-center">Senior Auditor</td>
+                                        <td class="text-center">Director of Student Affairs and Examinations</td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <!-- Report Footer -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="text-center text-muted">
+                                    <small>Generated on: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+        </t>
+    </template>
+
+</odoo>

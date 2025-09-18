@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+        <record id="timetable_by_teacher_wizard_form_view" model="ir.ui.view">
+            <field name="name">timetable.by.teacher.wizard.form</field>
+            <field name="model">timetable.by.teacher.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Report by Teacher" >
+                    <group>
+                            <field name="name"/>
+                    </group>
+                    
+
+                    <footer >
+                        <button name="generate_timetable_teacher_report" type="object"   
+                                string="Search" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_timetable_by_teacher_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Timetable By Class</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">timetable.by.teacher.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="timetable_by_teacher_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="timetable_by_teacher_report_menu" 
+                    name="By Teacher"
+                    parent="main_menu_timtable_reports"
+                    action="action_timetable_by_teacher_wizard"
+                    sequence = "4"/>
+
+
+    </data>
+</odoo>

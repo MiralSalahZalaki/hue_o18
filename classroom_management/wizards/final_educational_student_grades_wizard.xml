@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <record id="final_educational_student_grades_wizard_form_view" model="ir.ui.view">
+            <field name="name">final.educational.student.grades.wizard.form</field>
+            <field name="model">final.educational.student.grades.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Educational Student Grades" >
+                    <group>
+                            <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"   options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"   required="1"/>
+                            <field name="term_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="grade_id" required="1"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="class_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="syllabus_id"    options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"  />
+                            <field name="arabic_report" />
+                                  
+                    </group>
+
+                    <footer >
+                        <button name="generate_final_educational_student_report_wizard" type="object"   
+                                string="View" default_focus="1" class="oe_highlight" />
+                                or 
+
+                        <button string="Cancel" class="oe_link" special="cancel" />
+
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        
+        <record id="action_final_educational_student_grades_wizard" model="ir.actions.act_window">
+            <field name="name">Educational Student Grades</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">final.educational.student.grades.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="final_educational_student_grades_wizard_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem   id="final_educational_student_grades_wizard_report_menu" 
+                    name="Educational Student Grades"
+                    parent="menu_grading_reports"
+                    action="action_final_educational_student_grades_wizard"
+                    sequence = "10"/>
+
+
+    </data>
+</odoo>

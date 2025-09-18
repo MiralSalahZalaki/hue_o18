@@ -1,0 +1,81 @@
+<odoo>
+    <data>
+         <record id="mc_syllabus_form_inherit" model="ir.ui.view">
+            <field name="name">mc.syllabus.form.inherit</field>
+            <field name="model">education.syllabus</field>
+            <field name="inherit_id" ref="education_core.view_education_syllabus_view_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='class_id']" position="after">
+                 <field name="available_subject_ids" invisible="1"/>
+                <!--  <field name="elective_syllabus_student_id" invisible="1"/> -->
+                 <field name="arabic_name"/>
+                 <field name="sequence"/>
+                 <field name="company_id" domain="[('id', 'in', allowed_company_ids)]"/>
+                 <field name="regular_week"/>
+                 <field name="elective"/>
+                 <field name="allis_name"/>
+                 <field name="certificate_name"/>
+                 <field name="color" widget="color"/>
+                 <field name="color" String="Color Code"/>
+                </xpath>
+
+                <xpath expr="//field[@name='total_hours']" position="after">
+                 <field name="special_week"/>
+                 <field name="hidden_official_report"/>
+                 <field name="hidden_management_report"/>
+                 <field name="add_to_total"/>
+                 <field name="domain"/>
+                 <field name="create_team"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='class_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='subject_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                   
+                </xpath>
+
+                
+                <xpath expr="//form/sheet" position="inside">
+                    <group invisible="elective == False" >
+                        <notebook>
+                            <page string="Students">
+                                <field name="students" widget="one2many" >
+                                    <list editable="bottom">
+                                        <field name="student_id" domain="[('grade_id','=',parent.class_id)]" string="Student" />
+                                        <field name="year_id" string="Academic Year" />
+                                        <field name="class_id" string="Class" />
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Edit Action domain -->
+          <record id="education_core.education_syllabus_action" model="ir.actions.act_window">
+               <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        </record>
+
+        <!-- Menu for Timetables -->
+        <menuitem
+            id="menu_curriculum_from_timtable"
+            name="Curriculum"
+            parent="education_time_table.education_time_table_main_menu"
+            sequence="4"
+            />
+
+        <menuitem
+            id="menu_syllabus_from_timtable"
+            name="Syllabus"
+            parent="menu_curriculum_from_timtable"
+            action="education_core.education_syllabus_action"
+            sequence="1"
+            />
+    </data>
+</odoo>

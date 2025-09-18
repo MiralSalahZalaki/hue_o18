@@ -1,0 +1,540 @@
+<odoo>
+    <template  id="admission_application_form_template" name="Student Form">
+        <t>
+            <link rel="icon" href="/mc_app/static/description/mccion.png" type="image/x-icon"/>
+            <title>Mansoura College Student Application Form - طلب التحاق طالب</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link t-att-href="'https://fonts.googleapis.com/css2?family=Oswald&amp;display=swap'" rel="stylesheet"/>
+            <link t-att-href="'https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&amp;family=Oswald&amp;display=swap'" rel="stylesheet"/>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+
+          
+            <!-- تحميل مكتبات الـ CDN -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
+            <script type="text/javascript" src="/mc_app/static/src/js/mc_form_validation.js"></script>
+
+
+            <div class="form-body">
+            <div class="container">
+                <link rel="stylesheet" type="text/css" href="/mc_app/static/mc_admission_application_form.css" />
+                    <div class="form-container">
+                        <div class="form-header">
+                            <img src="/mc_app/static/description/mclogo.png" class="logo" alt=""
+                                style="width: auto;  display: block;margin: 0 auto;"/>
+                        <h1>Student Application Form</h1>
+                            <span style="font-size:13px">
+                            <span style=" font-weight: 600;"><t t-esc="company_id.name"/> -</span>
+                            Please complete promptly the form below.</span>
+                        </div>
+
+                    <form t-att-action="existing_application and '/update_student_admission' or '/submit_student_admission'" method="post" id="admission_form">
+                        <t t-if="existing_application">
+                            <div style="background-color: #bf172814; border: 1px solid #BF1728; border-radius: 24px; padding: 8px 16px; color: #BF1728; text-align: center; margin: 24px auto;">
+                              <span>
+                               You have already applied, you can edit your submission 
+                               <span class="arabic_span">-لقد قمت بالتقديم سابقاً. يمكنك تعديل بياناتك</span>
+                              </span>
+
+                            </div>
+                        </t>   
+
+                        <!--Stduent Info-->
+                        <fieldset>
+                            <legend>Student Information <span class="arabic_span">-بيانات الطالب</span></legend>
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="name">Arabic Student Name
+                                        <span class="arabic_span" style="float:right;" >اسم الطالب طبقا لشهادة الميلاد</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input  class="form-element-icon"
+                                                    type="text" name="name"
+                                                    required="true"
+                                                    placeholder="Student Name"
+                                                    id="name"
+                                                    t-att-value="existing_application and existing_application.full_arabic_name or ''"/>
+                                                    
+                                            <i class="fa fa-male fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="grade">Admission Grade
+                                        <span class="arabic_span" style="float:right;" >الصف الدراسي</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                          <select id="grade" class="form-element-icon" name="admission_class_ids" required="true">
+                                                <option value="" selected="selected" disabled="disabled">Select Grade</option>
+                                                <t t-foreach="admission_class_ids" t-as="grade">
+                                                    <option t-att-value="grade.id" t-att-selected="existing_application and existing_application.admission_class_id.id == grade.id">
+                                                        <t t-esc="grade.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <i class="fa fa-folder-open fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="prev_school">Previous School (Grades upper KG1)
+                                        <span class="arabic_span" style="float:right;" >المدرسة السابقة</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="prev_school"
+                                                placeholder = "Enter previous school"
+                                                t-att-value="existing_application and existing_application.prev_school or ''"
+                                                id="prev_school" />
+                                            <i class="fa fa-map-marker fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                                <div class="row">
+                                    <div class="l-col-6">
+                                        <div class="form-group">
+                                            <label for="student_national_id">Student National ID
+                                            <span class="arabic_span" style="float:right;" >الرقم القومي للطالب</span>
+                                            </label>
+                                            <div class="l-pos-r">
+                                                <input class="form-element-icon"
+                                                    type="text" name="student_national_id"
+                                                    required="true"
+                                                    placeholder="Student  National ID (English Numbers Only)"
+                                                    minlength="14"
+                                                    maxlength="14"
+                                                    t-att-style="existing_application and 'background-color:white; cursor: no-drop;'"
+                                                    t-att-disabled="existing_application and 'disabled' or None"
+                                                    t-att-value="existing_application and existing_application.student_national_id or ''"
+                                                    id="student_national_id" />
+                                                <i class="fa fa-file fa-absolute fa-background"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="l-col-6">
+                                        <div class="form-group">
+                                            <label>Student National ID Here :
+                                            <span class="arabic_span" style="float:right;" >لمعرفة الرقم القومي للطالب</span>
+                                            </label>
+                                            <div class="l-pos-r">
+                                                <div class="popup">
+                                                        <img src="/mc_app/static/description/birth.jpg"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                          <!--Birthday info NOT REQUIRED YET-->
+                        
+                            <div class="row">
+                                <div class="l-col-12">
+                                    <div class="form-group">
+                                        <label for="street">Home Address
+                                        <span class="arabic_span" style="float:right;" >عنوان</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="street"
+                                                placeholder = "Enter home address"
+                                                t-att-value="existing_application and existing_application.street or ''"
+                                                id="street" />
+                                            <i class="fa fa-map-marker fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!--Father Info-->
+                        <fieldset>
+                            <legend>Father's Information<span class="arabic_span">- بيانات الأب </span></legend>
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="father_name">Arabic Father Name
+                                        <span class="arabic_span" style="float:right;" >اسم الأب طبقا للبطاقة الشخصية</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="father_name"
+                                                placeholder = "Father Name"
+                                                t-att-value="existing_application and existing_application.father_name or ''"
+                                                id="father_name" />
+                                            <i class="fa fa-user fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="father_profession">Father Profession
+                                        <span class="arabic_span" style="float:right;" >وظيفة الأب</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="father_profession"
+                                                placeholder = "Father Profession"
+                                                t-att-value="existing_application and existing_application.father_profession or ''"
+                                                id="father_profession" />
+                                            <i class="fa fa-briefcase fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="father_educational_qualifications">Educational Qualifications
+                                        <span class="arabic_span" style="float:right;" >المستوي التعليمي</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="father_educational_qualifications"
+                                                placeholder = "Educational Qualifications"
+                                                t-att-value="existing_application and existing_application.father_educational_qualifications or ''"
+                                                id="father_educational_qualifications" />
+                                            <i class="fa fa-graduation-cap fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="father_mobile">Father Mobile
+                                        <span class="arabic_span" style="float:right;" >رقم هاتف الأب</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="father_mobile"
+                                                t-att-value="existing_application and existing_application.father_mobile or ''"
+                                                placeholder = "Father Mobile (English Numbers Only)"
+                                                id="father_mobile" />
+                                            <i class="fa fa-mobile fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="father_email">Father E-mail
+                                        <span class="arabic_span" style="float:right;">البريد الالكتروني - للأب</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="father_email"
+                                                t-att-value="existing_application and existing_application.father_email or ''"
+                                                placeholder = "Father E-mail"
+                                                id="father_email" />
+                                            <i class="fa fa-envelope fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="father_national_id">Father National ID
+                                        <span class="arabic_span" style="float:right;" >الرقم القومي - للأب</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="father_national_id"
+                                                t-att-value="existing_application and existing_application.father_national_id or ''"
+                                                t-att-disabled="existing_application and 'disabled' or None"
+                                                minlength="14"
+                                                maxlength="14"
+                                                required="true"
+                                                 t-att-style="existing_application and 'background-color:white; cursor: no-drop;'"
+                                                placeholder = "Father National ID (English Numbers Only)"
+                                                id="father_national_id" />
+                                            <i class="fa fa-id-card fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="father_english_level">English Level
+                                        <span class="arabic_span" style="float:right;" >مستوى اللغة - الأب</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                              <select id="father_english_level" class="form-element-icon" name="father_english_level">
+                                                    <option value="" disabled="disabled" selected="selected">Select Level</option>
+                                                    <option value="high" t-att-selected="existing_application and existing_application.father_english_level == 'high'">High</option>
+                                                    <option value="medium" t-att-selected="existing_application and existing_application.father_english_level == 'medium'">Medium</option>
+                                                    <option value="low" t-att-selected="existing_application and existing_application.father_english_level == 'low'">Low</option>   
+                                                </select>
+                                            <i class="fa fa-language fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!--Mother Info-->
+                        <fieldset>
+                            <legend>Mother's Information<span class="arabic_span">- بيانات الأم </span></legend>
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="mother_name">Arabic Mother Name
+                                        <span class="arabic_span" style="float:right;" >اسم الأم طبقا للبطاقة الشخصية</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="mother_name"
+                                                t-att-value="existing_application and existing_application.mother_name or ''"
+                                                placeholder = "Mother Name"
+                                                id="mother_name" />
+                                            <i class="fa fa-user fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="mother_profession">Mother Profession
+                                        <span class="arabic_span" style="float:right;" >وظيفة الأم</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="mother_profession"
+                                                t-att-value="existing_application and existing_application.mother_profession or ''"
+                                                placeholder = "Mother Profession"
+                                                id="mother_profession" />
+                                            <i class="fa fa-briefcase fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="mother_educational_qualifications">Educational Qualifications
+                                        <span class="arabic_span" style="float:right;" >المستوي التعليمي</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="mother_educational_qualifications"
+                                                placeholder = "Educational Qualifications"
+                                                t-att-value="existing_application and existing_application.mother_educational_qualifications or ''"
+                                                id="mother_educational_qualifications" />
+                                            <i class="fa fa-graduation-cap fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="mother_mobile">Mother Mobile
+                                        <span class="arabic_span" style="float:right;" >رقم هاتف الأم</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="mother_mobile"
+                                                placeholder = "Motther Mobile (English Numbers Only)"
+                                                t-att-value="existing_application and existing_application.mother_mobile or ''"
+                                                id="mother_mobile" />
+                                            <i class="fa fa-mobile fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="mother_email">Mother E-mail
+                                        <span class="arabic_span" style="float:right;">البريد الالكتروني - للأم</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="mother_email"
+                                                placeholder = "Mother E-mail"
+                                                t-att-value="existing_application and existing_application.mother_email or ''"
+                                                id="mother_email" />
+                                            <i class="fa fa-envelope fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="mother_national_id">Mother National ID
+                                        <span class="arabic_span" style="float:right;" >الرقم القومي - للأم</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                            <input class="form-element-icon"
+                                                type="text" name="mother_national_id"
+                                                minlength="14"
+                                                maxlength="14"
+                                                t-att-value="existing_application and existing_application.mother_national_id or ''"
+                                                t-att-disabled="existing_application and 'disabled' or None"
+                                                t-att-style="existing_application and 'background-color:white; cursor: no-drop;'"
+                                                required="true"
+                                                placeholder = "Mother National ID (English Numbers Only)"
+                                                id="mother_national_id" />
+                                            <i class="fa fa-id-card fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="mother_english_level">English Level
+                                        <span class="arabic_span" style="float:right;" >مستوى اللغة - الأم</span>
+                                        </label>
+                                        <div class="l-pos-r">
+                                               <select id="mother_english_level" class="form-element-icon" name="mother_english_level">
+                                                    <option value="" disabled="disabled" selected="selected">Select Level</option>
+                                                    <option value="high" t-att-selected="existing_application and existing_application.mother_english_level == 'high'">High</option>
+                                                    <option value="medium" t-att-selected="existing_application and existing_application.mother_english_level == 'medium'">Medium</option>
+                                                    <option value="low" t-att-selected="existing_application and existing_application.mother_english_level == 'low'">Low</option>   
+                                                </select>
+                                            <i class="fa fa-language fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!--Sibling Info-->
+                        <fieldset>
+                            <legend>Sibling Information<span class="arabic_span">- بيانات الاشقاء </span></legend>
+                            <div class="row">
+                                <div class="l-col-12">
+                                    <div class="form-group">
+                                        <label class="bordered-bottom-1">Sibling Information
+                                        <span class="arabic_span" style="float:right;">بيانات الاشقاء</span>
+                                        </label>
+                                        
+                                        <label for="has_siblings" style="gap: 1rem; justify-content: flex-start; font-weight: 500;">
+                                            <input type="checkbox" 
+                                                  onclick="toggleDiv()"
+                                                   id="has_siblings" 
+                                                   name="has_siblings"
+                                                   t-att-checked="existing_application and existing_application.siblings_ids and 'checked' or None" 
+                                                  t-att-disabled="existing_application and existing_application.siblings_ids and 'disabled' or None"
+                                                   style="width: 20px ; height: 20px"
+                                                   />
+                                            <span>Do you have a sibling at School 
+                                            <span style="float:right;" class="arabic_span ">( هل لديك اشقاء بالمدرسة )?</span>
+                                            </span>
+                                        </label>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div    class="row" id="siblings_info" 
+                                    t-att-style="existing_application and existing_application.siblings_ids and 'display:flex;' or 'display:none;'" >
+                                <div class="l-col-6">
+                                    <div class="form-group">
+                                        <label for="student_code">Student Code
+                                        <span class="arabic_span" style="float:right;">كود الطالب المدرسي</span>
+                                        </label>
+                                        <div class="l-pos-r mb-4">
+                                            <input class="form-element-icon"   
+                                                type="text" name="student_code"
+                                                placeholder = "****** (English Numbers Only)"
+                                                id="student_code" />
+                                            <i class="fa fa-graduation-cap fa-absolute fa-background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="l-col-6" t-att-style="existing_application and existing_application.siblings_ids and 'display:block;' or 'display:none;'">
+                                    <div class="form-group">
+                                        <label for="student_code">Siblings List
+                                        <span class="arabic_span" style="float:right;">الاشقاء</span>
+                                        </label>
+                                        <t t-if="existing_application">
+                                            <t t-if="existing_application.siblings_ids">
+                                                <div  style="display: flex; justify-content: space-between; align-items: flex-start; color: #4B4E64; margin: 12px 0; flex-direction: column; padding-left: 1.18rem;">
+                                                    <t t-foreach="existing_application.siblings_ids" t-as="student">
+                                                        <div style="align-items: center; display: flex; color: #4B4E64; ">
+                                                            <i class="fa fa-graduation-cap"></i>
+                                                            <span class="arabic_span" style="float:right;" t-esc="student.full_arabic_name"/>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+
+                       
+                        </fieldset>
+
+                        <!--Footer-->
+                         <fieldset>
+                            <legend>Application Instructions<span class="arabic_span">- تعليمات طلب الالتحاق </span></legend>
+                            <div class="row">
+                                <div class="l-col-12 arabic_span" style="color: #6d6666;">
+                                   يعتبر قبول طلب الالتحاق ترشيحا مبدأيا للتقديم ولا يعتبر قبولا نهائيا إلا بعد اجراء المقابلة الشخصية للطالب بحضور والديه واستيفاء باقى الاجراءات المعمول بها في نظام التسجيل بالمدارس ... يرجى الالتزام بالتقديم بالمدرسة التي يوجد بها شقيق الطفل...
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+
+
+                            <div class="l-col-12">
+                                <div class="form-group align-center">
+                                    <input style="display : none;" type="text" name="company_id" t-att-value="company_id"/>
+                                    <input type="hidden" name="application_id" t-att-value="existing_application and existing_application.id or ''"/>
+
+                                    <input type="submit" 
+                                        t-att-style="existing_application and 'display:none;' or 'display:block;'" 
+                                        value="Save Application -  حفظ طلب التقديم" 
+                                        id="submit" name="submit" class="btn btn-success btn-flat btn-form "/> 
+
+                                    <input  type="submit" 
+                                            t-att-style="existing_application and 'display:block;' or 'display:none;'" 
+                                            value="Update Application - تحديث طلب التقديم" 
+                                            id="update_submit" name="update_submit" class="btn btn-success btn-flat btn-form "/>
+
+                                    <t t-if="existing_application">
+                                        <a t-att-href="'/apply/' + str(existing_application.company_id.id)" 
+                                        style="text-decoration:none; height: 48px; align-items: center; padding: 0 24px; display: flex; t-att-style='existing_application and \'display:block;\' or \'display:none;\''">
+                                        Cancel - <span class='btn arabic_span'>إلغاء</span>
+                                        </a>  
+                                    </t>       
+                                    </div>
+                            </div>
+                    </form>
+
+                    <div id="errorMessages"></div>
+
+                    </div>
+
+            </div>
+            
+            </div>    
+        </t>
+    </template>
+</odoo>
